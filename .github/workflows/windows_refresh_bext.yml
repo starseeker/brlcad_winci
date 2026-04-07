@@ -1,0 +1,83 @@
+name: Refresh bext Cache (Windows – scheduled)
+
+# Runs weekly to ensure the GitHub Actions cache for bext_output does not
+# expire (caches are evicted after 7 days of inactivity).
+# This keeps Copilot agent setup sessions fast without requiring a manual
+# rebuild-bext-windows workflow run between sessions.
+#
+# The job restores the existing cache if it is still valid; only if there is
+# no usable cache entry does it rebuild bext from source.
+
+on:
+    schedule:
+        # Every Monday at 04:00 UTC
+        - cron: '0 4 * * 1'
+    workflow_dispatch:
+
+jobs:
+    refresh-bext-cache:
+        name: Keep bext Release cache warm (Windows)
+        runs-on: windows-latest
+
+        permissions:
+            contents: read
+
+        steps:
+            - name: Setup CMake
+              uses: lukka/get-cmake@latest
+
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v2
+
+            - name: Add cl.exe to PATH
+              uses: ilammy/msvc-dev-cmd@v1
+
+            - name: Clone bext (lightweight – for cache key)
+              shell: pwsh
+              run: git clone --depth=1 https://github.com/BRL-CAD/bext.git
+
+            - name: Get bext commit SHA
+              id: bext-sha
+              shell: pwsh
+              run: |
+                  cd bext
+                  $sha = git rev-parse HEAD
+                  echo "sha=$sha" >> $env:GITHUB_OUTPUT
+
+            - name: Compute bext cache discriminator
+              id: cachekey
+              shell: bash
+              run: |
+                  clver=""
+                  if command -v cl.exe &> /dev/null; then
+                      clver="$(cl.exe 2>&1 | head -n 1)"
+                  fi
+                  info="${{ steps.bext-sha.outputs.sha }}-$(uname -s)-$(uname -r)-$clver"
+                  echo "hash=$(echo -n "$info" | sha1sum | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+            # actions/cache@v4 will restore the cache if present (resetting its
+            # expiry timer) and save it at job-end if it was rebuilt on a miss.
+            - name: Restore / warm bext Release cache
+              id: cache-bext
+              uses: actions/cache@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output
+                  key: windows-bext-release-${{ steps.cachekey.outputs.hash }}
+                  restore-keys: |
+                      windows-bext-release-
+                      windows-bext-
+
+            - name: Build bext (Release) – only on cache miss
+              if: steps.cache-bext.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  cmake -E make_directory bext_build
+                  cmake -S bext -B bext_build `
+                      -DCMAKE_BUILD_TYPE=Release `
+                      -DENABLE_ALL=ON `
+                      -DUSE_QT=OFF `
+                      -DUSE_GDAL=OFF `
+                      -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\bext_output"
+                  cmake --build bext_build --config Release -j2
+                  cmake -E rm -rf bext
+                  cmake -E rm -rf bext_build

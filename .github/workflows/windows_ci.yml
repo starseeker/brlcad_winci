@@ -1,0 +1,157 @@
+name: Windows CI
+
+# Full Windows build and test run.  Mirrors the logic from windows_build.yml
+# (the reference snippet) and extends it with a check target so that test
+# regressions (including regress-remrt) are caught on every push.
+
+on:
+    push:
+    workflow_dispatch:
+
+jobs:
+    windows-ninja:
+        name: MSVC – Ninja (Release)
+        runs-on: windows-latest
+        strategy:
+            fail-fast: false
+        permissions:
+            contents: read
+
+        steps:
+            # ----------------------------------------------------------------
+            # Tool setup
+            # ----------------------------------------------------------------
+            - name: Setup CMake
+              uses: lukka/get-cmake@latest
+
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v2
+
+            - name: Add cl.exe to PATH
+              uses: ilammy/msvc-dev-cmd@v1
+
+            - name: Add workspace to PATH
+              shell: pwsh
+              run: Add-Content -Path $env:GITHUB_PATH -Value $env:GITHUB_WORKSPACE
+
+            # ----------------------------------------------------------------
+            # bext dependency cache
+            # ----------------------------------------------------------------
+            - name: Clone bext (lightweight – for cache key)
+              shell: pwsh
+              run: git clone --depth=1 https://github.com/BRL-CAD/bext.git
+
+            - name: Get bext commit SHA
+              id: bext-sha
+              shell: pwsh
+              run: |
+                  cd bext
+                  $sha = git rev-parse HEAD
+                  echo "sha=$sha" >> $env:GITHUB_OUTPUT
+
+            - name: Compute bext cache discriminator
+              id: cachekey
+              shell: bash
+              run: |
+                  clver=""
+                  if command -v cl.exe &> /dev/null; then
+                      clver="$(cl.exe 2>&1 | head -n 1)"
+                  fi
+                  info="${{ steps.bext-sha.outputs.sha }}-$(uname -s)-$(uname -r)-$clver"
+                  echo "hash=$(echo -n "$info" | sha1sum | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+            - name: Restore bext_output cache (Release)
+              id: cache-bext
+              uses: actions/cache@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output
+                  key: windows-bext-release-${{ steps.cachekey.outputs.hash }}
+                  restore-keys: |
+                      windows-bext-release-
+                      windows-bext-
+
+            - name: Build bext (Release) – only on cache miss
+              if: steps.cache-bext.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  cmake -E make_directory bext_build
+                  cmake -S bext -B bext_build `
+                      -DCMAKE_BUILD_TYPE=Release `
+                      -DENABLE_ALL=ON `
+                      -DUSE_QT=OFF `
+                      -DUSE_GDAL=OFF `
+                      -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\bext_output"
+                  cmake --build bext_build --config Release -j2
+                  cmake -E rm -rf bext
+                  cmake -E rm -rf bext_build
+
+            # ----------------------------------------------------------------
+            # BRL-CAD source
+            # ----------------------------------------------------------------
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  path: brlcad_src
+
+            # ----------------------------------------------------------------
+            # Configure
+            # ----------------------------------------------------------------
+            - name: Build directory setup
+              run: cmake -E make_directory build_winninja
+
+            - name: Configure BRL-CAD
+              shell: pwsh
+              run: |
+                  cmake -S brlcad_src -B build_winninja `
+                      -G Ninja `
+                      -DCMAKE_C_COMPILER="cl.exe" `
+                      -DCMAKE_CXX_COMPILER="cl.exe" `
+                      -DCMAKE_BUILD_TYPE=Release `
+                      -DBRLCAD_EXT_DIR="${{ github.workspace }}\bext_output" `
+                      -DBRLCAD_EXTRADOCS=OFF `
+                      -DBRLCAD_ENABLE_STEP=OFF `
+                      -DBRLCAD_ENABLE_QT=OFF
+
+            # ----------------------------------------------------------------
+            # Build
+            # ----------------------------------------------------------------
+            - name: Build (parallel)
+              id: build-parallel
+              shell: pwsh
+              working-directory: ${{ github.workspace }}/build_winninja
+              continue-on-error: true
+              run: ninja -j4
+
+            - name: Build (serial for diagnostics)
+              if: steps.build-parallel.outcome == 'failure'
+              shell: pwsh
+              working-directory: ${{ github.workspace }}/build_winninja
+              run: ninja -j1 -v
+
+            # ----------------------------------------------------------------
+            # Test – run the full check target so regress-remrt and other
+            # tests are exercised; continue-on-error keeps the log artifact
+            # step reachable even when tests fail.
+            # ----------------------------------------------------------------
+            - name: Run tests (make check)
+              id: run-check
+              shell: pwsh
+              working-directory: ${{ github.workspace }}/build_winninja
+              continue-on-error: true
+              run: ninja check -v
+
+            - name: Run regress-remrt with verbose CTest output
+              shell: pwsh
+              working-directory: ${{ github.workspace }}/build_winninja
+              continue-on-error: true
+              run: |
+                  ctest -R regress-remrt --verbose --output-on-failure
+
+            # Fail the job if the main check step reported failure, but only
+            # after we have captured the verbose remrt output above.
+            - name: Assert check result
+              if: steps.run-check.outcome == 'failure'
+              shell: pwsh
+              run: |
+                  Write-Error "ninja check reported failures – see logs above"
+                  exit 1
