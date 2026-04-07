@@ -1,0 +1,89 @@
+  windows:
+    name: MSVC - Ninja
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+    if: github.event_name == 'push'
+    steps:
+      - name: Setup - CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Add cl.exe to PATH
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Add github workspace to path
+        shell: pwsh
+        run: Add-Content -Path $env:GITHUB_PATH -Value $env:GITHUB_WORKSPACE
+
+      - name: Clone bext
+        # Note - this will not check out any of the submodules unless we need
+        # them for building, so it should be a very small disk space hit.
+        # Consequently, we don't worry about deleting it unless we end up
+        # having to build it.  The bext source directory is not one of the
+        # cached directories, so a straight git clone is fine - no need to
+        # worry about colliding with a previous clone.
+        run: git clone https://github.com/BRL-CAD/bext.git
+
+      - name: Get bext commit SHA
+        id: bext-sha
+        shell: powershell
+        run: |
+          cd bext
+          echo "sha=$(git rev-parse HEAD)" >> $env:GITHUB_OUTPUT
+
+      - name: Compute bext cache discriminator
+        id: cachekey
+        shell: bash
+        run: |
+          clver=""
+          if command -v cl.exe &> /dev/null; then
+            clver="$(cl.exe 2>&1 | head -n 1)"
+          fi
+          info="${{ steps.bext-sha.outputs.sha }}-$(uname -s)-$(uname -r)-$clver"
+          echo "hash=$(echo -n "$info" | sha1sum | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+      - name: Cache bext build outputs
+        id: cache-bext
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}\bext_output
+          key: windows-bext-${{ steps.cachekey.outputs.hash }}
+
+      - name: Build bext (if cache miss)
+        if: steps.cache-bext.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          cmake -E make_directory bext_build
+          cmake -S bext -B bext_build -DCMAKE_BUILD_TYPE=Release -DENABLE_ALL=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\bext_output
+          cmake --build bext_build --config Release -j2
+          # If we have had to build, the submodules are populated and the build
+          # directory will have a lot in it.  We only need the build ouputs
+          # (bext_output) after this point, so clean up to save space for the
+          # main BRL-CAD build.
+          cmake -E rm -rf bext
+          cmake -E rm -rf bext_build
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: brlcad
+
+      - name: Build Directory setup
+        run: cmake -E make_directory ./build_winninja
+
+      - name: Configure
+        shell: powershell
+        run: |
+          cmake -S brlcad -B build_winninja -G Ninja -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DBRLCAD_EXT_DIR=${{ github.workspace }}\bext_output -DCMAKE_BUILD_TYPE=Release -DBRLCAD_ENABLE_QT=ON
+
+      - name: Build
+        id: build_parallel
+        shell: powershell
+        run: |
+          ninja
+        working-directory: ${{ github.workspace }}/build_winninja
+        continue-on-error: true
+
