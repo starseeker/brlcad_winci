@@ -1,7 +1,7 @@
 name: "Copilot Setup Steps"
 
-# Automatically run the setup steps when they are changed to allow for easy validation, and
-# allow manual testing through the repository's "Actions" tab
+# Automatically run the setup steps when they are changed to allow for easy
+# validation, and allow manual testing through the repository's "Actions" tab.
 on:
     workflow_dispatch:
     push:
@@ -19,10 +19,113 @@ jobs:
         # Set the permissions to the lowest permissions possible needed for your steps.
         # Copilot will be given its own token for its operations.
         permissions:
-            # If you want to clone the repository as part of your setup steps, for example to install dependencies, you'll need the `contents: read` permission.
-            # If you don't clone the repository in your setup steps, Copilot will do this for you automatically after the steps complete.
+            # contents: read is needed to clone the repository.
+            # Actions cache operations use the ACTIONS_RUNTIME_TOKEN internally
+            # and do not require additional permissions here.
             contents: read
 
         steps:
+            # ----------------------------------------------------------------
+            # Tool setup
+            # ----------------------------------------------------------------
+            - name: Setup CMake
+              uses: lukka/get-cmake@latest
+
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v2
+
+            - name: Add cl.exe to PATH
+              uses: ilammy/msvc-dev-cmd@v1
+
+            # ----------------------------------------------------------------
+            # Checkout the repository (includes brlcad/ source subdirectory)
+            # ----------------------------------------------------------------
             - name: Checkout code
               uses: actions/checkout@v4
+
+            # ----------------------------------------------------------------
+            # Determine bext cache key
+            # We do a shallow clone of bext (no submodules) just to get the
+            # HEAD SHA used as part of the cache key.  The clone is cheap; the
+            # submodules (the actual dependency sources) are only fetched if we
+            # actually need to build bext due to a cache miss.
+            # ----------------------------------------------------------------
+            - name: Clone bext (lightweight – for cache key)
+              shell: pwsh
+              run: git clone --depth=1 https://github.com/BRL-CAD/bext.git
+
+            - name: Get bext commit SHA
+              id: bext-sha
+              shell: pwsh
+              run: |
+                  cd bext
+                  $sha = git rev-parse HEAD
+                  echo "sha=$sha" >> $env:GITHUB_OUTPUT
+
+            - name: Compute bext cache discriminator
+              id: cachekey
+              shell: bash
+              run: |
+                  clver=""
+                  if command -v cl.exe &> /dev/null; then
+                      clver="$(cl.exe 2>&1 | head -n 1)"
+                  fi
+                  info="${{ steps.bext-sha.outputs.sha }}-$(uname -s)-$(uname -r)-$clver"
+                  echo "hash=$(echo -n "$info" | sha1sum | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+            # ----------------------------------------------------------------
+            # Restore (or build + cache) the bext Release outputs.
+            # actions/cache@v4 automatically saves the cache on a miss at the
+            # end of the job, so a freshly-built bext_output will be stored
+            # for future runs without an explicit save step.
+            # restore-keys provides graceful fallback to any prior Windows bext
+            # cache if the exact key is not found (e.g. after a runner update
+            # changes the OS version string slightly).
+            # ----------------------------------------------------------------
+            - name: Restore bext_output cache (Release)
+              id: cache-bext
+              uses: actions/cache@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output
+                  key: windows-bext-release-${{ steps.cachekey.outputs.hash }}
+                  restore-keys: |
+                      windows-bext-release-
+                      windows-bext-
+
+            - name: Build bext (Release) – only on cache miss
+              if: steps.cache-bext.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  # Full submodule fetch happens inside the bext cmake build.
+                  cmake -E make_directory bext_build
+                  cmake -S bext -B bext_build `
+                      -DCMAKE_BUILD_TYPE=Release `
+                      -DENABLE_ALL=ON `
+                      -DUSE_QT=OFF `
+                      -DUSE_GDAL=OFF `
+                      -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\bext_output"
+                  cmake --build bext_build --config Release -j2
+                  # Clean up sources and build tree – only bext_output is needed.
+                  cmake -E rm -rf bext
+                  cmake -E rm -rf bext_build
+
+            # ----------------------------------------------------------------
+            # Configure BRL-CAD so the agent has a ready-to-use build directory.
+            # Uses Release bext with Qt and GDAL disabled for the fastest
+            # configure/build cycle (suitable for most debugging tasks).
+            # The agent can reconfigure with different flags if needed.
+            # ----------------------------------------------------------------
+            - name: Configure BRL-CAD (Release, Ninja)
+              shell: pwsh
+              run: |
+                  cmake -E make_directory brlcad_build
+                  cmake -S "${{ github.workspace }}\brlcad" `
+                        -B "${{ github.workspace }}\brlcad_build" `
+                        -G Ninja `
+                        -DCMAKE_C_COMPILER="cl.exe" `
+                        -DCMAKE_CXX_COMPILER="cl.exe" `
+                        -DCMAKE_BUILD_TYPE=Release `
+                        -DBRLCAD_EXT_DIR="${{ github.workspace }}\bext_output" `
+                        -DBRLCAD_EXTRADOCS=OFF `
+                        -DBRLCAD_ENABLE_STEP=OFF `
+                        -DBRLCAD_ENABLE_QT=OFF
