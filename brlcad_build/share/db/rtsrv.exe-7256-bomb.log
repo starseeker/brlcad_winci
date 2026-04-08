@@ -1,0 +1,13 @@
+******************************************
+
+BRL-CAD Release 7.43.0  Crash Report
+    Wed, 08 Apr 2026 10:44:20 UTC, Compilation 2
+    runneradmin@runnervmsit9q
+
+Command: rtsrv.exe
+Process: 7256
+Path: D:\a\brlcad_winci\brlcad_winci\brlcad_build\bin\rtsrv.exe.exe
+Date: Wed Apr  8 11:17:31 2026
+
+Call stack backtrace (thread 2):
+

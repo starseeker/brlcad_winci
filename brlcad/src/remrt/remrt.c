@@ -1104,7 +1104,7 @@ scan_frame_for_finished_pixels(struct frame *fr)
 
     bu_log("%s Scanning %s for non-black pixels\n", stamp(),
 	   fr->fr_filename);
-    if ((fp = fopen(fr->fr_filename, "r")) == NULL) {
+    if ((fp = fopen(fr->fr_filename, "rb")) == NULL) {
 	perror(fr->fr_filename);
 	return -1;
     }
@@ -1485,7 +1485,7 @@ repaint_fb(struct frame *fr)
     /* Draw the accumulated image */
     nby = 3*fr->fr_width;
     line = (unsigned char *)bu_malloc(nby, "scanline");
-    if ((fp = fopen(fr->fr_filename, "r")) == NULL) {
+    if ((fp = fopen(fr->fr_filename, "rb")) == NULL) {
 	perror(fr->fr_filename);
 	bu_free((char *)line, "scanline");
 	return;
@@ -1760,7 +1760,7 @@ frame_is_done(struct frame *fr)
 	    perror(fr->fr_filename);
     } else {
 	FILE *fp;
-	if ((fp = fopen(fr->fr_filename, "r")) == NULL) {
+	if ((fp = fopen(fr->fr_filename, "rb")) == NULL) {
 	    perror(fr->fr_filename);
 	} else {
 	    /* Write-protect the file to prevent re-computation */
@@ -3554,7 +3554,7 @@ ph_pixels(struct pkg_conn *pc, char *buf)
     }
     /* Write pixels into file */
     /* Later, can implement FD cache here */
-    if ((fd = open(fr->fr_filename, 2)) < 0) {
+    if ((fd = open(fr->fr_filename, O_RDWR | O_BINARY)) < 0) {
 	/* open failed */
 	perror(fr->fr_filename);
     } else if (bu_lseek(fd, info.li_startpix*3, 0) < 0) {
