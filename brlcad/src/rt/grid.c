@@ -25,6 +25,8 @@
 
 #include "common.h"
 
+#include <stdlib.h>
+
 #include "rt/application.h"
 #include "bn/mat.h"
 #include "bu/log.h"
@@ -237,6 +239,33 @@ grid_setup(struct bu_vls *err)
 	bu_vls_printf(err, "bad image size (%zu, %zu)",
 		      width, height);
 	return 1;
+    }
+
+    /* Diagnostic: when RT_SETUP_DEBUG is set to a non-zero value, print
+     * all key grid vectors at full double precision.  Both rt and rtsrv
+     * call grid_setup(); comparing their output identifies any difference
+     * in view2model / dx_model / dy_model that could cause pixel-value
+     * divergence.  In rtsrv, bu_log() is forwarded to the remrt dispatcher
+     * and appears in its stderr. */
+    {
+	const char *_dbg = getenv("RT_SETUP_DEBUG");
+	if (_dbg && _dbg[0] != '0') {
+	    int _i;
+	    bu_log("RT_SETUP_DEBUG grid_setup:"
+		   " viewsize=%.17g eye=(%.17g %.17g %.17g) w=%zu h=%zu\n",
+		   viewsize, V3ARGS(eye_model), width, height);
+	    bu_log("RT_SETUP_DEBUG view2model:");
+	    for (_i = 0; _i < 16; _i++)
+		bu_log(" %.17g", view2model[_i]);
+	    bu_log("\n");
+	    bu_log("RT_SETUP_DEBUG dx_model=(%.17g %.17g %.17g)"
+		   " dy_model=(%.17g %.17g %.17g)\n",
+		   V3ARGS(dx_model), V3ARGS(dy_model));
+	    bu_log("RT_SETUP_DEBUG viewbase=(%.17g %.17g %.17g)"
+		   " rbeam=%.17g r_dir=(%.17g %.17g %.17g)\n",
+		   V3ARGS(viewbase_model),
+		   APP.a_rbeam, V3ARGS(APP.a_ray.r_dir));
+	}
     }
 
     return 0;
