@@ -1606,6 +1606,10 @@ view_2init(struct application *ap, char *UNUSED(framename))
 	    break;
 #ifdef RTSRV
 	case BUFMODE_RTSRV:
+	    if (scanbuf) {
+		bu_free(scanbuf, "scanbuf [multi-line]");
+		scanbuf = NULL;
+	    }
 	    scanbuf = (unsigned char *)bu_malloc(srv_scanlen*pwidth + sizeof(long), "scanbuf [multi-line]");
 	    break;
 #endif

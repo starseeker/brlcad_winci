@@ -1,55 +1,68 @@
-Start testing: Apr 08 16:13 Coordinated Universal Time
+Start testing: Apr 08 17:27 Coordinated Universal Time
 ----------------------------------------------------------
 1079/1093 Testing: regress-remrt
 1079/1093 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 16:13 Coordinated Universal Time
+"regress-remrt" start time: Apr 08 17:27 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: token-auth 512x512 ===
-remrt port=4446  token=351cf724d83133ff2149f92aeadf60a323617c51192f6ec02002f32cc17872e5
+remrt port=4446  token=7c8575b053c0366cc6a5133f649e677d1076de87c10e654b55a82d17fb13838e
 regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
 Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
-  19 pixel(s) differ by exactly 1 channel value (floating-point rounding difference)
+  244024 pixel(s) differ by >1 channel value (assembly error)
+  2175 pixel(s) differ by exactly 1 channel value (floating-point rounding difference)
   First differing pixels (pix_no x y  a_rgb  b_rgb  delta):
-    pix=124682 (266,243)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=124683 (267,243)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=124684 (268,243)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=125192 (264,244)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=125193 (265,244)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=125701 (261,245)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=125702 (262,245)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=125703 (263,245)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
-    pix=126212 (260,246)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
-    pix=154232 (120,301)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=154741 (117,302)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=154742 (118,302)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=154743 (119,302)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=155251 (115,303)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
-    pix=155252 (116,303)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=155253 (117,303)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=155760 (112,304)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
-    pix=155761 (113,304)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
-    pix=155762 (114,304)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
-PASS: sub-test 1 (token-auth render matches reference)
+    pix=47304 (200,92)  a=(1,1,1) b=(0,0,1)  d=(1,1,0)
+    pix=47308 (204,92)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=47817 (201,93)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=47818 (202,93)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=48327 (199,94)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=48328 (200,94)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=48838 (198,95)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=48839 (199,95)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=48843 (203,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=48844 (204,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=48845 (205,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=48846 (206,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=48847 (207,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49349 (197,96)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=49350 (198,96)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=49353 (201,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49354 (202,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49355 (203,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49356 (204,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49357 (205,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49358 (206,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49860 (196,97)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=49861 (197,97)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
+    pix=49863 (199,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49864 (200,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49865 (201,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49866 (202,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49867 (203,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49868 (204,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=49869 (205,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+FAIL: sub-test 1 pixel comparison: output differs from D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix
+  This may indicate a ray-tracing correctness regression.
 
 === remrt regression: no-token 64x64 ===
-remrt port=4446  token=eb9ac3b99015fa40e4e70fbd84bcaacf3d06009eae6483a55e1f70c20b7fa6f0
+remrt port=4446  token=6446741ef37668b57f30730f43725d35ddf375d25aba5347887370bc56353cec
 regress_remrt [no-token 64x64]: output file OK (12288 bytes)
 PASS: sub-test 2 (no-token backward-compat render)
 
-All remrt regression sub-tests PASSED.
+1 remrt regression sub-test(s) FAILED.
 <end of output>
-Test time =   2.97 sec
+Test time =   3.14 sec
 ----------------------------------------------------------
-Test Passed.
-"regress-remrt" end time: Apr 08 16:13 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:02
+Test Failed.
+"regress-remrt" end time: Apr 08 17:27 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:03
 ----------------------------------------------------------
 
-End testing: Apr 08 16:13 Coordinated Universal Time
+End testing: Apr 08 17:27 Coordinated Universal Time
 
-Regression =   2.97 sec*proc
+Regression =   3.14 sec*proc
 
