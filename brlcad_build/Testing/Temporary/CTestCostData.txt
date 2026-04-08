@@ -1,4 +1,4 @@
-regress-remrt 7 0
+regress-remrt 8 0.577903
 regress-asc 0 0
 regress-asc2dsp 0 0
 regress-bots 0 0
@@ -149,4 +149,3 @@ regress-spdi 0 0
 regress-shaders 0 0
 regress-weight 0 0
 ---
-regress-remrt

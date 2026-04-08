@@ -3310,3 +3310,11 @@
 144	174	7973954481860474	D:/a/brlcad_winci/brlcad_winci/brlcad_build/CMakeFiles/timestamp	3126678379b82e98
 176	861	7973954482177980	src/rt/CMakeFiles/rt.dir/Unity/unity_0_c.c.obj	2bb351fab9e93b02
 861	1031	7973954489039365	bin/rt.exe	dd9f6220edf6c405
+143	174	7973957220455274	CMakeFiles/timestamp	3126678379b82e98
+143	174	7973957220455274	D:/a/brlcad_winci/brlcad_winci/brlcad_build/CMakeFiles/timestamp	3126678379b82e98
+176	1197	7973957220778383	src/liboptical/CMakeFiles/liboptical.dir/Unity/unity_0_c.c.obj	b455edf5b4746b56
+186	1462	7973957220869518	src/remrt/CMakeFiles/rtsrv.dir/Unity/unity_0_c.c.obj	1e4f904e76c37ac
+1198	1475	7973957230997714	bin/liboptical.dll	941bcc231503877b
+1198	1475	7973957230997714	lib/liboptical.lib	941bcc231503877b
+181	2405	7973957220829053	src/remrt/CMakeFiles/rtsrv.dir/Unity/unity_0_cxx.cxx.obj	c4fa47fd4abc6c3a
+2405	2588	7973957243057280	bin/rtsrv.exe	229d24861d005cb
