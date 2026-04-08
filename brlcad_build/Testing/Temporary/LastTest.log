@@ -1,35 +1,56 @@
-Start testing: Apr 08 11:26 Coordinated Universal Time
+Start testing: Apr 08 14:31 Coordinated Universal Time
 ----------------------------------------------------------
 1079/1093 Testing: regress-remrt
 1079/1093 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 11:26 Coordinated Universal Time
+"regress-remrt" start time: Apr 08 14:31 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: token-auth 512x512 ===
-remrt port=4446  token=73c246120c5d56539c3c0196ba113146f994883d82ff79c74219356ed7921d97
+remrt port=4448  token=b0d0e7441d962505cecb57c9aa4234e715b4b740f0ff50afd5a9a7a21b6a6d8e
 regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
 Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
-  19 pixel(s) differ by exactly 1 channel value (platform floating-point rounding, ignored)
-PASS: sub-test 1 (token-auth render matches reference)
+  19 pixel(s) differ by exactly 1 channel value (floating-point rounding difference)
+  First differing pixels (pix_no x y  a_rgb  b_rgb  delta):
+    pix=124682 (266,243)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=124683 (267,243)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=124684 (268,243)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=125192 (264,244)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=125193 (265,244)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=125701 (261,245)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=125702 (262,245)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=125703 (263,245)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
+    pix=126212 (260,246)  a=(21,21,21) b=(21,21,22)  d=(0,0,-1)
+    pix=154232 (120,301)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=154741 (117,302)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=154742 (118,302)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=154743 (119,302)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=155251 (115,303)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
+    pix=155252 (116,303)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=155253 (117,303)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=155760 (112,304)  a=(18,18,18) b=(18,18,19)  d=(0,0,-1)
+    pix=155761 (113,304)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
+    pix=155762 (114,304)  a=(15,15,15) b=(15,15,16)  d=(0,0,-1)
+FAIL: sub-test 1 pixel comparison: output differs from D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix
+  This may indicate a ray-tracing correctness regression.
 
 === remrt regression: no-token 64x64 ===
-remrt port=4446  token=d54a2b5d49435f84ebb998a05f87f3fe92cb60bd807025e341c1c8140fec0361
+remrt port=4448  token=52642ba5c912b356a1e909a14f5d10fe15adb3e60affef2226201d62f6be59c8
 regress_remrt [no-token 64x64]: output file OK (12288 bytes)
 PASS: sub-test 2 (no-token backward-compat render)
 
-All remrt regression sub-tests PASSED.
+1 remrt regression sub-test(s) FAILED.
 <end of output>
-Test time =   7.26 sec
+Test time =   2.86 sec
 ----------------------------------------------------------
-Test Passed.
-"regress-remrt" end time: Apr 08 11:26 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:07
+Test Failed.
+"regress-remrt" end time: Apr 08 14:31 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:02
 ----------------------------------------------------------
 
-End testing: Apr 08 11:26 Coordinated Universal Time
+End testing: Apr 08 14:31 Coordinated Universal Time
 
-Regression =   7.26 sec*proc
+Regression =   2.86 sec*proc
 

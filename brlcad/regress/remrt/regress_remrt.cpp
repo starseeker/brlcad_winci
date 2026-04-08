@@ -647,6 +647,10 @@ compare_pix_tolerant(const std::string &file_a,
     long bad_pixels  = 0;   /* pixels where any channel differs by >1 */
     long warn_pixels = 0;   /* pixels where any channel differs by 1 */
     long pixel_no    = 0;
+    int width        = 512; /* assumed from context */
+
+    struct diff_detail { long pix; int ra,ga,ba,rb,gb,bb; };
+    std::vector<diff_detail> diffs;
 
     int ra, ga, ba, rb, gb, bb;
     while (true) {
@@ -664,8 +668,11 @@ compare_pix_tolerant(const std::string &file_a,
 
 	if (maxd > 1)
 	    ++bad_pixels;
-	else if (maxd == 1)
+	else if (maxd == 1) {
 	    ++warn_pixels;
+	    if ((int)diffs.size() < 30)
+		diffs.push_back({pixel_no-1, ra,ga,ba,rb,gb,bb});
+	}
     }
 
     fclose(fa);
@@ -681,6 +688,16 @@ compare_pix_tolerant(const std::string &file_a,
 		"  %ld pixel(s) differ by exactly 1 channel value"
 		" (floating-point rounding difference)\n",
 		warn_pixels);
+	fprintf(stderr, "  First differing pixels (pix_no x y  a_rgb  b_rgb  delta):\n");
+	for (auto &d : diffs) {
+	    int x = (int)(d.pix % width);
+	    int y = (int)(d.pix / width);
+	    fprintf(stderr, "    pix=%ld (%d,%d)  a=(%d,%d,%d) b=(%d,%d,%d)  d=(%d,%d,%d)\n",
+		    d.pix, x, y,
+		    d.ra, d.ga, d.ba,
+		    d.rb, d.gb, d.bb,
+		    d.ra-d.rb, d.ga-d.gb, d.ba-d.bb);
+	}
     }
     if (bad_pixels == 0 && warn_pixels == 0) {
 	fprintf(stderr, "  pixel-exact match\n");
