@@ -1,0 +1,898 @@
+D:/a/_temp/-1212469507/cmake-4.3.1-windows-x86_64/bin/cmake.exe "D:/a/brlcad_winci/brlcad_winci/brlcad"  -DBRLCAD_ENABLE_QT=OFF -DBRLCAD_ENABLE_STEP=OFF -DBRLCAD_EXTRADOCS=OFF
+**********************************************************
+*** Configuring BRL-CAD Release 7.43.0, Build 20260408 ***
+**********************************************************
+CHECK_START: Performing Test WORKING__D_POSIX_C_SOURCE_200809L
+CHECK_PASS: Success
+CHECK_START: Performing Test WORKING__D_XOPEN_SOURCE_700
+CHECK_PASS: Success
+***********************************************************
+*        Stage 1 of 9 - Top Level Configure Options       *
+***********************************************************
+STATUS: Found OpenGL: opengl32
+***********************************************************
+*             Stage 2 of 9 - Check for Programs           *
+***********************************************************
+STATUS: Found SHELL_SUPPORTED: C:/Program Files/Git/bin/sh.exe
+STATUS: Found SWIG: C:/ProgramData/chocolatey/bin/swig.exe (found version "4.3.1")
+STATUS: Found Doxygen: C:/Strawberry/c/bin/doxygen.exe (found version "1.10.0") found components: doxygen missing components: dot
+***********************************************************
+*     Stage 3 of 9 - Check for Compiler Characteristics   *
+***********************************************************
+CHECK_START: Performing Test PIPE_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test PIPE_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FVISIBILITY_HIDDEN_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FVISIBILITY_HIDDEN_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FNO_STRICT_ALIASING_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FNO_STRICT_ALIASING_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FNO_COMMON_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FNO_COMMON_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FEXCEPTIONS_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FEXCEPTIONS_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test FTEMPLATE_DEPTH_128_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test G_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test G_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test GGDB3_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test GGDB3_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_INLINE_KEYWORD
+CHECK_PASS: Success
+CHECK_START: Performing Test WERROR_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_PRINTF12_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_PRINTF23_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_SCANF23_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_DEPRECATED_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_DEPRECATED_DECLSPEC
+CHECK_PASS: Success
+CHECK_START: Performing Test HAVE_NORETURN_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_NORETURN_DECLSPEC
+CHECK_PASS: Success
+CHECK_START: Performing Test HAVE_ANALYZER_NORETURN_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_ALWAYS_INLINE_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_FORCEINLINE
+CHECK_PASS: Success
+CHECK_START: Performing Test HAVE_CONST_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_PURE_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_COLD_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_HOT_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_NONNULL_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_WARN_UNUSED_RESULT_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_FLATTEN_ATTRIBUTE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test QUNUSED_ARGUMENTS_C_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test QUNUSED_ARGUMENTS_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+***********************************************************
+*             Stage 4 of 9 - Check for Libraries          *
+***********************************************************
+CHECK_START: Performing Test CMAKE_HAVE_LIBC_PTHREAD
+CHECK_FAIL: Failed
+CHECK_START: Looking for pthread_create in pthreads
+CHECK_FAIL: not found
+CHECK_START: Looking for pthread_create in pthread
+CHECK_FAIL: not found
+STATUS: Found Threads: TRUE
+STATUS: Performing Test STL_LIB_TEST
+STATUS: Performing Test STL_LIB_TEST - Success
+Performing C SOURCE FILE Test STL_LIB_TEST succeeded with the following output:
+Change Dir: 'D:/a/brlcad_winci/brlcad_winci/brlcad_build/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): D:/a/_temp/-1212469507/ninja.exe -v cmTC_6c75f
+[1/2] C:\PROGRA~1\MICROS~2\2022\ENTERP~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo -D_MBCS  /DWIN32 /D_WINDOWS -std:c11  -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 -DSTL_LIB_TEST /Zi /Ob0 /Od /RTC1 -std:c11 -MDd /showIncludes /FoCMakeFiles\cmTC_6c75f.dir\src.c.obj /FdCMakeFiles\cmTC_6c75f.dir\ /FS -c D:\a\brlcad_winci\brlcad_winci\brlcad_build\CMakeFiles\CMakeTmp\src.c
+[2/2] C:\Windows\system32\cmd.exe /C "cd . && D:\a\_temp\-1212469507\cmake-4.3.1-windows-x86_64\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=CMakeFiles\cmTC_6c75f.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests  -- C:\PROGRA~1\MICROS~2\2022\ENTERP~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_6c75f.dir\src.c.obj  /out:cmTC_6c75f.exe /implib:cmTC_6c75f.lib /pdb:cmTC_6c75f.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+
+
+Return value: 1
+Source file was:
+
+int
+main(int ac, char *av[])
+{
+  if (av)
+    return 0;
+  else
+    return ac-ac;
+}
+
+STATUS: Could NOT find MPI_C (missing: MPI_C_LIB_NAMES MPI_C_HEADER_DIR MPI_C_WORKS) 
+STATUS: Could NOT find MPI (missing: MPI_C_FOUND C) 
+CHECK_START: Performing Test HAVE_NO_BUILTIN
+CHECK_FAIL: Failed
+CHECK_START: Looking for daemon in bsd
+CHECK_FAIL: not found
+CHECK_START: Looking for daemon in c
+CHECK_FAIL: not found
+CHECK_START: Looking for cos in m
+CHECK_FAIL: not found
+CHECK_START: Looking for socket in socket
+CHECK_FAIL: not found
+CHECK_START: Looking for gethostbyaddr in nsl
+CHECK_FAIL: not found
+CHECK_START: Looking for socket in network
+CHECK_FAIL: not found
+CHECK_START: Looking for mallopt in c
+CHECK_FAIL: not found
+CHECK_START: Looking for mallopt in malloc
+CHECK_FAIL: not found
+CHECK_START: Looking for dlopen in dl
+CHECK_FAIL: not found
+CHECK_START: Looking for yyless in l
+CHECK_FAIL: not found
+***********************************************************
+*               Stage 5 of 9 - Check for Headers          *
+***********************************************************
+STATUS: Performing Test WORKING_SYS_WAIT
+STATUS: Performing Test WORKING_SYS_WAIT - Failed
+CHECK_START: Looking for include file dirent.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file conio.h
+CHECK_PASS: found
+CHECK_START: Looking for include file direct.h
+CHECK_PASS: found
+CHECK_START: Looking for include file dlfcn.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file dslib.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file emmintrin.h
+CHECK_PASS: found
+CHECK_START: Looking for include file getopt.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file GL/gl.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file gl/device.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file gl/glext.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file gl/wglext.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file glob.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file grp.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file inttypes.h
+CHECK_PASS: found
+CHECK_START: Looking for include file io.h
+CHECK_PASS: found
+CHECK_START: Looking for include file libgen.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file mach/host_info.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file mach/mach_host.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file mach/thread_policy.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file memory.h
+CHECK_PASS: found
+CHECK_START: Looking for include file netdb.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file netinet/in.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file poll.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file process.h
+CHECK_PASS: found
+CHECK_START: Looking for include file pthread.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file pthread_np.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file pwd.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sched.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sgtty.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file signal.h
+CHECK_PASS: found
+CHECK_START: Looking for include file stdlib.h
+CHECK_PASS: found
+CHECK_START: Looking for include file string.h
+CHECK_PASS: found
+CHECK_START: Looking for include file strings.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file strsafe.h
+CHECK_PASS: found
+CHECK_START: Looking for include file sys/cpuset.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/file.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/ioctl.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/ioctl_compat.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/ipc.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/machd.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/mman.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/mount.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/param.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/prctl.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/resource.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/sched.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/select.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/shm.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/signal.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/socket.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/stat.h
+CHECK_PASS: found
+CHECK_START: Looking for include file sys/syscall.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/sysctl.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/sysinfo.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/sysmp.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/time.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/times.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/uio.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/un.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/utsname.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file sys/wait.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file syslog.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file ulocks.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file uuid.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file unistd.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file uuid/uuid.h
+CHECK_FAIL: not found
+CHECK_START: Performing Test HAVE_LIBPROC_H
+CHECK_FAIL: Failed
+CHECK_START: Looking for include file termios.h
+CHECK_FAIL: not found
+CHECK_START: Looking for include file termio.h
+CHECK_FAIL: not found
+CHECK_START: Looking for C++ include istream
+CHECK_PASS: found
+CHECK_START: Looking for C++ include limits
+CHECK_PASS: found
+STATUS: Performing Test HAVE_BASENAME
+STATUS: Performing Test HAVE_BASENAME - Failed
+STATUS: Performing Test HAVE_DIRNAME
+STATUS: Performing Test HAVE_DIRNAME - Failed
+CHECK_START: Performing Test HAVE_EMMINTRIN
+CHECK_PASS: Success
+***********************************************************
+*          Stage 6 of 9 - Check for Types/Structures      *
+***********************************************************
+CHECK_START: Performing Test HAVE_STRUCT_STAT_ST_BLKSIZE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_STRUCT_STAT_ST_BLOCKS
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_STRUCT_STAT_ST_RDEV
+CHECK_PASS: Success
+CHECK_START: Check size of socklen_t
+CHECK_FAIL: failed
+CHECK_START: Check size of socklen_t
+CHECK_FAIL: failed
+CHECK_START: Check size of socklen_t
+CHECK_FAIL: failed
+CHECK_START: Check size of cpu_set_t
+CHECK_FAIL: failed
+CHECK_START: Check size of int
+CHECK_PASS: done
+CHECK_START: Check size of long
+CHECK_PASS: done
+CHECK_START: Check size of long long
+CHECK_PASS: done
+CHECK_START: Check size of off_t
+CHECK_PASS: done
+CHECK_START: Check size of ptrdiff_t
+CHECK_PASS: done
+CHECK_START: Check size of size_t
+CHECK_PASS: done
+CHECK_START: Check size of ssize_t
+CHECK_FAIL: failed
+CHECK_START: Check size of uint64_t
+CHECK_PASS: done
+CHECK_START: Check size of uintptr_t
+CHECK_PASS: done
+CHECK_START: Check size of sig_t
+CHECK_FAIL: failed
+CHECK_START: Check size of u_char
+CHECK_FAIL: failed
+CHECK_START: Check size of u_int
+CHECK_FAIL: failed
+CHECK_START: Check size of u_long
+CHECK_FAIL: failed
+CHECK_START: Check size of u_short
+CHECK_FAIL: failed
+Note: platform void pointer size (8) is greater than off_t size (4)
+CHECK_START: Performing Test HAVE_THREAD_LOCAL
+CHECK_PASS: Success
+STATUS: Performing Test HAVE_PERCENT_Z
+STATUS: Performing Test HAVE_PERCENT_Z - Success
+Performing C SOURCE FILE Test HAVE_PERCENT_Z succeeded with the following output:
+Change Dir: 'D:/a/brlcad_winci/brlcad_winci/brlcad_build/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): D:/a/_temp/-1212469507/ninja.exe -v cmTC_d30f5
+[1/2] C:\PROGRA~1\MICROS~2\2022\ENTERP~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo -DHAVE_STDINT_H=1 -D_MBCS  /DWIN32 /D_WINDOWS -std:c11  -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 -DHAVE_PERCENT_Z  /DWIN32 /D_WINDOWS -std:c11  -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 /Zi /Ob0 /Od /RTC1 -std:c11 -MDd /showIncludes /FoCMakeFiles\cmTC_d30f5.dir\src.c.obj /FdCMakeFiles\cmTC_d30f5.dir\ /FS -c D:\a\brlcad_winci\brlcad_winci\brlcad_build\CMakeFiles\CMakeTmp\src.c
+[2/2] C:\Windows\system32\cmd.exe /C "cd . && D:\a\_temp\-1212469507\cmake-4.3.1-windows-x86_64\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=CMakeFiles\cmTC_d30f5.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests  -- C:\PROGRA~1\MICROS~2\2022\ENTERP~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_d30f5.dir\src.c.obj  /out:cmTC_d30f5.exe /implib:cmTC_d30f5.lib /pdb:cmTC_d30f5.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+
+
+Return value: 1
+Source file was:
+
+#ifdef HAVE_STDINT_H
+#  include <stdint.h>
+#endif
+#include <stdio.h>
+int main(int ac, char *av[])
+{
+  char buf[64] = {0};
+  if (sprintf(buf, "%zu", (size_t)1) != 1 || buf[0] != '1' || buf[1] != 0)
+    return 1;
+  return (ac < 0) ? (int)av[0][0] : 0;
+}
+
+STATUS: Performing Test HAVE_STATIC_ARRAYS
+STATUS: Performing Test HAVE_STATIC_ARRAYS - Failed
+***********************************************************
+*              Stage 7 of 9 - Check for Functions         *
+***********************************************************
+CHECK_START: Looking for XQueryExtension
+CHECK_FAIL: not found
+CHECK_START: Looking for _putenv_s
+CHECK_PASS: found
+CHECK_START: Looking for _splitpath
+CHECK_PASS: found
+CHECK_START: Looking for _strtoi64
+CHECK_PASS: found
+CHECK_START: Looking for alarm
+CHECK_FAIL: not found
+CHECK_START: Looking for asinh
+CHECK_PASS: found
+CHECK_START: Looking for confstr
+CHECK_FAIL: not found
+CHECK_START: Looking for dlopen
+CHECK_FAIL: not found
+CHECK_START: Looking for dladdr
+CHECK_FAIL: not found
+CHECK_START: Looking for drand48
+CHECK_FAIL: not found
+CHECK_START: Looking for fchmod
+CHECK_FAIL: not found
+CHECK_START: Looking for fdopen
+CHECK_PASS: found
+CHECK_START: Looking for fmemopen
+CHECK_FAIL: not found
+CHECK_START: Looking for fpclassify
+CHECK_FAIL: not found
+CHECK_START: Looking for fseeko
+CHECK_FAIL: not found
+CHECK_START: Looking for fsync
+CHECK_FAIL: not found
+CHECK_START: Looking for funopen
+CHECK_FAIL: not found
+CHECK_START: Looking for getcwd
+CHECK_PASS: found
+CHECK_START: Looking for getegid
+CHECK_FAIL: not found
+CHECK_START: Looking for getenv_s
+CHECK_PASS: found
+CHECK_START: Looking for geteuid
+CHECK_FAIL: not found
+CHECK_START: Looking for gethostname
+CHECK_FAIL: not found
+CHECK_START: Looking for getloadavg
+CHECK_FAIL: not found
+CHECK_START: Looking for getopt_long
+CHECK_FAIL: not found
+CHECK_START: Looking for getpid
+CHECK_PASS: found
+CHECK_START: Looking for getprogname
+CHECK_FAIL: not found
+CHECK_START: Looking for gettimeofday
+CHECK_FAIL: not found
+CHECK_START: Looking for htonl
+CHECK_FAIL: not found
+CHECK_START: Looking for htonll
+CHECK_FAIL: not found
+CHECK_START: Looking for hypot
+CHECK_PASS: found
+CHECK_START: Looking for isascii
+CHECK_FAIL: not found
+CHECK_START: Looking for isinf
+CHECK_FAIL: not found
+CHECK_START: Looking for isnan
+CHECK_FAIL: not found
+CHECK_START: Looking for logb
+CHECK_PASS: found
+CHECK_START: Looking for lrand48
+CHECK_FAIL: not found
+CHECK_START: Looking for lseek
+CHECK_PASS: found
+CHECK_START: Looking for mkstemp
+CHECK_FAIL: not found
+CHECK_START: Looking for modff
+CHECK_PASS: found
+CHECK_START: Looking for nextafter
+CHECK_PASS: found
+CHECK_START: Looking for nextafterf
+CHECK_PASS: found
+CHECK_START: Looking for ntohll
+CHECK_FAIL: not found
+CHECK_START: Looking for pipe
+CHECK_FAIL: not found
+CHECK_START: Looking for _pipe
+CHECK_PASS: found
+CHECK_START: Looking for popen
+CHECK_FAIL: not found
+CHECK_START: Looking for posix_memalign
+CHECK_FAIL: not found
+CHECK_START: Looking for proc_pidpath
+CHECK_FAIL: not found
+CHECK_START: Looking for program_invocation_name
+CHECK_FAIL: not found
+CHECK_START: Looking for random
+CHECK_FAIL: not found
+CHECK_START: Looking for realpath
+CHECK_FAIL: not found
+CHECK_START: Looking for rint
+CHECK_PASS: found
+CHECK_START: Looking for setenv
+CHECK_FAIL: not found
+CHECK_START: Looking for setpgid
+CHECK_FAIL: not found
+CHECK_START: Looking for setpriority
+CHECK_FAIL: not found
+CHECK_START: Looking for setsid
+CHECK_FAIL: not found
+CHECK_START: Looking for shmat
+CHECK_FAIL: not found
+CHECK_START: Looking for shmctl
+CHECK_FAIL: not found
+CHECK_START: Looking for shmdt
+CHECK_FAIL: not found
+CHECK_START: Looking for shmget
+CHECK_FAIL: not found
+CHECK_START: Looking for snprintf
+CHECK_FAIL: not found
+CHECK_START: Looking for srand48
+CHECK_FAIL: not found
+CHECK_START: Looking for strcasecmp
+CHECK_FAIL: not found
+CHECK_START: Looking for strdup
+CHECK_PASS: found
+CHECK_START: Looking for strlcat
+CHECK_FAIL: not found
+CHECK_START: Looking for strlcpy
+CHECK_FAIL: not found
+CHECK_START: Looking for strncasecmp
+CHECK_FAIL: not found
+CHECK_START: Looking for strtoll
+CHECK_PASS: found
+CHECK_START: Looking for sync
+CHECK_FAIL: not found
+CHECK_START: Looking for syscall
+CHECK_FAIL: not found
+CHECK_START: Looking for sysctl
+CHECK_FAIL: not found
+CHECK_START: Looking for sysmp
+CHECK_FAIL: not found
+CHECK_START: Looking for time
+CHECK_PASS: found
+CHECK_START: Looking for toascii
+CHECK_FAIL: not found
+CHECK_START: Looking for tzset
+CHECK_PASS: found
+CHECK_START: Looking for uname
+CHECK_FAIL: not found
+CHECK_START: Looking for vfork
+CHECK_FAIL: not found
+CHECK_START: Looking for vsnprintf
+CHECK_FAIL: not found
+CHECK_START: Looking for vsscanf
+CHECK_FAIL: not found
+CHECK_START: Looking for wait
+CHECK_FAIL: not found
+CHECK_START: Looking for writev
+CHECK_FAIL: not found
+STATUS: Performing Test WORKING_ALLOCA
+STATUS: Performing Test WORKING_ALLOCA - Success
+Performing C SOURCE FILE Test WORKING_ALLOCA succeeded with the following output:
+Change Dir: 'D:/a/brlcad_winci/brlcad_winci/brlcad_build/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): D:/a/_temp/-1212469507/ninja.exe -v cmTC_57bbb
+[1/2] C:\PROGRA~1\MICROS~2\2022\ENTERP~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo -D_MBCS  /DWIN32 /D_WINDOWS -std:c11  -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 -DWORKING_ALLOCA  /DWIN32 /D_WINDOWS -std:c11  -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 /Zi /Ob0 /Od /RTC1 -std:c11 -MDd /showIncludes /FoCMakeFiles\cmTC_57bbb.dir\src.c.obj /FdCMakeFiles\cmTC_57bbb.dir\ /FS -c D:\a\brlcad_winci\brlcad_winci\brlcad_build\CMakeFiles\CMakeTmp\src.c
+[2/2] C:\Windows\system32\cmd.exe /C "cd . && D:\a\_temp\-1212469507\cmake-4.3.1-windows-x86_64\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=CMakeFiles\cmTC_57bbb.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests  -- C:\PROGRA~1\MICROS~2\2022\ENTERP~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_57bbb.dir\src.c.obj  /out:cmTC_57bbb.exe /implib:cmTC_57bbb.lib /pdb:cmTC_57bbb.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+
+
+Return value: 1
+Source file was:
+
+#ifdef __GNUC__
+# define alloca __builtin_alloca
+#else
+# ifdef _MSC_VER
+#  include <malloc.h>
+#  define alloca _alloca
+# else
+#  ifdef HAVE_ALLOCA_H
+#   include <alloca.h>
+#  else
+#   ifdef _AIX
+ #pragma alloca
+#   else
+#    ifndef alloca /* predefined by HP cc +Olibcalls */
+char *alloca ();
+#    endif
+#   endif
+#  endif
+# endif
+#endif
+
+int main(void) {
+   char *p = (char *) alloca (1);
+   if (p) return 0;
+   ;
+   return 0;
+}
+CHECK_START: Looking for kill
+CHECK_FAIL: not found
+CHECK_START: Looking for fileno
+CHECK_PASS: found
+CHECK_START: Looking for daemon
+CHECK_FAIL: not found
+CHECK_START: Looking for sysconf
+CHECK_FAIL: not found
+CHECK_START: Looking for ntohll
+CHECK_FAIL: not found
+CHECK_START: Looking for htonll
+CHECK_FAIL: not found
+CHECK_START: Looking for _snprintf
+CHECK_FAIL: not found
+CHECK_START: Performing Test HAVE_GETFULLPATHNAME
+CHECK_PASS: Success
+CHECK_START: Performing Test HAVE_GETPROCESSTIMES
+CHECK_PASS: Success
+CHECK_START: Performing Test HAVE_GETCURRENTPROCESSID
+CHECK_PASS: Success
+CHECK_START: Looking for lrint
+CHECK_PASS: found
+CHECK_START: Looking for tgamma
+CHECK_PASS: found
+CHECK_START: Looking for gethostbyaddr
+CHECK_FAIL: not found
+CHECK_START: Looking for gethostbyname
+CHECK_FAIL: not found
+CHECK_START: Performing Test HAVE_CXX_LOGB
+CHECK_PASS: Success
+CHECK_START: Looking for _isnan
+CHECK_PASS: found
+CHECK_START: Looking for fmax
+CHECK_PASS: found
+CHECK_START: Looking for nextafterl
+CHECK_PASS: found
+CHECK_START: Looking for _fseeki64
+CHECK_PASS: found
+CHECK_START: Looking for _lseeki64
+CHECK_PASS: found
+CHECK_START: Looking for _ftelli64
+CHECK_PASS: found
+***********************************************************
+*          Stage 8 of 9 - Check for System Services       *
+***********************************************************
+CHECK_START: Performing Test COMPILER_SUPPORTS_O3
+CHECK_FAIL: Failed
+Staging third party files from D:/a/brlcad_winci/brlcad_winci/bext_output/install in build directory...
+Packing bin subdirectory...
+Packing bin subdirectory... done.
+Expanding bin.tar in build directory...
+Expanding bin.tar in build directory... done.
+Packing doc subdirectory...
+Packing doc subdirectory... done.
+Expanding doc.tar in build directory...
+Expanding doc.tar in build directory... done.
+Packing etc subdirectory...
+Packing etc subdirectory... done.
+Expanding etc.tar in build directory...
+Expanding etc.tar in build directory... done.
+Packing include subdirectory...
+Packing include subdirectory... done.
+Expanding include.tar in build directory...
+Expanding include.tar in build directory... done.
+Packing lib subdirectory...
+Packing lib subdirectory... done.
+Expanding lib.tar in build directory...
+Expanding lib.tar in build directory... done.
+Packing man subdirectory...
+Packing man subdirectory... done.
+Expanding man.tar in build directory...
+Expanding man.tar in build directory... done.
+Packing share subdirectory...
+Packing share subdirectory... done.
+Expanding share.tar in build directory...
+Expanding share.tar in build directory... done.
+Removing files indicated by exclude patterns...
+Removing files indicated by exclude patterns... done.
+Staging third party files from D:/a/brlcad_winci/brlcad_winci/bext_output/install in build directory... done.
+Comparing previous and current states...
+Comparing previous and current states... done.
+Characterizing new or changed bundled third party files...
+Found 500 text files (characterized 549 of 2256 files.
+Found 1000 text files (characterized 1050 of 2256 files.
+Found 1500 text files (characterized 1601 of 2256 files.
+Found 100 binary files (characterized 2024 of 2256 files.
+Found 2000 text files (characterized 2116 of 2256 files.
+Characterizing new or changed bundled third party files... done.
+Scrubbing paths from new 3rd party data files...
+Scrubbing paths from new 3rd party data files... done.
+Replacing paths in new 3rd party text files...
+Replacing paths in new 3rd party text files... done.
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2Config.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2ConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2Targets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/opencv4/OpenCVConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/opencv4/OpenCVModules.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/pugixml/pugixml-config.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/pugixml/pugixml-targets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/tinygltf/TinyGLTFConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/tinygltf/TinyGLTFTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/Clipper2.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/assimp.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/geogram1.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/libjpeg.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/libturbojpeg.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/manifold.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/pugixml.pc
+***********************************************************
+*        Stage 9 of 9 - Output and Summarize Config       *
+***********************************************************
+-- Adding src...
+-- Adding src/libbu...
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+CHECK_START: Performing Test O3_COMPILER_FLAG
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_NO_STRINGOP_OVERFLOW
+CHECK_FAIL: Failed
+--- Checking operating system support for file symlinking
+--- Checking operating system support for file symlinking - Supported
+-- Adding src/libbu - done
+-- Adding src/libbn...
+-- Adding src/libbn - done
+-- Adding src/libbg...
+STATUS: Found GTE: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/include/GTE
+STATUS: Found SPSR: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/include
+CHECK_START: Performing Test CXX_BIGOBJ_SUPPORTED
+CHECK_PASS: Success
+-- Adding src/libbg - done
+-- Adding src/libbv...
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+-- Adding src/libbv - done
+-- Adding src/libnmg...
+-- Adding src/libnmg - done
+-- Adding src/libbrep...
+STATUS: Found OPENNURBS: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/OpenNURBS.lib
+-- Adding src/libbrep - done
+-- Adding src/librt...
+STATUS: Found OPENNURBS: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/OpenNURBS.lib
+STATUS: Found REGEX: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/regex_brl.lib
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+-- Adding src/librt - done
+-- Adding src/libwdb...
+-- Adding src/libwdb - done
+-- Adding src/libpkg...
+-- Adding src/libpkg - done
+-- Adding src/libgcv...
+STATUS: Found ZLIB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/z_brl.lib (found version "1.3.1")
+D:/a/_temp/-1212469507/cmake-4.3.1-windows-x86_64/bin/cmake.exe "D:/a/brlcad_winci/brlcad_winci/brlcad"  -DBRLCAD_ENABLE_GDAL=OFF
+**********************************************************
+*** Configuring BRL-CAD Release 7.43.0, Build 20260408 ***
+**********************************************************
+STATUS: Could NOT find MPI_C (missing: MPI_C_LIB_NAMES MPI_C_HEADER_DIR MPI_C_WORKS) 
+STATUS: Could NOT find MPI (missing: MPI_C_FOUND C) 
+CHECK_START: Performing Test COMPILER_SUPPORTS_CXX17
+CHECK_FAIL: Failed
+Comparing previous and current states...
+Comparing previous and current states... done.
+Characterizing new or changed bundled third party files...
+Characterizing new or changed bundled third party files... done.
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2Config.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2ConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2Targets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/opencv4/OpenCVConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/opencv4/OpenCVModules.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/pugixml/pugixml-config.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/pugixml/pugixml-targets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/tinygltf/TinyGLTFConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/tinygltf/TinyGLTFTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/Clipper2.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/assimp.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/geogram1.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/libjpeg.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/libturbojpeg.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/manifold.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/pugixml.pc
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+STATUS: Found OPENNURBS: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/OpenNURBS.lib
+STATUS: Found OPENNURBS: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/OpenNURBS.lib
+STATUS: Found REGEX: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/regex_brl.lib
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+STATUS: Found ZLIB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/z_brl.lib (found version "1.3.1")
+CHECK_START: Performing Test HAVE_UNIQUE_PTR
+CHECK_PASS: Success
+STATUS: Found PERPLEX: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/perplex.exe
+STATUS: Found LEMON: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/lemon.exe
+STATUS: Found RE2C: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/re2c.exe
+CHECK_START: Performing Test HAVE_CXX_FLAG_W
+CHECK_PASS: Success
+STATUS: Found TCL: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/tcl86.lib
+STATUS: Found NETPBM: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/netpbm.lib
+STATUS: Found ZLIB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/z_brl.lib (found version "1.3.1")
+STATUS: Found PNG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/libpng_brl16.lib (found version "1.6.54")
+STATUS: Found JPEG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/jpeg.lib (found version "62")
+STATUS: Found OSMESA: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/osmesa.lib
+STATUS: Found TCLTK: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/tcl86.lib
+STATUS: Found TK: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/tk86.lib
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+STATUS: Found ZLIB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/z_brl.lib (found version "1.3.1")
+STATUS: Found PNG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/libpng_brl16.lib (found version "1.6.54")
+STATUS: Found REGEX: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/regex_brl.lib
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+STATUS: Found PERPLEX: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/perplex.exe
+STATUS: Found LEMON: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/lemon.exe
+STATUS: Found RE2C: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/re2c.exe
+CHECK_START: Performing Test HAVE_C_FLAG_W
+CHECK_PASS: Success
+CHECK_START: Performing Test HAVE_STACK_SIZE_FLAG
+CHECK_PASS: Success
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+STATUS: Could NOT find Adaptagrams (missing: _AVOID_LIB _AVOID_INC avoid cola dialect topology) 
+CHECK_START: Performing Test NO_NONNULL_COMPARE
+CHECK_FAIL: Failed
+Generating plugin wrapper files...
+WARNING: Skipping non-existent source file: D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libged/brep/dplot_scanner_dplot_scanner/dplot_scanner.c
+WARNING: Skipping non-existent source file: D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libged/brep/dplot_parser_dplot_parser/dplot_parser.c
+Generating plugin wrapper files... done.
+STATUS: Found OpenCV: D:/a/brlcad_winci/brlcad_winci/brlcad_build (found version "4.13.0") found components: core features2d imgproc highgui
+Found OpenCV: opencv_core;opencv_features2d;opencv_imgproc;opencv_highgui
+STATUS: Could NOT find Appleseed (missing: Appleseed_INCLUDE_DIR Appleseed_LIBRARY) 
+'art' appleseed ray tracing is DISABLED
+STATUS: Found ZLIB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/z_brl.lib (found version "1.3.1")
+STATUS: Found PNG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/libpng_brl16.lib (found version "1.6.54")
+CHECK_START: Performing Test WNO_MAYBE_UNINITIALIZED_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test WNO_UNINITIALIZED_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+CHECK_START: Performing Test WD4065_CXX_FLAG_FOUND
+CHECK_PASS: Success
+CHECK_START: Performing Test WD4251_CXX_FLAG_FOUND
+CHECK_PASS: Success
+CHECK_START: Performing Test WD4800_CXX_FLAG_FOUND
+CHECK_PASS: Success
+CHECK_START: Performing Test WNO_IGNORED_QUALIFIERS_CXX_FLAG_FOUND
+CHECK_FAIL: Failed
+STATUS: Could NOT find STEPCODE (missing: STEPCODE_DAI_DIR STEPCODE_EDITOR_DIR STEPCODE_STEPCORE_DIR STEPCODE_UTILS_DIR STEPCODE_EXPPP_DIR STEPCODE_EXPRESS_DIR STEPCODE_INCLUDE_DIR STEPCODE_EXPRESS_LIBRARY STEPCODE_EXPPP_LIBRARY STEPCODE_CORE_LIBRARY STEPCODE_EDITOR_LIBRARY STEPCODE_DAI_LIBRARY STEPCODE_UTILS_LIBRARY EXP2CXX_EXECUTABLE EXPPP_EXECUTABLE) 
+STATUS: Found ZLIB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/z_brl.lib (found version "1.3.1")
+WARNING: regress-dsp fails on some Windows platforms (pix-bw appears to hang on github runners) - skipping
+CHECK_START: Performing Test HAVE_NO_UNUSED_BUT_SET_VARIABLE
+CHECK_FAIL: Failed
+CHECK_START: Performing Test HAVE_FSANITIZE_FUZZER
+CHECK_PASS: Success
+STATUS: The '-fsanitize=fuzzer' flag is supported.
+WARNING: iges.sh doesn not currently pass on Windows - disabling
+WARNING: regress-red does not currently pass on Windows, disabling
+
+
+------------ BRL-CAD Release 7.43.0, Build 20260408 - Release Build ------------
+
+        Prefix: C:/Program Files/BRL-CAD 7.43.0
+      Binaries: C:/Program Files/BRL-CAD 7.43.0/bin
+     Libraries: C:/Program Files/BRL-CAD 7.43.0/lib
+  Manual pages: C:/Program Files/BRL-CAD 7.43.0/share/man
+Data resources: C:/Program Files/BRL-CAD 7.43.0/share
+ 
+CFLAGS   = /DWIN32 /D_WINDOWS -std:c11 -D_POSIX_C_SOURCE=200809L
+           -D_XOPEN_SOURCE=700 /utf-8 /O2 /Ob2 /DNDEBUG
+CXXFLAGS = /DWIN32 /D_WINDOWS /EHsc -std:c++17 -D_POSIX_C_SOURCE=200809L
+           -D_XOPEN_SOURCE=700 /utf-8 /O2 /Ob2 /DNDEBUG
+LDFLAGS  = /machine:x64 /STACK:10000000 /NOLOGO /INCREMENTAL:NO
+ 
+ 
+Asset Import Library.................: Bundled
+Eigen................................: Bundled
+Geogram..............................: Bundled
+Lightning Memory-Mapped Database.....: Bundled
+Manifold.............................: Bundled
+Netpbm...............................: Bundled
+OpenCV...............................: Bundled
+OpenNURBS............................: Bundled
+OSMesa...............................: Bundled
+Portable Network Graphics............: Bundled
+Regex Library........................: Bundled
+Tcl..................................: Bundled
+Tk...................................: Bundled
+Zlib.................................: Bundled
+ 
+OpenGL support (optional) ..........: ON
+X11 support (optional) .............: OFF
+Qt support (optional) ..............: OFF
+Run-time debuggability (optional) ..: ON
+ 
+Build 32/64-bit release ............: 64BIT (Auto)
+Build with optimization ............: ON
+Build static libraries .............: ON
+Build dynamic libraries ............: ON
+Install example geometry models ....: ON
+Generate AsciiDoc docs .............: OFF
+ 

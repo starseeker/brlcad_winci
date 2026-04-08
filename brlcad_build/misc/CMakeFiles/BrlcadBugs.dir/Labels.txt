@@ -1,0 +1,13 @@
+# Target labels
+ BrlcadBugs
+# Source files and their labels
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/CMakeFiles/BrlcadBugs
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/CMakeFiles/BrlcadBugs.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/CMakeFiles/BrlcadBugs-complete.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-build.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-configure.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-download.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-install.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-mkdir.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-patch.rule
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-update.rule

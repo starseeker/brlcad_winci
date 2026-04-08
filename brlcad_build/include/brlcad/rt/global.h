@@ -1,0 +1,1 @@
+D:/a/brlcad_winci/brlcad_winci/brlcad/include/rt/global.h

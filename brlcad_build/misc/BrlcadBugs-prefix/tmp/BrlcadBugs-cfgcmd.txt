@@ -1,0 +1,1 @@
+cmd='D:/a/_temp/-1212469507/cmake-4.3.1-windows-x86_64/bin/cmake.exe;-DCMAKE_BUILD_TYPE=Release;-DBUGS_DIR=D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/bugs_out;-DCMAKE_INSTALL_PREFIX=D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/bugs_out;-GNinja;-S;<SOURCE_DIR><SOURCE_SUBDIR>;-B;<BINARY_DIR>'
