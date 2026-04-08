@@ -241,11 +241,14 @@ view_pixel(struct application *ap)
 		g = inonbackground[1];
 		b = inonbackground[2];
 	    }
-
-	    /* Make sure it's never perfect black */
-	    if (r==0 && g==0 && b==0)
-		b = 1;
 	}
+
+	/* Make sure it's never perfect black, even in benchmark mode.
+	 * A genuine hit that renders to (0,0,0) is indistinguishable from
+	 * a background miss, which breaks compositing.  The reference image
+	 * bench/ref/m35.pix was generated with this guard always active. */
+	if (r==0 && g==0 && b==0)
+	    b = 1;
     }
 
     /* Diagnostic: when RT_SETUP_DEBUG >= 1, print hit pixels with a blue
