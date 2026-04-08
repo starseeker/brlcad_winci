@@ -27,10 +27,8 @@
  *     Starts remrt in -M mode feeding the exact m35 benchmark view script
  *     with three local rtsrv workers that each supply the session token via
  *     "-S <token>".  The assembled 512×512 .pix output is compared against
- *     bench/ref/m35.pix with a tolerance-aware check (differences ≤1 per
- *     channel are accepted to accommodate cross-platform floating-point
- *     rounding) to verify assembly correctness against the 1991 BRL-CAD
- *     benchmark reference image.
+ *     bench/ref/m35.pix using a pixel-exact comparison to verify assembly
+ *     correctness against the 1991 BRL-CAD benchmark reference image.
  *
  *   Sub-test 2 — token-less workers (backward-compatibility render):
  *     Starts remrt without -M (uses default az/el) for a quick 64×64 render
@@ -627,17 +625,11 @@ run_subtest(const TestOptions &opts,
 
 /*
  * Compare two raw .pix (RGB) files byte by byte.  Returns:
- *   0   – files are identical or all byte differences are at most 1
- *         (cross-platform floating-point rounding tolerance)
- *   >0  – one or more bytes differ by more than 1
+ *   0   – files are pixel-exact (identical)
+ *   >0  – one or more bytes differ
  *
- * "Differ by more than 1" indicates a real corruption (e.g. byte-order
- * error, missing scanline, text-mode CRLF expansion) rather than the
- * unavoidable ±1 rounding difference that arises when the same scene is
- * rendered on different floating-point implementations.
- *
- * A summary is always printed to stderr so the caller can see how many
- * pixels are affected.
+ * A detailed summary is printed to stderr so the caller can see how many
+ * pixels are affected and by how much.
  */
 static int
 compare_pix_tolerant(const std::string &file_a,
@@ -653,7 +645,7 @@ compare_pix_tolerant(const std::string &file_a,
     }
 
     long bad_pixels  = 0;   /* pixels where any channel differs by >1 */
-    long warn_pixels = 0;   /* pixels where any channel differs by  1 */
+    long warn_pixels = 0;   /* pixels where any channel differs by 1 */
     long pixel_no    = 0;
 
     int ra, ga, ba, rb, gb, bb;
@@ -687,14 +679,15 @@ compare_pix_tolerant(const std::string &file_a,
     if (warn_pixels > 0) {
 	fprintf(stderr,
 		"  %ld pixel(s) differ by exactly 1 channel value"
-		" (platform floating-point rounding, ignored)\n",
+		" (floating-point rounding difference)\n",
 		warn_pixels);
     }
     if (bad_pixels == 0 && warn_pixels == 0) {
 	fprintf(stderr, "  pixel-exact match\n");
     }
 
-    return (bad_pixels > 0) ? 1 : 0;
+    /* Treat any difference as a failure: we aim for pixel-exact output. */
+    return (bad_pixels > 0 || warn_pixels > 0) ? 1 : 0;
 }
 
 
