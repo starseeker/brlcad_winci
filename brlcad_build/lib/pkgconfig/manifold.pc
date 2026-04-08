@@ -1,0 +1,12 @@
+prefix=D:/a/brlcad_winci/brlcad_winci/brlcad_build
+exec_prefix=${prefix}
+libdir=D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib
+includedir=D:/a/brlcad_winci/brlcad_winci/brlcad_build/include
+
+Name: manifold
+Description: Geometry library for topological robustness
+Version: 3.2.1
+URL: https://github.com/elalish/manifold
+Requires-private:  Clipper2
+Libs: -L${libdir} -lmanifold
+Cflags: -I${includedir} -std=c++17

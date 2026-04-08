@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/CMakeFiles/BrlcadBugs"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/CMakeFiles/BrlcadBugs.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/CMakeFiles/BrlcadBugs-complete.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-build.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-configure.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-download.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-install.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-mkdir.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-patch.rule"
+		},
+		{
+			"file" : "D:/a/brlcad_winci/brlcad_winci/brlcad_build/misc/BrlcadBugs-prefix/src/BrlcadBugs-stamp/BrlcadBugs-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"BrlcadBugs"
+		],
+		"name" : "BrlcadBugs"
+	}
+}
