@@ -47,6 +47,7 @@
 #include "common.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
@@ -244,6 +245,24 @@ view_pixel(struct application *ap)
 	    /* Make sure it's never perfect black */
 	    if (r==0 && g==0 && b==0)
 		b = 1;
+	}
+    }
+
+    /* Diagnostic: when RT_SETUP_DEBUG >= 1, print hit pixels with a blue
+     * channel of 0 or 1 (the range where ±1 rounding differences between
+     * rt and rtsrv can appear).  When RT_SETUP_DEBUG >= 2, print all hit
+     * pixels at full double precision.  In rtsrv, bu_log() is forwarded
+     * over the network to the remrt dispatcher and appears in its stderr,
+     * making the output visible alongside rt's own stderr. */
+    {
+	const char *_dbg = getenv("RT_SETUP_DEBUG");
+	if (_dbg && _dbg[0] != '0' && ap->a_user != 0) {
+	    int _level = atoi(_dbg);
+	    if (_level >= 2 || (_level >= 1 && b <= 1))
+		bu_log("RT_SETUP_DEBUG pixel (%d,%d):"
+		       " a_color=(%.17g %.17g %.17g) rgb=(%d %d %d)\n",
+		       ap->a_x, ap->a_y,
+		       V3ARGS(ap->a_color), r, g, b);
 	}
     }
 
