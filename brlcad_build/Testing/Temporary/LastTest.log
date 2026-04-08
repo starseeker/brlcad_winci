@@ -1,68 +1,69 @@
-Start testing: Apr 08 17:27 Coordinated Universal Time
+Start testing: Apr 08 21:54 Coordinated Universal Time
 ----------------------------------------------------------
 1079/1093 Testing: regress-remrt
 1079/1093 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 17:27 Coordinated Universal Time
+"regress-remrt" start time: Apr 08 21:54 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: token-auth 512x512 ===
-remrt port=4446  token=7c8575b053c0366cc6a5133f649e677d1076de87c10e654b55a82d17fb13838e
+remrt port=4446  token=000b2d97f662e8bcfdcacc0c45dc9e9537a28f456b3723c9c546a3787cc3eaa0
 regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
 Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
-  244024 pixel(s) differ by >1 channel value (assembly error)
-  2175 pixel(s) differ by exactly 1 channel value (floating-point rounding difference)
+  93 pixel(s) differ by exactly 1 channel value (floating-point rounding difference)
   First differing pixels (pix_no x y  a_rgb  b_rgb  delta):
-    pix=47304 (200,92)  a=(1,1,1) b=(0,0,1)  d=(1,1,0)
-    pix=47308 (204,92)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=47817 (201,93)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=47818 (202,93)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=48327 (199,94)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=48328 (200,94)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=48838 (198,95)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=48839 (199,95)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=48843 (203,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=48844 (204,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=48845 (205,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=48846 (206,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=48847 (207,95)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49349 (197,96)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=49350 (198,96)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=49353 (201,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49354 (202,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49355 (203,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49356 (204,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49357 (205,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49358 (206,96)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49860 (196,97)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=49861 (197,97)  a=(2,2,2) b=(1,1,1)  d=(1,1,1)
-    pix=49863 (199,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49864 (200,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49865 (201,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49866 (202,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49867 (203,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49868 (204,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
-    pix=49869 (205,97)  a=(3,3,3) b=(2,2,2)  d=(1,1,1)
+    pix=45267 (211,88)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=45268 (212,88)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=45269 (213,88)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=45270 (214,88)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=45271 (215,88)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=45774 (206,89)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=47304 (200,92)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=50881 (193,99)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=68701 (93,134)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=69210 (90,135)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=69720 (88,136)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=70230 (86,137)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=73807 (79,144)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=83182 (238,162)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=84202 (234,164)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=84711 (231,165)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=104764 (316,204)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=105277 (317,205)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=105790 (318,206)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=106340 (356,207)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=106848 (352,208)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=108866 (322,212)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=109400 (344,213)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=109907 (339,214)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=109908 (340,214)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=109909 (341,214)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=109911 (343,214)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=110415 (335,215)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=110422 (342,215)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
+    pix=110924 (332,216)  a=(0,0,0) b=(0,0,1)  d=(0,0,-1)
 FAIL: sub-test 1 pixel comparison: output differs from D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix
   This may indicate a ray-tracing correctness regression.
+remrt/rtsrv stderr log:
+04/08 21:54:13  BRL-CAD Release 7.43.0  Network-Distributed RT (REMRT)    Wed, 08 Apr 2026 21:49:24 UTC, Compilation 7    runneradmin@runnervm2p0d804/08 21:54:14 Session token: 000b2d97f662e8bcfdcacc0c45dc9e9537a28f456b3723c9c546a3787cc3eaa004/08 21:54:14 TLS enabled (self-signed cert)pkg_permserver(rtsrv, 8): unknown service04/08 21:54:14 Automatic REMRT on 04/08 21:54:14 Assigned LIBPKG permport 004/08 21:54:14 Listening at TCP port 444604/08 21:54:14 Reading script on stdin04/08 21:54:14 Starting to scan animation script04/08 21:54:14 Animation script loaded04/08 21:54:14 Worker assignment interval=5 seconds:   Server   Last  Last   Average  Cur   Machine    State   Lump Elapsed pix/sec Frame   Name   -------- ----- ------- ------- ----- -------------04/08 21:54:14 Seeking servers to start_pkg_checkin: select returned 1, bits=0_pkg_checkin: select returned 1, bits=0_pkg_checkin: select returned 1, bits=004/08 21:54:15 runnervm2p0d8: using 4 of 4 cpus_pkg_checkin: select returned 1, bits=0_pkg_checkin: select returned 1, bits=0_pkg_checkin: select returned 1, bits=004/08 21:54:15 runnervm2p0d8: using 4 of 4 cpus_pkg_checkin: select returned 1, bits=0_pkg_checkin: select returned 1, bits=0_pkg_checkin: select returned 1, bits=004/08 21:54:15 runnervm2p0d8: using 4 of 4 cpus04/08 21:54:15 runnervm2p0d8 dirbuild OK (M35   2 1/2 ton truck)04/08 21:54:15 runnervm2p0d8: process_cmd 'opt -w512 -n512 -H0 -p0 -U0 -J0 -A0.4 -l0 -E1.41421 -x0 -X0 -T5.000000e-04/0.000000e+00 -B'04/08 21:54:15 runnervm2p0d8: Using tolerance 004/08 21:54:15 runnervm2p0d8: process_cmd 'viewsize 6.787387985e+03'04/08 21:54:15 runnervm2p0d8: process_cmd 'eye_pt 3.974533127e+03 1.503320754e+03 2.874633221e+03'04/08 21:54:15 runnervm2p0d8: process_cmd 'viewrot -5.527838919e-01 8.332423558e-01 1.171090926e-02 0.000000000e+00 -4.815587087e-01 -3.308784486e-01 8.115544728e-01 0.000000000e+00  6.800964482e-01 4.429747496e-01 5.841593895e-01 0.000000000e+00  0.000000000e+00 0.000000000e+00 0.000000000e+00 1.000000000e+00'04/08 21:54:15 runnervm2p0d8 dirbuild OK (M35   2 1/2 ton truck)04/08 21:54:15 Change work allocation method (One per Frame to Load Averaging)04/08 21:54:15 Change work allocation method (Load Averaging to Frame)04/08 21:54:15 runnervm2p0d8: process_cmd 'opt -w512 -n512 -H0 -p0 -U0 -J0 -A0.4 -l0 -E1.41421 -x0 -X0 -T5.000000e-04/0.000000e+00 -B'04/08 21:54:15 runnervm2p0d8: Using tolerance 004/08 21:54:15 runnervm2p0d8: process_cmd 'viewsize 6.787387985e+03'04/08 21:54:15 runnervm2p0d8: process_cmd 'eye_pt 3.974533127e+03 1.503320754e+03 2.874633221e+03'04/08 21:54:15 runnervm2p0d8: process_cmd 'viewrot -5.527838919e-01 8.332423558e-01 1.171090926e-02 0.000000000e+00 -4.815587087e-01 -3.308784486e-01 8.115544728e-01 0.000000000e+00  6.800964482e-01 4.429747496e-01 5.841593895e-01 0.000000000e+00  0.000000000e+00 0.000000000e+00 0.000000000e+00 1.000000000e+00'04/08 21:54:15 runnervm2p0d8 dirbuild OK (M35   2 1/2 ton truck)04/08 21:54:15 runnervm2p0d8: process_cmd 'opt -w512 -n512 -H0 -p0 -U0 -J0 -A0.4 -l0 -E1.41421 -x0 -X0 -T5.000000e-04/0.000000e+00 -B'04/08 21:54:15 runnervm2p0d8: Using tolerance 004/08 21:54:15 runnervm2p0d8: process_cmd 'viewsize 6.787387985e+03'04/08 21:54:15 runnervm2p0d8: process_cmd 'eye_pt 3.974533127e+03 1.503320754e+03 2.874633221e+03'04/08 21:54:15 runnervm2p0d8: process_cmd 'viewrot -5.527838919e-01 8.332423558e-01 1.171090926e-02 0.000000000e+00 -4.815587087e-01 -3.308784486e-01 8.115544728e-01 0.000000000e+00  6.800964482e-01 4.429747496e-01 5.841593895e-01 0.000000000e+00  0.000000000e+00 0.000000000e+00 0.000000000e+00 1.000000000e+00'04/08 21:54:15 runnervm2p0d8: BRL-CAD Release 7.43.0  The BRL-CAD Optical Shader Library    Wed, 08 Apr 2026 21:49:24 UTC, Compilation 7    runneradmin@runnervm2p0d804/08 21:54:15 runnervm2p0d8: BRL-CAD Release 7.43.0  The BRL-CAD Optical Shader Library    Wed, 08 Apr 2026 21:49:24 UTC, Compilation 7    runneradmin@runnervm2p0d804/08 21:54:15 runnervm2p0d8: BRL-CAD Release 7.43.0  The BRL-CAD Optical Shader Library    Wed, 08 Apr 2026 21:49:24 UTC, Compilation 7    runneradmin@runnervm2p0d804/08 21:54:15 runnervm2p0d8: PREP: cpu = 0 sec, elapsed = 0.00575 sec04/08 21:54:15 runnervm2p0d8: NUBSP: 2246 cut, 2247 box (2247 empty)04/08 21:54:15 runnervm2p0d8 gettrees OK (all.g)04/08 21:54:15 runnervm2p0d8: PREP: cpu = 0 sec, elapsed = 0.00982 sec04/08 21:54:15 runnervm2p0d8: NUBSP: 2246 cut, 2247 box (2247 empty)04/08 21:54:15 runnervm2p0d8 gettrees OK (all.g)04/08 21:54:15 runnervm2p0d8: PREP: cpu = 0 sec, elapsed = 0.00841 sec04/08 21:54:15 runnervm2p0d8: NUBSP: 2246 cut, 2247 box (2247 empty)04/08 21:54:15 runnervm2p0d8 gettrees OK (all.g)04/08 21:54:18 Frame 0 DONE: 2.64226 elapsed sec, 656362 rays/1.23438 cpu sec04/08 21:54:18 RTFM=248409 rays/sec (531736 rays/cpu sec)04/08 21:54:18 All work done!04/08 21:54:18 Task accomplished
 
 === remrt regression: no-token 64x64 ===
-remrt port=4446  token=6446741ef37668b57f30730f43725d35ddf375d25aba5347887370bc56353cec
+remrt port=4446  token=ff95aa238b0743216bc3cae745890cc316806f88f115117d20a20c373282623f
 regress_remrt [no-token 64x64]: output file OK (12288 bytes)
 PASS: sub-test 2 (no-token backward-compat render)
 
 1 remrt regression sub-test(s) FAILED.
 <end of output>
-Test time =   3.14 sec
+Test time =   8.75 sec
 ----------------------------------------------------------
 Test Failed.
-"regress-remrt" end time: Apr 08 17:27 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:03
+"regress-remrt" end time: Apr 08 21:54 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:08
 ----------------------------------------------------------
 
-End testing: Apr 08 17:27 Coordinated Universal Time
+End testing: Apr 08 21:54 Coordinated Universal Time
 
-Regression =   3.14 sec*proc
+Regression =   8.75 sec*proc
 
