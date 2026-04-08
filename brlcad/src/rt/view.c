@@ -233,16 +233,18 @@ view_pixel(struct application *ap)
 	else if (g < 0) g = 0;
 	if (b > 255) b = 255;
 	else if (b < 0) b = 0;
-	if (r == ibackground[0] && g == ibackground[1] &&
-	    b == ibackground[2]) {
-	    r = inonbackground[0];
-	    g = inonbackground[1];
-	    b = inonbackground[2];
-	}
+	if (!benchmark) {
+	    if (r == ibackground[0] && g == ibackground[1] &&
+		b == ibackground[2]) {
+		r = inonbackground[0];
+		g = inonbackground[1];
+		b = inonbackground[2];
+	    }
 
-	/* Make sure it's never perfect black */
-	if (r==0 && g==0 && b==0)
-	    b = 1;
+	    /* Make sure it's never perfect black */
+	    if (r==0 && g==0 && b==0)
+		b = 1;
+	}
     }
 
     if (OPTICAL_DEBUG&OPTICAL_DEBUG_HITS) bu_log("rgb=%3d, %3d, %3d xy=%3d, %3d (%g, %g, %g)\n",

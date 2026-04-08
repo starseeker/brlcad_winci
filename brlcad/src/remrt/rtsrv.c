@@ -720,27 +720,6 @@ ph_matrix(struct pkg_conn *UNUSED(pc), char *buf)
 
     process_cmd(buf);
     free(buf);
-
-    /* prepare() called grid_setup+view_2init earlier (MSG_GETTREES time)
-     * but the view parameters (viewsize, eye_pt, viewrot) were not yet set.
-     * Now that process_cmd above has applied them, refresh the grid so that
-     * view2model is correct, then clear the incorrectly-placed default light
-     * and re-initialise lighting with the correct view matrix.  This mirrors
-     * what standalone rt does: grid_setup -> view_2init after all params set.
-     */
-    {
-	struct bu_vls err = BU_VLS_INIT_ZERO;
-	int setup = grid_setup(&err);
-	if (setup) {
-	    bu_log("ph_matrix: grid_setup failed: %s\n", bu_vls_cstr(&err));
-	    bu_vls_free(&err);
-	    return;
-	}
-	bu_vls_free(&err);
-    }
-    light_cleanup();
-    view_2init(&APP, NULL);
-
     seen_matrix = 1;
 }
 
