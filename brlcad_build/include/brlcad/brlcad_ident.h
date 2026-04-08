@@ -56,7 +56,7 @@
 /**
  * Compilation date, updated every time a build pass occurs.
  */
-static const char *BRLCAD_DATE = "Wed, 08 Apr 2026 17:14:22 UTC";
+static const char *BRLCAD_DATE = "Wed, 08 Apr 2026 21:49:24 UTC";
 
 /**
  * Compilation host, updated every time a build pass occurs.
@@ -71,7 +71,7 @@ static const char *BRLCAD_USER = "runneradmin";
 /**
  * Compilation count, updated every time a build pass occurs.
  */
-static const int BRLCAD_COUNT = 6;
+static const int BRLCAD_COUNT = 7;
 
 /**
  * Provides the release identifier details along with basic
