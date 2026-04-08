@@ -1,0 +1,9 @@
+source D:/a/brlcad_winci/brlcad_winci/brlcad/regress/mged/regression_resources.tcl
+
+puts "*** Testing 'sv' command ***"
+
+view center
+sv 76 19
+view center
+
+puts "*** 'sv' testing completed ***"

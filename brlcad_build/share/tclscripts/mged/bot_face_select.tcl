@@ -1,0 +1,1 @@
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/tclscripts/mged/bot_face_select.tcl
