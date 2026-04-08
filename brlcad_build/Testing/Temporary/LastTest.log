@@ -1,33 +1,33 @@
-Start testing: Apr 08 02:11 Coordinated Universal Time
+Start testing: Apr 08 02:45 Coordinated Universal Time
 ----------------------------------------------------------
 1079/1093 Testing: regress-remrt
 1079/1093 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 02:11 Coordinated Universal Time
+"regress-remrt" start time: Apr 08 02:45 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: token-auth 512x512 ===
-remrt port=4446  token=4305dcb2703618a0f71431b7df9d704b4bc5c2936d6e0b53f3a10ccfcf33b2d2
-regress_remrt [token-auth 512x512]: remrt exited with status -1073740791
-FAIL: sub-test 1 (token-auth render)
+remrt port=4446  token=d41e25829ed167beb21288e8963c517194de09b04772ab03b71de2889c699cc6
+regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
+Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
+FAIL: sub-test 1 pixel comparison: output differs from D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix
+  This may indicate a ray-tracing correctness regression.
 
 === remrt regression: no-token 64x64 ===
-remrt port=4446  token=86f1e7b0f048a8a8275c6b3fffe96265cde4fe80748207d2593477b8584ae97d
-regress_remrt [no-token 64x64]: remrt exited with status -1073740791
-FAIL: sub-test 2 (no-token backward-compat render)
-
-2 remrt regression sub-test(s) FAILED.
+remrt port=4446  token=5bf5159bce04c6b3ce870b40cfb7e4075619fcbcedbb1ae9f0221787171eb457
+regress_remrt [no-token 64x64]: output file OK (12288 bytes)
+PASS: sub-test 2 (no-token backward-compat render)
 <end of output>
-Test time =   4.45 sec
+Test time =   4.10 sec
 ----------------------------------------------------------
 Test Failed.
-"regress-remrt" end time: Apr 08 02:11 Coordinated Universal Time
+"regress-remrt" end time: Apr 08 02:45 Coordinated Universal Time
 "regress-remrt" time elapsed: 00:00:04
 ----------------------------------------------------------
 
-End testing: Apr 08 02:11 Coordinated Universal Time
+End testing: Apr 08 02:45 Coordinated Universal Time
 
-Regression =   4.45 sec*proc
+Regression =   4.10 sec*proc
 
