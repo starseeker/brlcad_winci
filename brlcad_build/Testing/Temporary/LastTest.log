@@ -1,33 +1,33 @@
-Start testing: Apr 08 02:45 Coordinated Universal Time
+Start testing: Apr 08 10:38 Coordinated Universal Time
 ----------------------------------------------------------
 1079/1093 Testing: regress-remrt
 1079/1093 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 02:45 Coordinated Universal Time
+"regress-remrt" start time: Apr 08 10:38 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: token-auth 512x512 ===
-remrt port=4446  token=d41e25829ed167beb21288e8963c517194de09b04772ab03b71de2889c699cc6
+remrt port=4446  token=921d974657a0fe43feea7cd5bd436de1ea63159c027b59dd6d375653117e4950
 regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
 Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
 FAIL: sub-test 1 pixel comparison: output differs from D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix
   This may indicate a ray-tracing correctness regression.
 
 === remrt regression: no-token 64x64 ===
-remrt port=4446  token=5bf5159bce04c6b3ce870b40cfb7e4075619fcbcedbb1ae9f0221787171eb457
+remrt port=4446  token=a3e722466a03c9dc480900054ecb1e686b5809b56fe7265b1c4c88b278191b41
 regress_remrt [no-token 64x64]: output file OK (12288 bytes)
 PASS: sub-test 2 (no-token backward-compat render)
 <end of output>
-Test time =   4.10 sec
+Test time =  24.67 sec
 ----------------------------------------------------------
 Test Failed.
-"regress-remrt" end time: Apr 08 02:45 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:04
+"regress-remrt" end time: Apr 08 10:38 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:24
 ----------------------------------------------------------
 
-End testing: Apr 08 02:45 Coordinated Universal Time
+End testing: Apr 08 10:38 Coordinated Universal Time
 
-Regression =   4.10 sec*proc
+Regression =  24.67 sec*proc
 
