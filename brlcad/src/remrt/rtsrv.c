@@ -61,6 +61,10 @@
 #include "../rt/rtuif.h"
 #include "../rt/ext.h"
 #include "./protocol.h"
+#include "./auth.h"
+/* Enable TLS client-side functions */
+#define REMRT_TLS_IMPL
+#include "./tls_wrap.h"
 
 
 struct bu_list WorkHead;
@@ -149,7 +153,19 @@ char *control_host;	/* name of host running controller */
 char *tcp_port;		/* TCP port on control_host */
 int debug = 0;		/* 0=off, 1=debug, 2=verbose */
 
-char srv_usage[] = "Usage: rtsrv [-d] control-host tcp-port [cmd]\n";
+/*
+ * Session authentication token, supplied via "-S <token>" on the
+ * command line when remrt auto-launches this process via SSH.
+ * An empty string means no authentication (passive/manual start).
+ */
+static char srv_auth_token[REMRT_AUTH_TOKEN_LEN + 1] = {0};
+
+char srv_usage[] = "Usage: rtsrv [-d] [-S token] control-host tcp-port [cmd]\n";
+
+/* forward declarations for log/bomb hook helpers defined later in this file */
+static int rtsrv_log_hook(void *clientdata, void *str);
+static int rtsrv_bomb_hook(void *clientdata, void *str);
+static void rtsrv_install_log_hook(void);
 
 
 int
@@ -173,6 +189,15 @@ main(int argc, char **argv)
 	    argc--; argv++;
 	} else if (BU_STR_EQUAL(argv[1], "-X")) {
 	    sscanf(argv[2], "%x", (unsigned int *)&optical_debug);
+	    argc--; argv++;
+	} else if (BU_STR_EQUAL(argv[1], "-S")) {
+	    /* Session authentication token from remrt */
+	    if (argc < 3) {
+		fprintf(stderr, "%s", srv_usage);
+		return 3;
+	    }
+	    bu_strlcpy(srv_auth_token, argv[2],
+		       sizeof(srv_auth_token));
 	    argc--; argv++;
 	} else {
 	    fprintf(stderr, "%s", srv_usage);
@@ -201,6 +226,32 @@ main(int argc, char **argv)
 	return 1;
     }
 
+#ifdef HAVE_OPENSSL_SSL_H
+    /* Attempt TLS handshake with the remrt dispatcher.  If remrt was
+     * built with TLS support it will do SSL_accept() on its side;
+     * if not (or the handshake fails) we continue as plaintext for
+     * backward compatibility. */
+    {
+	SSL_CTX *tls_ctx = remrt_tls_client_ctx();
+	if (tls_ctx) {
+	    if (remrt_tls_connect(tls_ctx, pcsrv) == REMRT_TLS_OK) {
+		if (debug)
+		    fprintf(stderr, "rtsrv: TLS established with %s\n",
+			    control_host);
+	    } else {
+		fprintf(stderr, "rtsrv: TLS handshake failed; "
+			"continuing as plaintext\n");
+	    }
+	    SSL_CTX_free(tls_ctx);
+	}
+    }
+#endif
+
+    /* Redirect bu_log() and bu_bomb() through the package connection so
+     * all log output is forwarded to the remrt dispatcher instead of
+     * going to stderr.  Must be done after pcsrv is open. */
+    rtsrv_install_log_hook();
+
     if (argc == 4) {
 	/* Slip one command to dispatcher */
 	(void)pkg_send(MSG_CMD, argv[3], strlen(argv[3])+1, pcsrv);
@@ -225,35 +276,40 @@ main(int argc, char **argv)
 #endif
 
     if (!debug) {
-	int i;
 	FILE *fp;
 
 	/* DAEMONIZE */
 
-	/* Get a fresh process */
-	i = fork();
-	if (i < 0)
-	    perror("fork");
-	else if (i)
-	    return 0;
+#ifdef HAVE_FORK
+	{
+	    int i;
+
+	    /* Get a fresh process */
+	    i = fork();
+	    if (i < 0)
+		perror("fork");
+	    else if (i)
+		return 0;
+	}
 
 	/* Go into our own process group */
 	n = bu_pid();
-#ifdef HAVE_SETPGID
+#  ifdef HAVE_SETPGID
 	if (setpgid(n, n) < 0)
 	    perror("setpgid");
-#else
+#  else
 	/* SysV uses setpgrp with no args and it can't fail,
 	 * obsoleted by setpgid.
 	 */
 	setpgrp();
-#endif
+#  endif
 
 	/* Create our own session */
-#ifdef HAVE_SETSID
+#  ifdef HAVE_SETSID
 	if (setsid() < 0)
-	    perror("setpgid");
-#endif
+	    perror("setsid");
+#  endif
+#endif /* HAVE_FORK */
 
 	/* TODO: need to change directory (e.g., to TEMP) so we don't
 	 * make the initial working directory unlinkable on some OS.
@@ -294,13 +350,29 @@ main(int argc, char **argv)
 	    perror("freopen STDERR");
     }
 
-    /* Send our version string */
-    if (pkg_send(MSG_VERSION, PROTOCOL_VERSION, strlen(PROTOCOL_VERSION)+1, pcsrv) < 0) {
-	fprintf(stderr, "pkg_send MSG_VERSION error\n");
-	return 1;
+    /* Send our version string, optionally including the session token.
+     * Format: PROTOCOL_VERSION REMRT_AUTH_TOKEN_PREFIX <hex-token>
+     * The token is only appended when one was supplied on the command
+     * line (i.e., this process was auto-launched by remrt via SSH).
+     */
+    {
+	struct bu_vls ver = BU_VLS_INIT_ZERO;
+	bu_vls_strcat(&ver, PROTOCOL_VERSION);
+	if (srv_auth_token[0] != '\0') {
+	    bu_vls_strcat(&ver, REMRT_AUTH_TOKEN_PREFIX);
+	    bu_vls_strcat(&ver, srv_auth_token);
+	}
+	if (pkg_send(MSG_VERSION,
+		     bu_vls_addr(&ver), bu_vls_strlen(&ver) + 1,
+		     pcsrv) < 0) {
+	    fprintf(stderr, "pkg_send MSG_VERSION error\n");
+	    bu_vls_free(&ver);
+	    return 1;
+	}
+	if (debug)
+	    fprintf(stderr, "PROTOCOL_VERSION='%s'\n", bu_vls_addr(&ver));
+	bu_vls_free(&ver);
     }
-    if (debug)
-	fprintf(stderr, "PROTOCOL_VERSION='%s'\n", PROTOCOL_VERSION);
 
     /*
      * Now that the fork() has been done, it is safe to initialize
@@ -411,6 +483,12 @@ ph_enqueue(struct pkg_conn *pc, char *buf)
 void
 ph_cd(struct pkg_conn *UNUSED(pc), char *buf)
 {
+    /* Strip any trailing whitespace to guard against newlines in the path */
+    {
+	char *p = buf + strlen(buf);
+	while (p > buf && isspace((unsigned char)p[-1]))
+	    *--p = '\0';
+    }
     if (debug)
 	fprintf(stderr, "ph_cd %s\n", buf);
     if (chdir(buf) < 0)
@@ -778,96 +856,79 @@ ph_loglvl(struct pkg_conn *UNUSED(pc), char *buf)
 }
 
 
-/**** Other replacement routines from libbu/log.c ****/
-int bu_log_indent_cur_level = 0; /* formerly RTG.rtg_logindent */
 /*
- * Change indent level by indicated number of characters.  Call with a
- * large negative number to cancel all indentation.
+ * bu_log hook: forwards formatted log strings to the remrt dispatcher
+ * over the package connection.  Replaces the old bu_log() override that
+ * caused LNK2005 multiply-defined-symbol errors on Windows (where the
+ * DLL export from libbu cannot be silently overridden by an object file).
  */
-void
-bu_log_indent_delta(int delta)
+static int
+rtsrv_log_hook(void *clientdata, void *str)
 {
-    if ((bu_log_indent_cur_level += delta) < 0)
-	bu_log_indent_cur_level = 0;
-}
-
-
-/*
- * For multi-line vls generators, honor logindent level like bu_log()
- * does, and prefix the proper number of spaces.  Should be called at
- * the front of each new line.
- */
-void
-bu_log_indent_vls(struct bu_vls *v)
-{
-    bu_vls_spaces(v, bu_log_indent_cur_level);
-}
-
-
-/*
- * Log an error.  This version buffers a full line, to save network
- * traffic.
- */
-int
-bu_log(const char *fmt, ...)
-{
-    va_list vap;
-    char buf[512];		/* a generous output line.  Must be AUTO, else non-PARALLEL. */
-    int ret = 0;
+    int ret;
+    (void)clientdata;
 
     if (print_on == 0)
 	return 0;
 
-    bu_semaphore_acquire(BU_SEM_SYSCALL);
-    va_start(vap, fmt);
-    ret = vsprintf(buf, fmt, vap);
-    va_end(vap);
-
     if (pcsrv == PKC_NULL || pcsrv == PKC_ERROR) {
-	fprintf(stderr, "%s", buf);
-	bu_semaphore_release(BU_SEM_SYSCALL);
-	return ret;
+	fprintf(stderr, "%s", (const char *)str);
+	return 0;
     }
 
     if (debug)
-	fprintf(stderr, "%s", buf);
+	fprintf(stderr, "%s", (const char *)str);
 
-    ret = pkg_send(MSG_PRINT, buf, strlen(buf)+1, pcsrv);
+    ret = pkg_send(MSG_PRINT, (const char *)str, strlen((const char *)str)+1, pcsrv);
     if (ret < 0) {
 	fprintf(stderr, "pkg_send MSG_PRINT failed\n");
 	bu_exit(12, NULL);
     }
-
-    bu_semaphore_release(BU_SEM_SYSCALL);
-    return ret;
+    return 0;
 }
 
 
-/* override libbu's bu_bomb() function.
- *
- * FIXME: should register a bu_bomb() handler instead of this hack.
+/*
+ * bu_bomb hook: forwards the bomb string to the remrt dispatcher before
+ * bu_bomb() terminates the process.
  */
-void
-bu_bomb(const char *str)
+static int
+rtsrv_bomb_hook(void *clientdata, void *str)
 {
-    char *bomb = "RTSRV terminated by bu_bomb()\n";
+    static const char *bomb_msg = "RTSRV terminated by bu_bomb()\n";
     int ret;
+    (void)clientdata;
 
-    ret = pkg_send(MSG_PRINT, (char *)str, strlen(str)+1, pcsrv);
-    if (ret < 0) {
-	fprintf(stderr, "bu_bomb MSG_PRINT failed\n");
-    }
+    if (pcsrv != PKC_NULL && pcsrv != PKC_ERROR) {
+	ret = pkg_send(MSG_PRINT, (const char *)str, strlen((const char *)str)+1, pcsrv);
+	if (ret < 0)
+	    fprintf(stderr, "bu_bomb MSG_PRINT failed\n");
 
-    ret = pkg_send(MSG_PRINT, bomb, strlen(bomb)+1, pcsrv);
-    if (ret < 0) {
-	fprintf(stderr, "bu_bomb MSG_PRINT failed\n");
+	ret = pkg_send(MSG_PRINT, bomb_msg, strlen(bomb_msg)+1, pcsrv);
+	if (ret < 0)
+	    fprintf(stderr, "bu_bomb MSG_PRINT failed\n");
     }
 
     if (debug)
-	fprintf(stderr, "\n%s\n", str);
+	fprintf(stderr, "\n%s\n", (const char *)str);
     fflush(stderr);
 
-    bu_exit(12, NULL);
+    /* bu_bomb() will terminate the process after all hooks return */
+    return 0;
+}
+
+
+/*
+ * Install the log and bomb hooks once the package connection (pcsrv) is
+ * open.  This suppresses the default stderr output from bu_log() so that
+ * all logging goes over the network to the remrt dispatcher instead.
+ */
+static void
+rtsrv_install_log_hook(void)
+{
+    bu_log_hook_delete_all();
+    bu_log_add_hook(rtsrv_log_hook, NULL);
+    bu_bomb_add_hook(rtsrv_bomb_hook, NULL);
 }
 
 
