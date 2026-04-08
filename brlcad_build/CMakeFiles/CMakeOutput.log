@@ -1250,3 +1250,121 @@ Build dynamic libraries ............: ON
 Install example geometry models ....: ON
 Generate AsciiDoc docs .............: OFF
  
+D:/a/_temp/-1212469507/cmake-4.3.1-windows-x86_64/bin/cmake.exe "D:/a/brlcad_winci/brlcad_winci/brlcad" 
+**********************************************************
+*** Configuring BRL-CAD Release 7.43.0, Build 20260408 ***
+**********************************************************
+STATUS: Could NOT find MPI_C (missing: MPI_C_LIB_NAMES MPI_C_HEADER_DIR MPI_C_WORKS) 
+STATUS: Could NOT find MPI (missing: MPI_C_FOUND C) 
+Comparing previous and current states...
+Comparing previous and current states... done.
+Characterizing new or changed bundled third party files...
+Characterizing new or changed bundled third party files... done.
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/PNG/PNGTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/assimp-6.0/assimpTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2Config.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2ConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/clipper2/Clipper2Targets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/libjpeg-turbo/libjpeg-turboTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/manifold/manifoldTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshConfigVersion.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/mmesh/mmeshTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/opencv4/OpenCVConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/opencv4/OpenCVModules.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/pugixml/pugixml-config.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/pugixml/pugixml-targets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/tinygltf/TinyGLTFConfig.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/cmake/tinygltf/TinyGLTFTargets.cmake
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/Clipper2.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/assimp.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/geogram1.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/libjpeg.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/libturbojpeg.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/manifold.pc
+Adding install rule for CMake find_package file C:/Program Files/BRL-CAD 7.43.0/lib/pkgconfig/pugixml.pc
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+STATUS: Found OPENNURBS: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/OpenNURBS.lib
+STATUS: Found OPENNURBS: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/OpenNURBS.lib
+STATUS: Found REGEX: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/regex_brl.lib
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+STATUS: Found PERPLEX: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/perplex.exe
+STATUS: Found LEMON: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/lemon.exe
+STATUS: Found RE2C: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/re2c.exe
+STATUS: Found NETPBM: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/netpbm.lib
+STATUS: Found PNG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/libpng_brl16.lib (found version "1.6.54")
+STATUS: Found JPEG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/jpeg.lib (found version "62")
+STATUS: Found OSMESA: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/osmesa.lib
+STATUS: Found LMDB: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/lmdb.lib
+STATUS: Found PNG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/libpng_brl16.lib (found version "1.6.54")
+STATUS: Found REGEX: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/regex_brl.lib
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+STATUS: Found PERPLEX: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/perplex.exe
+STATUS: Found LEMON: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/lemon.exe
+STATUS: Found RE2C: D:/a/brlcad_winci/brlcad_winci/bext_output/noinstall/bin/re2c.exe
+STATUS: Found Geogram: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/geogram.lib
+STATUS: Could NOT find Adaptagrams (missing: _AVOID_LIB _AVOID_INC avoid cola dialect topology) 
+Generating plugin wrapper files...
+Generating plugin wrapper files... done.
+Found OpenCV: opencv_core;opencv_features2d;opencv_imgproc;opencv_highgui
+STATUS: Could NOT find Appleseed (missing: Appleseed_INCLUDE_DIR Appleseed_LIBRARY) 
+'art' appleseed ray tracing is DISABLED
+STATUS: Found PNG: D:/a/brlcad_winci/brlcad_winci/brlcad_build/lib/libpng_brl16.lib (found version "1.6.54")
+STATUS: Could NOT find STEPCODE (missing: STEPCODE_DAI_DIR STEPCODE_EDITOR_DIR STEPCODE_STEPCORE_DIR STEPCODE_UTILS_DIR STEPCODE_EXPPP_DIR STEPCODE_EXPRESS_DIR STEPCODE_INCLUDE_DIR STEPCODE_EXPRESS_LIBRARY STEPCODE_EXPPP_LIBRARY STEPCODE_CORE_LIBRARY STEPCODE_EDITOR_LIBRARY STEPCODE_DAI_LIBRARY STEPCODE_UTILS_LIBRARY EXP2CXX_EXECUTABLE EXPPP_EXECUTABLE) 
+WARNING: regress-dsp fails on some Windows platforms (pix-bw appears to hang on github runners) - skipping
+STATUS: The '-fsanitize=fuzzer' flag is supported.
+WARNING: iges.sh doesn not currently pass on Windows - disabling
+WARNING: regress-red does not currently pass on Windows, disabling
+
+
+------------ BRL-CAD Release 7.43.0, Build 20260408 - Release Build ------------
+
+        Prefix: C:/Program Files/BRL-CAD 7.43.0
+      Binaries: C:/Program Files/BRL-CAD 7.43.0/bin
+     Libraries: C:/Program Files/BRL-CAD 7.43.0/lib
+  Manual pages: C:/Program Files/BRL-CAD 7.43.0/share/man
+Data resources: C:/Program Files/BRL-CAD 7.43.0/share
+ 
+CFLAGS   = /DWIN32 /D_WINDOWS -std:c11 -D_POSIX_C_SOURCE=200809L
+           -D_XOPEN_SOURCE=700 /utf-8 /O2 /Ob2 /DNDEBUG
+CXXFLAGS = /DWIN32 /D_WINDOWS /EHsc -std:c++17 -D_POSIX_C_SOURCE=200809L
+           -D_XOPEN_SOURCE=700 /utf-8 /O2 /Ob2 /DNDEBUG
+LDFLAGS  = /machine:x64 /STACK:10000000 /NOLOGO /INCREMENTAL:NO
+ 
+ 
+Asset Import Library.................: Bundled
+Eigen................................: Bundled
+Geogram..............................: Bundled
+Lightning Memory-Mapped Database.....: Bundled
+Manifold.............................: Bundled
+Netpbm...............................: Bundled
+OpenCV...............................: Bundled
+OpenNURBS............................: Bundled
+OSMesa...............................: Bundled
+Portable Network Graphics............: Bundled
+Regex Library........................: Bundled
+Tcl..................................: Bundled
+Tk...................................: Bundled
+Zlib.................................: Bundled
+ 
+OpenGL support (optional) ..........: ON
+X11 support (optional) .............: OFF
+Qt support (optional) ..............: OFF
+Run-time debuggability (optional) ..: ON
+ 
+Build 32/64-bit release ............: 64BIT (Auto)
+Build with optimization ............: ON
+Build static libraries .............: ON
+Build dynamic libraries ............: ON
+Install example geometry models ....: ON
+Generate AsciiDoc docs .............: OFF
+ 
