@@ -710,6 +710,9 @@ ph_matrix(struct pkg_conn *UNUSED(pc), char *buf)
 
     /* Start options in a known state */
     AmbientIntensity = 0.4;
+    /* 0/0/1 background -- must match rt's initialize_option_defaults() */
+    background[0] = background[1] = 0.0;
+    background[2] = 1.0/255.0; /* slightly non-black */
     hypersample = 0;
     jitter = 0;
     rt_perspective = 0;
