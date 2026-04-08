@@ -1185,8 +1185,15 @@ create_outputfilename(struct frame *fr)
      * from work-to-do queue
      */
     if (!bu_file_exists(fr->fr_filename, NULL)) {
-	/* File does not yet exist */
+	/* File does not yet exist.
+	 * Use only _S_IREAD|_S_IWRITE on Windows: _creat() validates
+	 * pmode strictly and rejects bits outside that pair (POSIX
+	 * group/other bits such as those in 0644 trigger FAST_FAIL). */
+#ifdef HAVE_WINDOWS_H
+	if ((fd = creat(fr->fr_filename, _S_IREAD|_S_IWRITE)) < 0) {
+#else
 	if ((fd = creat(fr->fr_filename, 0644)) < 0) {
+#endif
 	    /* Unable to create new file */
 	    perror(fr->fr_filename);
 	    return -1;		/* skip this frame */
