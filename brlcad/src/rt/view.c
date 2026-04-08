@@ -241,7 +241,7 @@ view_pixel(struct application *ap)
 	}
 
 	/* Make sure it's never perfect black */
-	if (r==0 && g==0 && b==0 && benchmark==0)
+	if (r==0 && g==0 && b==0)
 	    b = 1;
     }
 
