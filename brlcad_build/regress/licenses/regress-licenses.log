@@ -1,0 +1,3 @@
+Running license check:
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/echeck.exe D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/licenses/embedded_licenses.txt D:/a/brlcad_winci/brlcad_winci/brlcad_build/cmakefiles.cmake D:/a/brlcad_winci/brlcad_winci/brlcad
+
