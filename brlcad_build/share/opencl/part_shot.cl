@@ -1,0 +1,1 @@
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/librt/primitives/part/part_shot.cl

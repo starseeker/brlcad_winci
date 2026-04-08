@@ -88,6 +88,7 @@ unsigned char *scanbuf = NULL;
 extern int grid_setup(struct bu_vls *err);
 extern void worker(int, void *);
 extern void application_init(void);
+extern void light_cleanup(void); /* from liboptical/sh_light.c */
 
 /***** variables shared with worker() ******/
 struct application APP;
@@ -719,7 +720,6 @@ ph_matrix(struct pkg_conn *UNUSED(pc), char *buf)
 
     process_cmd(buf);
     free(buf);
-
     seen_matrix = 1;
 }
 
@@ -812,6 +812,25 @@ ph_lines(struct pkg_conn *UNUSED(pc), char *buf)
     info.li_startpix = a;
     info.li_endpix = b;
     info.li_frame = fr;
+
+    /* Re-run grid setup with the view parameters that arrived in
+     * MSG_MATRIX.  prepare() already called grid_setup() once, but
+     * MSG_MATRIX may have been processed after that call (or the view
+     * parameters may have been updated since), so we refresh the grid
+     * here to guarantee the ray origins/directions are consistent with
+     * the current viewsize, eye_pt and viewrot before firing any rays.
+     */
+    {
+	struct bu_vls err = BU_VLS_INIT_ZERO;
+	int setup = grid_setup(&err);
+	if (setup) {
+	    bu_log("ph_lines: grid_setup failed: %s\n", bu_vls_cstr(&err));
+	    bu_vls_free(&err);
+	    free(buf);
+	    return;
+	}
+	bu_vls_free(&err);
+    }
 
     rt_prep_timer();
     do_run(a, b);

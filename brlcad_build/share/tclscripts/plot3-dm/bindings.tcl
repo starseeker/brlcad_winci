@@ -1,0 +1,1 @@
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/tclscripts/plot3-dm/bindings.tcl
