@@ -38,10 +38,13 @@ jobs:
               uses: ilammy/msvc-dev-cmd@v1
 
             # ----------------------------------------------------------------
-            # Checkout the repository (includes brlcad/ source subdirectory)
+            # Checkout the repository (includes brlcad/ source subdirectory).
+            # submodules: false is explicit – the repo has no active submodules.
             # ----------------------------------------------------------------
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  submodules: false
 
             # ----------------------------------------------------------------
             # Determine bext cache key
@@ -111,8 +114,8 @@ jobs:
 
             # ----------------------------------------------------------------
             # Configure BRL-CAD so the agent has a ready-to-use build directory.
-            # Uses Release bext with Qt and GDAL disabled for the fastest
-            # configure/build cycle (suitable for most debugging tasks).
+            # Uses Release bext with Qt and GDAL disabled (bext was built without
+            # GDAL, so BRL-CAD must be configured with BRLCAD_ENABLE_GDAL=OFF).
             # The agent can reconfigure with different flags if needed.
             # ----------------------------------------------------------------
             - name: Configure BRL-CAD (Release, Ninja)
@@ -128,4 +131,6 @@ jobs:
                         -DBRLCAD_EXT_DIR="${{ github.workspace }}\bext_output" `
                         -DBRLCAD_EXTRADOCS=OFF `
                         -DBRLCAD_ENABLE_STEP=OFF `
-                        -DBRLCAD_ENABLE_QT=OFF
+                        -DBRLCAD_ENABLE_QT=OFF `
+                        -DBRLCAD_ENABLE_GDAL=OFF
+
