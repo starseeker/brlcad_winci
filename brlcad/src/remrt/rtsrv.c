@@ -105,6 +105,12 @@ static int seen_dirbuild = 0;
 static int seen_gettrees = 0;
 static int seen_matrix = 0;
 
+/* Frame number for which grid vectors and lighting have been initialized.
+ * Set to -1 by prepare() and ph_matrix() to force re-setup on the next
+ * ph_lines() call (mimicking rt's do_frame() order: do_prep -> grid_setup
+ * -> view_2init -> do_run). */
+static int last_setup_frame = -1;
+
 static char *title_file = NULL;
 static char *title_obj = NULL;	/* name of file and first object */
 
@@ -704,6 +710,9 @@ ph_matrix(struct pkg_conn *UNUSED(pc), char *buf)
 
     /* Start options in a known state */
     AmbientIntensity = 0.4;
+    /* 0/0/1 background -- must match rt's initialize_option_defaults() */
+    background[0] = background[1] = 0.0;
+    background[2] = 1.0/255.0; /* slightly non-black */
     hypersample = 0;
     jitter = 0;
     rt_perspective = 0;
@@ -721,6 +730,10 @@ ph_matrix(struct pkg_conn *UNUSED(pc), char *buf)
     process_cmd(buf);
     free(buf);
     seen_matrix = 1;
+    /* New view parameters arrived: force grid+lighting re-setup on the
+     * next ph_lines() so that grid_setup() uses the updated viewsize,
+     * eye_model, and Viewrotscale values. */
+    last_setup_frame = -1;
 }
 
 
@@ -745,15 +758,20 @@ prepare(void)
     if (rtip->nsolids <= 0)
 	bu_exit(3, "ph_matrix: No solids remain after prep.\n");
 
-    {
-	struct bu_vls err = BU_VLS_INIT_ZERO;
-	int ret = grid_setup(&err);
-	if (ret)
-	    bu_exit(BRLCAD_ERROR, "%s\n", bu_vls_cstr(&err));
-    }
-
-    /* initialize lighting */
-    view_2init(&APP, NULL);
+    /*
+     * Do NOT call grid_setup() or view_2init() here.  These are
+     * deferred to ph_lines() so that the initialization order matches
+     * rt's do_frame() exactly:
+     *
+     *   do_prep() -> grid_setup() -> view_2init() -> do_run()
+     *
+     * Calling view_2init() (which invokes light_maker() using the
+     * current view2model) in the same stack frame as grid_setup()
+     * guarantees that the light positions and the ray-origin grid are
+     * built from the identical view2model matrix, achieving pixel-exact
+     * parity with standalone rt.
+     */
+    last_setup_frame = -1;  /* trigger grid+lighting setup in ph_lines() */
 
     rtip->nshots = 0;
     rtip->nmiss_model = 0;
@@ -813,16 +831,36 @@ ph_lines(struct pkg_conn *UNUSED(pc), char *buf)
     info.li_endpix = b;
     info.li_frame = fr;
 
-    /* Re-run grid setup with the view parameters that arrived in
-     * MSG_MATRIX.  prepare() already called grid_setup() once, but
-     * MSG_MATRIX may have been processed after that call (or the view
-     * parameters may have been updated since), so we refresh the grid
-     * here to guarantee the ray origins/directions are consistent with
-     * the current viewsize, eye_pt and viewrot before firing any rays.
+    /* Set up grid vectors and lighting on the first MSG_LINES for each
+     * frame (identified by the frame number 'fr').  This mirrors the
+     * order used by rt's do_frame():
+     *
+     *   do_prep() [called in prepare()] -> grid_setup() -> view_2init()
+     *   -> do_run()
+     *
+     * Doing grid_setup() and view_2init() here — immediately before
+     * do_run() — guarantees that both the light positions (set by
+     * light_maker() inside view_2init()) and the per-pixel ray origins
+     * (computed by do_run() using viewbase_model / dx_model / dy_model)
+     * are derived from the same view2model matrix, producing pixel-exact
+     * parity with standalone rt.
+     *
+     * For multi-frame animations the light list carries over from the
+     * previous frame when the geometry has not changed (no new
+     * MSG_GETTREES / prepare() call).  light_cleanup() discards the
+     * stale lights so that view_2init() recreates them with the
+     * updated view2model.
      */
-    {
+    if (fr != last_setup_frame) {
 	struct bu_vls err = BU_VLS_INIT_ZERO;
-	int setup = grid_setup(&err);
+	int setup;
+
+	/* Discard lights from any previous frame so light_maker() inside
+	 * view_2init() will build fresh ones from the current view2model.
+	 * light_cleanup() is safe to call even when LightHead is empty. */
+	light_cleanup();
+
+	setup = grid_setup(&err);
 	if (setup) {
 	    bu_log("ph_lines: grid_setup failed: %s\n", bu_vls_cstr(&err));
 	    bu_vls_free(&err);
@@ -830,6 +868,9 @@ ph_lines(struct pkg_conn *UNUSED(pc), char *buf)
 	    return;
 	}
 	bu_vls_free(&err);
+
+	view_2init(&APP, NULL);
+	last_setup_frame = fr;
     }
 
     rt_prep_timer();
