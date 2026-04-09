@@ -110,7 +110,8 @@ jobs:
                       -DBRLCAD_EXT_DIR="${{ github.workspace }}\bext_output" `
                       -DBRLCAD_EXTRADOCS=OFF `
                       -DBRLCAD_ENABLE_STEP=OFF `
-                      -DBRLCAD_ENABLE_QT=OFF
+                      -DBRLCAD_ENABLE_QT=OFF `
+                      -DBRLCAD_ENABLE_GDAL=OFF
 
             # ----------------------------------------------------------------
             # Build

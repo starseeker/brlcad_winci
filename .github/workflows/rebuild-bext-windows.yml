@@ -1,0 +1,155 @@
+name: Rebuild bext Dependencies (Windows)
+
+# This workflow builds the bext external dependencies from source on Windows,
+# then saves them to the GitHub Actions cache so that subsequent agent sessions
+# and CI runs restore bext_output quickly instead of rebuilding from scratch.
+#
+# Run this workflow manually:
+#   - After a new bext commit lands that changes the cache key
+#   - After a runner OS upgrade that changes the compiler version string
+#   - If the cache has expired (no activity for 7 days)
+#
+# The saved cache key format matches what copilot-setup-steps.yml and
+# windows_ci.yml expect, so once this workflow succeeds the cache is
+# immediately usable by both.
+#
+# Configure flags used (matching copilot-setup-steps.yml defaults):
+#   -DENABLE_ALL=ON    Build all available bext components
+#   -DUSE_QT=OFF       Skip Qt (very large, optional for most debugging)
+#   -DUSE_GDAL=OFF     Skip GDAL (large, optional; BRL-CAD configured with
+#                      -DBRLCAD_ENABLE_GDAL=OFF to match)
+
+on:
+    workflow_dispatch:
+        inputs:
+            build_debug:
+                type: boolean
+                description: 'Also build and cache a Debug configuration of bext_output'
+                required: false
+                default: false
+
+jobs:
+    rebuild-bext-windows:
+        name: Rebuild bext and update cache (Windows)
+        runs-on: windows-latest
+
+        permissions:
+            contents: read
+
+        steps:
+            - name: Setup CMake
+              uses: lukka/get-cmake@latest
+
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v2
+
+            - name: Add cl.exe to PATH
+              uses: ilammy/msvc-dev-cmd@v1
+
+            # ----------------------------------------------------------------
+            # Determine cache key (same logic as copilot-setup-steps.yml)
+            # ----------------------------------------------------------------
+            - name: Clone bext
+              shell: pwsh
+              run: git clone --depth=1 https://github.com/BRL-CAD/bext.git
+
+            - name: Get bext commit SHA
+              id: bext-sha
+              shell: pwsh
+              run: |
+                  cd bext
+                  $sha = git rev-parse HEAD
+                  echo "sha=$sha" >> $env:GITHUB_OUTPUT
+
+            - name: Compute bext cache discriminator
+              id: cachekey
+              shell: bash
+              run: |
+                  clver=""
+                  if command -v cl.exe &> /dev/null; then
+                      clver="$(cl.exe 2>&1 | head -n 1)"
+                  fi
+                  info="${{ steps.bext-sha.outputs.sha }}-$(uname -s)-$(uname -r)-$clver"
+                  echo "hash=$(echo -n "$info" | sha1sum | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+            # ----------------------------------------------------------------
+            # Release build
+            # ----------------------------------------------------------------
+            - name: Check Release cache
+              id: cache-bext-release
+              uses: actions/cache/restore@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output
+                  key: windows-bext-release-${{ steps.cachekey.outputs.hash }}
+                  lookup-only: true
+
+            - name: Build bext (Release)
+              if: steps.cache-bext-release.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  cmake -E make_directory bext_build_release
+                  cmake -S bext -B bext_build_release `
+                      -DCMAKE_BUILD_TYPE=Release `
+                      -DENABLE_ALL=ON `
+                      -DUSE_QT=OFF `
+                      -DUSE_GDAL=OFF `
+                      -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\bext_output"
+                  cmake --build bext_build_release --config Release -j2
+                  cmake -E rm -rf bext_build_release
+
+            - name: Save bext Release cache
+              if: steps.cache-bext-release.outputs.cache-hit != 'true'
+              uses: actions/cache/save@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output
+                  key: windows-bext-release-${{ steps.cachekey.outputs.hash }}
+
+            - name: Verify Release bext outputs
+              shell: pwsh
+              run: |
+                  Write-Host "=== bext_output\install contents (top level) ==="
+                  Get-ChildItem "${{ github.workspace }}\bext_output\install" -ErrorAction SilentlyContinue | Select-Object Name
+                  Write-Host "=== bext_output\noinstall contents (top level) ==="
+                  Get-ChildItem "${{ github.workspace }}\bext_output\noinstall" -ErrorAction SilentlyContinue | Select-Object Name
+
+            # ----------------------------------------------------------------
+            # Debug build (optional – only when explicitly requested)
+            # ----------------------------------------------------------------
+            - name: Check Debug cache
+              id: cache-bext-debug
+              if: inputs.build_debug == true
+              uses: actions/cache/restore@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output_debug
+                  key: windows-bext-debug-${{ steps.cachekey.outputs.hash }}
+                  lookup-only: true
+
+            - name: Build bext (Debug)
+              if: inputs.build_debug == true && steps.cache-bext-debug.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  cmake -E make_directory bext_build_debug
+                  cmake -S bext -B bext_build_debug `
+                      -DCMAKE_BUILD_TYPE=Debug `
+                      -DENABLE_ALL=ON `
+                      -DUSE_QT=OFF `
+                      -DUSE_GDAL=OFF `
+                      -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\bext_output_debug"
+                  cmake --build bext_build_debug --config Debug -j2
+                  cmake -E rm -rf bext_build_debug
+
+            - name: Save bext Debug cache
+              if: inputs.build_debug == true && steps.cache-bext-debug.outputs.cache-hit != 'true'
+              uses: actions/cache/save@v4
+              with:
+                  path: ${{ github.workspace }}\bext_output_debug
+                  key: windows-bext-debug-${{ steps.cachekey.outputs.hash }}
+
+            # ----------------------------------------------------------------
+            # Clean up the bext source tree (not needed after build)
+            # ----------------------------------------------------------------
+            - name: Clean up bext source
+              if: always()
+              shell: pwsh
+              run: |
+                  if (Test-Path bext) { cmake -E rm -rf bext }
