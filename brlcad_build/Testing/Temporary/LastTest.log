@@ -1,3 +1,23 @@
-Start testing: Apr 12 16:43 Coordinated Universal Time
+Start testing: Apr 12 17:03 Coordinated Universal Time
 ----------------------------------------------------------
-End testing: Apr 12 16:43 Coordinated Universal Time
+1080/1094 Testing: regress-remrt
+1080/1094 Test: regress-remrt
+Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
+Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
+"regress-remrt" start time: Apr 12 17:03 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+
+=== remrt regression: IPC 512x512 benchmark ===
+<end of output>
+Test time = 600.28 sec
+----------------------------------------------------------
+Test Failed.
+"regress-remrt" end time: Apr 12 17:13 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:10:00
+----------------------------------------------------------
+
+End testing: Apr 12 17:13 Coordinated Universal Time
+
+Regression = 600.28 sec*proc
+

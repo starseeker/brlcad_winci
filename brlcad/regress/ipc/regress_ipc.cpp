@@ -64,6 +64,7 @@
 #include "bu/env.h"
 #include "bu/snooze.h"
 #include "dm/fbserv.h"
+#include "tclcad/misc.h"  /* tclcad_listen_ipc() */
 #include "pkg.h"   /* PKG_STDIO_MODE, pkc_in_fd, pkc_out_fd */
 
 /* Portable low-level fd read/write (used when we only have the raw fd). */
@@ -540,7 +541,94 @@ test_tcl_fbserv_var(void)
 
 
 /* ================================================================== */
-/* Group 8: fbserv -I <addr> flag (Phase 7)                           */
+/* Group 7 (Windows): tclcad_listen_ipc() timer-based IPC path        */
+/* On Windows, Tcl_CreateFileHandler is a no-op and wrapping a pipe   */
+/* in a Tcl channel causes Tcl's reader thread to consume data before  */
+/* pkg_process() can read it.  tclcad_listen_ipc() uses a recurring   */
+/* Tcl timer (PeekNamedPipe) instead.  This test verifies:            */
+/*   1. tclcad_listen_ipc returns BRLCAD_OK on Windows (not error).   */
+/*   2. The timer token (fbsc_chan) is installed.                      */
+/*   3. The $fbserv(ipc_addr) Tcl variable is set.                    */
+/*   4. fbs_close() cleanly cancels the timer (fbsc_chan becomes NULL).*/
+/* ================================================================== */
+#ifdef _WIN32
+static void
+test_tcl_listen_ipc_win(void)
+{
+    if (g_verbose) fprintf(stdout, "\n[Group 7] tclcad_listen_ipc() Windows timer-IPC path\n");
+
+    Tcl_FindExecutable(nullptr);
+    Tcl_Interp *interp = Tcl_CreateInterp();
+    TEST("Tcl_CreateInterp for win IPC test", interp != nullptr);
+    if (!interp) return;
+
+    struct fbserv_obj fbs;
+    memset(&fbs, 0, sizeof(fbs));
+    fbs.fbs_listener.fbsl_fd     = -1;
+    fbs.fbs_is_listening         = noop_is_listening;
+    fbs.fbs_listen_on_port       = noop_listen_on_port;
+    fbs.fbs_open_server_handler  = noop_open_server;
+    fbs.fbs_close_server_handler = noop_close_server;
+    fbs.fbs_open_client_handler  = nullptr;
+    fbs.fbs_close_client_handler = noop_close_ipc_client;
+    fbs.fbs_open_ipc_client_handler  = nullptr;   /* set by tclcad_listen_ipc */
+    fbs.fbs_close_ipc_client_handler = nullptr;
+    fbs.fbs_interp = interp;
+
+    /* tclcad_listen_ipc() should now succeed on Windows and install the
+     * timer-based IPC polling handler.                                    */
+    int rc = tclcad_listen_ipc(&fbs, interp);
+    TEST("tclcad_listen_ipc returns BRLCAD_OK on Windows", rc == BRLCAD_OK);
+
+    if (rc == BRLCAD_OK) {
+        TEST("fbsl_ipc_child non-NULL after tclcad_listen_ipc",
+             fbs.fbs_listener.fbsl_ipc_child != nullptr);
+
+        /* The timer token is stored in fbsc_chan of the registered client. */
+        bool timer_installed = false;
+        for (int i = 0; i < MAX_CLIENTS; ++i) {
+            if (fbs.fbs_clients[i].fbsc_is_ipc && fbs.fbs_clients[i].fbsc_chan) {
+                timer_installed = true;
+                break;
+            }
+        }
+        TEST("poll timer token installed in fbsc_chan", timer_installed);
+
+        /* Verify $fbserv(ipc_addr) was set in the interpreter. */
+        const char *gr = Tcl_GetVar2(interp, "fbserv", "ipc_addr", TCL_GLOBAL_ONLY);
+        TEST("$fbserv(ipc_addr) is set by tclcad_listen_ipc", gr != nullptr);
+        TEST("$fbserv(ipc_addr) is non-empty", gr && gr[0] != '\0');
+
+        if (g_verbose && gr)
+            fprintf(stdout, "  $fbserv(ipc_addr) = \"%s\"\n", gr);
+
+        /* Verify a Tcl script can read the variable. */
+        int trc = Tcl_Eval(interp,
+                           "set ::_ipc_len [string length $::fbserv(ipc_addr)]");
+        TEST("Tcl script reads $fbserv(ipc_addr)", trc == TCL_OK);
+        const char *tres = Tcl_GetVar(interp, "::_ipc_len", TCL_GLOBAL_ONLY);
+        TEST("$fbserv(ipc_addr) has positive length in Tcl",
+             tres && atoi(tres) > 0);
+
+        /* fbs_close() must cancel the timer; fbsc_chan becomes NULL. */
+        fbs_close(&fbs);
+
+        bool timer_canceled = true;
+        for (int i = 0; i < MAX_CLIENTS; ++i) {
+            if (fbs.fbs_clients[i].fbsc_chan) {
+                timer_canceled = false;
+                break;
+            }
+        }
+        TEST("poll timer canceled after fbs_close()", timer_canceled);
+    }
+
+    Tcl_DeleteInterp(interp);
+}
+#endif /* _WIN32 */
+
+
+
 /* Spawns fbserv -F /dev/null -I <addr> and verifies it accepts the   */
 /* flag without printing "Illegal option" or "Usage:".                */
 /* This test uses POSIX shell features and is skipped on Windows.     */
@@ -679,11 +767,11 @@ main(int argc, const char **argv)
     test_fbserv_minus_I(fbserv_bin);
 #else
     (void)fbserv_bin;
-    if (g_verbose) {
+    if (g_verbose)
         fprintf(stdout, "\n[Group 6] SKIPPED (Tcl_CreateFileHandler not available on Windows)\n");
-        fprintf(stdout, "\n[Group 7] SKIPPED (uses Tcl_CreateFileHandler callbacks on Windows)\n");
+    test_tcl_listen_ipc_win();  /* Group 7: Windows timer-IPC path */
+    if (g_verbose)
         fprintf(stdout, "\n[Group 8] SKIPPED (POSIX shell spawn not available on Windows)\n");
-    }
 #endif
 
     fprintf(stdout, "\n==============================================\n");
