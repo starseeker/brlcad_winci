@@ -50,6 +50,7 @@ static const char * const env_vars[] = {
   "PWD",
   "QTCAD_REPORT_EVENTS",
   "QTCAD_REPORT_SLOTS",
+  "RT_SETUP_DEBUG",
   "TCLCAD_LIBRARY_PATH",
   "TCL_LIBRARY",
   "TERM",
@@ -121,6 +122,7 @@ static const char * const cad_env_vars[] = {
   "REMRT_TLS_KEY",
   "RT",
   "RTWIZARD_RCFILE",
+  "RT_SETUP_DEBUG",
   "RUN",
   "TCLCAD_LIBRARY_PATH",
   "TCL_LIBRARY",
@@ -169,6 +171,7 @@ static const struct envcmd_entry lib_vars[] = {
 	{"ged","GED_MAN_LANG_MODE"},
 	{"ged","GED_NO_PLUGIN_SCAN"},
 	{"ged","LIBGED_MAKE_SKETCH"},
+	{"optical","RT_SETUP_DEBUG"},
 	{"pkg","LIB_PKG_DEBUG"},
 	{"rt","BRLCAD_FILE_PATH"},
 	{"rt","LIBRT_BOT_MINTIE"},
@@ -304,6 +307,9 @@ static const char * const mged_vars[] = {
 	"DISPLAY",
 	"HOME",
 	NULL};
+static const char * const optical_vars[] = {
+	"RT_SETUP_DEBUG",
+	NULL};
 static const char * const pkg_vars[] = {
 	"LIB_PKG_DEBUG",
 	NULL};
@@ -358,6 +364,7 @@ static const struct env_context_entry context_vars[] = {
 	{"ged", (const char * const *)&ged_vars},
 	{"gtools", (const char * const *)&gtools_vars},
 	{"mged", (const char * const *)&mged_vars},
+	{"optical", (const char * const *)&optical_vars},
 	{"pkg", (const char * const *)&pkg_vars},
 	{"remrt", (const char * const *)&remrt_vars},
 	{"rt", (const char * const *)&rt_vars},

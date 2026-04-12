@@ -134,6 +134,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/pkg/cmake_install.cmake")
 endif()
 

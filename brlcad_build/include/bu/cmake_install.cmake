@@ -55,6 +55,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/hist.h"
     "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/hook.h"
     "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/interrupt.h"
+    "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/ipc.h"
     "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/list.h"
     "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/log.h"
     "D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/magic.h"
