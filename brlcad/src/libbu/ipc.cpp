@@ -616,15 +616,24 @@ bu_ipc_read(bu_ipc_chan_t *chan, void *buf, size_t nbytes)
 /* ================================================================== */
 
 int
-bu_ipc_fileno(const bu_ipc_chan_t *chan)
+bu_ipc_fileno(bu_ipc_chan_t *chan)
 {
-    return chan ? chan->fd : -1;
+    if (!chan) return -1;
+    /* For TCP parent-end channels accept() must complete before the fd is
+     * valid.  Block here until the child connects (the child must already
+     * have been spawned by the caller before calling bu_ipc_fileno).      */
+    if (chan->type == BU_IPC_TCP && chan->fd < 0)
+	tcp_accept(chan);
+    return chan->fd;
 }
 
 int
-bu_ipc_fileno_write(const bu_ipc_chan_t *chan)
+bu_ipc_fileno_write(bu_ipc_chan_t *chan)
 {
     if (!chan) return -1;
+    /* Ensure TCP accept is complete so fd_write is valid. */
+    if (chan->type == BU_IPC_TCP && chan->fd < 0)
+	tcp_accept(chan);
     return (chan->fd_write >= 0) ? chan->fd_write : chan->fd;
 }
 
