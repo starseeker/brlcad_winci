@@ -1,35 +1,91 @@
-Start testing: Apr 08 23:55 Coordinated Universal Time
+Start testing: Apr 12 03:10 Coordinated Universal Time
 ----------------------------------------------------------
-1079/1093 Testing: regress-remrt
-1079/1093 Test: regress-remrt
-Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
-Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 23:55 Coordinated Universal Time
+1077/1094 Testing: regress-ipc
+1077/1094 Test: regress-ipc
+Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_ipc.exe" "--verbose"
+Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc
+"regress-ipc" start time: Apr 12 03:10 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
-=== remrt regression: token-auth 512x512 ===
-remrt port=4446  token=9e29fcb64e2b7a498eb6c8db8f3efd222530353e3977dc75d2647eca965ad86c
-regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
-Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
-  pixel-exact match
-PASS: sub-test 1 (token-auth render matches reference)
+==============================================
+  bu_ipc / fbs_open_ipc Regression Tests
+==============================================
+  fbserv binary: D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/fbserv.exe
 
-=== remrt regression: no-token 64x64 ===
-remrt port=4446  token=da4204e26104ddf1c97829b0cc5be048614c3331e1e3c1748635fe5db669e980
-regress_remrt [no-token 64x64]: output file OK (12288 bytes)
-PASS: sub-test 2 (no-token backward-compat render)
 
-All remrt regression sub-tests PASSED.
+[Group 1] bu_ipc_pair() basics
+PASS: bu_ipc_pair returns 0
+PASS: parent channel non-NULL
+PASS: child channel non-NULL
+PASS: parent read  fd >= 0
+PASS: parent write fd >= 0
+PASS: child  read  fd >= 0
+PASS: child  write fd >= 0
+PASS: parent addr_env non-NULL
+PASS: child  addr_env non-NULL
+PASS: parent addr_env has BU_IPC_ADDR= prefix
+PASS: child  addr_env has BU_IPC_ADDR= prefix
+
+[Group 2] bu_ipc round-trip data
+PASS: bu_ipc_pair for round-trip
+PASS: parent writes to child
+PASS: child reads from parent
+PASS: parent→child data matches
+PASS: child writes to parent
+PASS: parent reads from child
+PASS: child→parent data matches
+
+[Group 3] bu_ipc_connect() via addr string
+PASS: bu_ipc_pair for connect test
+PASS: child addr_env has '=' separator
+PASS: bu_ipc_connect via child addr succeeds
+PASS: connected channel read fd >= 0
+PASS: parent write succeeds
+PASS: connected-channel read succeeds
+PASS: connected-channel data matches
+
+[Group 4] fbs_open_ipc() smoke test
+PASS: fbs_open_ipc returns BRLCAD_OK
+PASS: fbs_ipc_child_addr_env non-NULL
+PASS: fbs_ipc_child_addr_env has BU_IPC_ADDR= pfx
+PASS: fbsl_ipc_child non-NULL
+PASS: IPC client slot has fbsc_is_ipc set
+PASS: IPC client fbsc_fd is a valid (>= 0) fd
+PASS: fbsl_ipc_child NULL after fbs_close
+
+[Group 5] BU_IPC_ADDR env-var end-to-end
+PASS: fbs_open_ipc for env-var test
+PASS: parent pkg_conn registered
+PASS: parent pkg_conn write fd valid
+PASS: addr_env has '=' separator
+PASS: getenv(BU_IPC_ADDR_ENVVAR) returns non-NULL
+PASS: getenv value matches addr_val
+PASS: rem_open-style bu_ipc_connect succeeds
+PASS: child channel read fd >= 0
+PASS: parent pkg_conn write to child
+PASS: child reads pixel data
+PASS: pixel data matches end-to-end
+
+[Group 6] SKIPPED (Tcl_CreateFileHandler not available on Windows)
+
+[Group 7] SKIPPED (uses Tcl_CreateFileHandler callbacks on Windows)
+
+[Group 8] SKIPPED (POSIX shell spawn not available on Windows)
+
+==============================================
+  Results: 43 / 43 passed
+==============================================
+
 <end of output>
-Test time =   4.62 sec
+Test time =   0.24 sec
 ----------------------------------------------------------
 Test Passed.
-"regress-remrt" end time: Apr 08 23:55 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:04
+"regress-ipc" end time: Apr 12 03:10 Coordinated Universal Time
+"regress-ipc" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Apr 08 23:55 Coordinated Universal Time
+End testing: Apr 12 03:10 Coordinated Universal Time
 
-Regression =   4.62 sec*proc
+STAND_ALONE =   0.24 sec*proc
 

@@ -1459,8 +1459,8 @@ add_host_local(struct ihost *ihp)
 {
     bu_ipc_chan_t *pe = NULL, *ce = NULL;
     char rtsrv_path[MAXPATHLEN];
-    /* Slots: exe, [-S, token,] NULL — 4 entries is enough. */
-    const char *argv[6];
+    /* Slots: exe, -I, addr, [-S, token,] NULL — 6 entries minimum. */
+    const char *argv[8];
     int argc = 0;
     struct bu_process *p = NULL;
     struct pkg_conn *pc;
@@ -1500,8 +1500,17 @@ add_host_local(struct ihost *ihp)
      * so clearing the var in the parent after the call is race-free.       */
     bu_setenv(BU_IPC_ADDR_ENVVAR, bu_ipc_addr(ce), 1);
 
-    /* Build rtsrv argv.  No host/port positional args in IPC mode.         */
+    /* Build rtsrv argv.  Always pass the IPC address explicitly via -I so
+     * that rtsrv has at least one flag argument and passes the argc<2 guard
+     * in its main().  Also set the environment variable as a fallback for
+     * platforms where argv passing is unavailable.  Save the address string
+     * before we close ce (which would free the internal buffer).           */
+    char ipc_addr_buf[256];
+    bu_strlcpy(ipc_addr_buf, bu_ipc_addr(ce), sizeof(ipc_addr_buf));
+
     argv[argc++] = rtsrv_path;
+    argv[argc++] = "-I";
+    argv[argc++] = ipc_addr_buf;
     if (session_token[0] != '\0') {
 	argv[argc++] = "-S";
 	argv[argc++] = session_token;

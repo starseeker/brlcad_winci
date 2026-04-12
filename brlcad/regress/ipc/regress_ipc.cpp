@@ -45,15 +45,35 @@
 #include <cstdlib>
 #include <cstring>
 #include <csignal>
-#include <unistd.h>
-#include <sys/wait.h>
+#ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+#endif
+#ifdef HAVE_SYS_WAIT_H
+#  include <sys/wait.h>
+#endif
+#ifdef _WIN32
+#  include <io.h>
+#  ifndef X_OK
+#    define X_OK 0
+#  endif
+#endif
 #include <tcl.h>
 
 #include "bu/ipc.h"
 #include "bu/str.h"
 #include "bu/env.h"
+#include "bu/snooze.h"
 #include "dm/fbserv.h"
 #include "pkg.h"   /* PKG_STDIO_MODE, pkc_in_fd, pkc_out_fd */
+
+/* Portable low-level fd read/write (used when we only have the raw fd). */
+#ifdef _WIN32
+#  define ipc_fd_write(fd, buf, n)  ((bu_ssize_t)_write((fd), (buf), (unsigned)(n)))
+#  define ipc_fd_read(fd,  buf, n)  ((bu_ssize_t)_read((fd),  (buf), (unsigned)(n)))
+#else
+#  define ipc_fd_write(fd, buf, n)  ((bu_ssize_t)write((fd), (buf), (n)))
+#  define ipc_fd_read(fd,  buf, n)  ((bu_ssize_t)read((fd),  (buf), (n)))
+#endif
 
 /* ------------------------------------------------------------------ */
 /* Test harness                                                        */
@@ -165,21 +185,21 @@ test_bu_ipc_roundtrip(void)
     TEST("bu_ipc_pair for round-trip", 1);
 
     static const char msg1[] = "PARENT_TO_CHILD";
-    ssize_t n = write(bu_ipc_fileno_write(pe), msg1, sizeof(msg1)-1);
-    TEST("parent writes to child", n == (ssize_t)(sizeof(msg1)-1));
+    bu_ssize_t n = bu_ipc_write(pe, msg1, sizeof(msg1)-1);
+    TEST("parent writes to child", n == (bu_ssize_t)(sizeof(msg1)-1));
 
     char buf[64]; memset(buf, 0, sizeof(buf));
-    n = read(bu_ipc_fileno(ce), buf, sizeof(msg1)-1);
-    TEST("child reads from parent", n == (ssize_t)(sizeof(msg1)-1));
+    n = bu_ipc_read(ce, buf, sizeof(msg1)-1);
+    TEST("child reads from parent", n == (bu_ssize_t)(sizeof(msg1)-1));
     TEST("parent→child data matches", memcmp(buf, msg1, sizeof(msg1)-1) == 0);
 
     static const char msg2[] = "CHILD_TO_PARENT";
-    n = write(bu_ipc_fileno_write(ce), msg2, sizeof(msg2)-1);
-    TEST("child writes to parent", n == (ssize_t)(sizeof(msg2)-1));
+    n = bu_ipc_write(ce, msg2, sizeof(msg2)-1);
+    TEST("child writes to parent", n == (bu_ssize_t)(sizeof(msg2)-1));
 
     memset(buf, 0, sizeof(buf));
-    n = read(bu_ipc_fileno(pe), buf, sizeof(msg2)-1);
-    TEST("parent reads from child", n == (ssize_t)(sizeof(msg2)-1));
+    n = bu_ipc_read(pe, buf, sizeof(msg2)-1);
+    TEST("parent reads from child", n == (bu_ssize_t)(sizeof(msg2)-1));
     TEST("child→parent data matches", memcmp(buf, msg2, sizeof(msg2)-1) == 0);
 
     bu_ipc_close(pe); bu_ipc_close(ce);
@@ -217,12 +237,12 @@ test_bu_ipc_connect(void)
 
             /* Write from parent, read via connected channel */
             static const char msg[] = "CONNECT_OK";
-            ssize_t n = write(bu_ipc_fileno_write(pe), msg, sizeof(msg)-1);
-            TEST("parent write succeeds", n == (ssize_t)(sizeof(msg)-1));
+            bu_ssize_t n = bu_ipc_write(pe, msg, sizeof(msg)-1);
+            TEST("parent write succeeds", n == (bu_ssize_t)(sizeof(msg)-1));
 
             char buf[64]; memset(buf, 0, sizeof(buf));
-            n = read(rfd, buf, sizeof(msg)-1);
-            TEST("connected-channel read succeeds", n == (ssize_t)(sizeof(msg)-1));
+            n = bu_ipc_read(conn, buf, sizeof(msg)-1);
+            TEST("connected-channel read succeeds", n == (bu_ssize_t)(sizeof(msg)-1));
             TEST("connected-channel data matches", memcmp(buf, msg, sizeof(msg)-1) == 0);
 
             /* Detach: conn wraps the same fds as ce — don't close them twice */
@@ -339,12 +359,12 @@ test_env_var_end_to_end(void)
 
             /* Pixel data: parent (fbserv side) → child (rt side) */
             static const char pkt[] = "PIXEL_PAYLOAD_0123456789";
-            ssize_t n = write(pwfd, pkt, sizeof(pkt)-1);
-            TEST("parent pkg_conn write to child", n == (ssize_t)(sizeof(pkt)-1));
+            bu_ssize_t n = ipc_fd_write(pwfd, pkt, sizeof(pkt)-1);
+            TEST("parent pkg_conn write to child", n == (bu_ssize_t)(sizeof(pkt)-1));
 
             char buf[64]; memset(buf, 0, sizeof(buf));
-            n = read(child_rfd, buf, sizeof(pkt)-1);
-            TEST("child reads pixel data", n == (ssize_t)(sizeof(pkt)-1));
+            n = bu_ipc_read(child_chan, buf, sizeof(pkt)-1);
+            TEST("child reads pixel data", n == (bu_ssize_t)(sizeof(pkt)-1));
             TEST("pixel data matches end-to-end",
                  memcmp(buf, pkt, sizeof(pkt)-1) == 0);
 
@@ -360,7 +380,11 @@ test_env_var_end_to_end(void)
 
 /* ================================================================== */
 /* Group 6: Tcl_CreateFileHandler callback path (Phase 4)              */
+/* Tcl_CreateFileHandler is a POSIX-only Tcl API; not available on     */
+/* Windows (which uses Tcl channels instead).                           */
 /* ================================================================== */
+
+#ifndef _WIN32
 
 static int g_tcl_handler_invoked = 0;
 
@@ -424,8 +448,8 @@ test_tcl_file_handler(void)
 
         if (ce_wfd >= 0) {
             static const char msg[] = "TCL_HANDLER_TRIGGER";
-            ssize_t n = write(ce_wfd, msg, sizeof(msg)-1);
-            TEST("write from child end succeeds", n == (ssize_t)(sizeof(msg)-1));
+            bu_ssize_t n = bu_ipc_write(ce, msg, sizeof(msg)-1);
+            TEST("write from child end succeeds", n == (bu_ssize_t)(sizeof(msg)-1));
 
             g_tcl_handler_invoked = 0;
             /* TCL_DONT_WAIT: process one event without blocking */
@@ -440,10 +464,15 @@ test_tcl_file_handler(void)
     Tcl_DeleteInterp(interp);
 }
 
+#endif /* !_WIN32 */
+
 
 /* ================================================================== */
 /* Group 7: $fbserv(ipc_addr) Tcl variable path (Phase 6)             */
 /* ================================================================== */
+
+#ifndef _WIN32
+
 static void
 test_tcl_fbserv_var(void)
 {
@@ -507,12 +536,16 @@ test_tcl_fbserv_var(void)
     Tcl_DeleteInterp(interp);
 }
 
+#endif /* !_WIN32 */
+
 
 /* ================================================================== */
 /* Group 8: fbserv -I <addr> flag (Phase 7)                           */
 /* Spawns fbserv -F /dev/null -I <addr> and verifies it accepts the   */
 /* flag without printing "Illegal option" or "Usage:".                */
+/* This test uses POSIX shell features and is skipped on Windows.     */
 /* ================================================================== */
+#ifndef _WIN32
 static void
 test_fbserv_minus_I(const char *fbserv_bin)
 {
@@ -554,7 +587,7 @@ test_fbserv_minus_I(const char *fbserv_bin)
      * ~100 ms in practice); cap at 2 s to avoid flakiness on slow runners. */
     FILE *log = nullptr;
     for (int attempt = 0; attempt < 20 && !log; ++attempt) {
-        usleep(100000);   /* 100 ms per attempt, up to 2 s total */
+        bu_snooze(BU_SEC2USEC(0.1));   /* 100 ms per attempt, up to 2 s total */
         log = fopen(log_path, "r");
     }
 
@@ -575,8 +608,9 @@ test_fbserv_minus_I(const char *fbserv_bin)
 
     bu_ipc_close(pe);
     bu_ipc_close(ce);
-    usleep(200000);
+    bu_snooze(BU_SEC2USEC(0.2));
 }
+#endif /* !_WIN32 */
 
 
 /* ================================================================== */
@@ -585,8 +619,10 @@ test_fbserv_minus_I(const char *fbserv_bin)
 int
 main(int argc, const char **argv)
 {
+#ifdef SIGPIPE
     /* Ignore SIGPIPE: writes to closed peers must not crash the harness */
     signal(SIGPIPE, SIG_IGN);
+#endif
 
     for (int i = 1; i < argc; ++i)
         if (strcmp(argv[i], "--verbose") == 0 ||
@@ -601,7 +637,15 @@ main(int argc, const char **argv)
         /* Walk up from test binary to find bin/ */
         if (argc > 0) {
             snprintf(fbserv_path, sizeof(fbserv_path), "%s", argv[0]);
+            /* Find last path separator (handle both / and \ on Windows) */
             char *slash = strrchr(fbserv_path, '/');
+#ifdef _WIN32
+            {
+                char *bslash = strrchr(fbserv_path, '\\');
+                if (!slash || (bslash && bslash > slash))
+                    slash = bslash;
+            }
+#endif
             if (slash) {
                 *slash = '\0';
                 /* Check sibling bin/ from test build dir */
@@ -629,9 +673,18 @@ main(int argc, const char **argv)
     test_bu_ipc_connect();
     test_fbs_open_ipc_smoke();
     test_env_var_end_to_end();
+#ifndef _WIN32
     test_tcl_file_handler();
     test_tcl_fbserv_var();
     test_fbserv_minus_I(fbserv_bin);
+#else
+    (void)fbserv_bin;
+    if (g_verbose) {
+        fprintf(stdout, "\n[Group 6] SKIPPED (Tcl_CreateFileHandler not available on Windows)\n");
+        fprintf(stdout, "\n[Group 7] SKIPPED (uses Tcl_CreateFileHandler callbacks on Windows)\n");
+        fprintf(stdout, "\n[Group 8] SKIPPED (POSIX shell spawn not available on Windows)\n");
+    }
+#endif
 
     fprintf(stdout, "\n==============================================\n");
     fprintf(stdout, "  Results: %d / %d passed\n", g_tests_pass, g_tests_run);
