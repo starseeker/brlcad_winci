@@ -46,6 +46,7 @@
 #include "bsocket.h"
 
 #include "bu/app.h"
+#include "bu/ipc.h"
 #include "bu/str.h"
 #include "bu/process.h"
 #include "bu/snooze.h"
@@ -104,6 +105,10 @@ static char idbuf[132] = {0};		/* First ID record info */
 static int seen_dirbuild = 0;
 static int seen_gettrees = 0;
 static int seen_matrix = 0;
+
+/* Set to 1 when the remrt connection is lost mid-render so the main loop
+ * can break cleanly rather than calling bu_exit() from a hook function.  */
+static volatile int rtsrv_connection_lost = 0;
 
 /* Frame number for which grid vectors and lighting have been initialized.
  * Set to -1 by prepare() and ph_matrix() to force re-setup on the next
@@ -167,7 +172,8 @@ int debug = 0;		/* 0=off, 1=debug, 2=verbose */
  */
 static char srv_auth_token[REMRT_AUTH_TOKEN_LEN + 1] = {0};
 
-char srv_usage[] = "Usage: rtsrv [-d] [-S token] control-host tcp-port [cmd]\n";
+char srv_usage[] = "Usage: rtsrv [-d] [-S token] [-I ipc-addr] control-host tcp-port [cmd]\n"
+		   "       rtsrv [-d] [-S token]  -I ipc-addr\n";
 
 /* forward declarations for log/bomb hook helpers defined later in this file */
 static int rtsrv_log_hook(void *clientdata, void *str);
@@ -179,6 +185,7 @@ int
 main(int argc, char **argv)
 {
     int n;
+    const char *ipc_addr = NULL;   /* set by -I flag; enables IPC mode */
 
     bu_setprogname(argv[0]);
 
@@ -188,7 +195,7 @@ main(int argc, char **argv)
     }
     original_argc = argc;
     original_argv = bu_argv_dup(argc, (const char **)argv);
-    while (argv[1][0] == '-') {
+    while (argc > 1 && argv[1][0] == '-') {
 	if (BU_STR_EQUAL(argv[1], "-d")) {
 	    debug++;
 	} else if (BU_STR_EQUAL(argv[1], "-x")) {
@@ -206,39 +213,89 @@ main(int argc, char **argv)
 	    bu_strlcpy(srv_auth_token, argv[2],
 		       sizeof(srv_auth_token));
 	    argc--; argv++;
+	} else if (BU_STR_EQUAL(argv[1], "-I")) {
+	    /* IPC connection address supplied by remrt via -I <addr>.
+	     * When present, no host/port positional args are needed.  */
+	    if (argc < 3) {
+		fprintf(stderr, "%s", srv_usage);
+		return 3;
+	    }
+	    ipc_addr = argv[2];
+	    argc--; argv++;
 	} else {
 	    fprintf(stderr, "%s", srv_usage);
 	    return 3;
 	}
 	argc--; argv++;
     }
-    if (argc != 3 && argc != 4) {
-	fprintf(stderr, "%s", srv_usage);
-	return 2;
-    }
 
-    control_host = argv[1];
-    tcp_port = argv[2];
+    /* Determine IPC mode: -I flag takes explicit precedence; fall back to
+     * the BU_IPC_ADDR environment variable (BU_IPC_ADDR_ENVVAR) set by
+     * the parent before fork() (see add_host_local() in remrt.c).         */
+    {
+	bu_ipc_chan_t *ch = NULL;
+	if (ipc_addr) {
+	    ch = bu_ipc_connect(ipc_addr);
+	    if (!ch) {
+		fprintf(stderr, "rtsrv: bu_ipc_connect(%s) failed\n", ipc_addr);
+		return 1;
+	    }
+	} else {
+	    ch = bu_ipc_connect_env();
+	}
 
-    /* Note that the LIBPKG error logger can not be
-     * "bu_log", as that can cause bu_log to be entered recursively.
-     * Given the special version of bu_log in use here,
-     * that will result in a deadlock in bu_semaphore_acquire(res_syscall)!
-     * libpkg will default to stderr via pkg_errlog(), which is fine.
-     */
-    pcsrv = pkg_open(control_host, tcp_port, "tcp", "", "", pkgswitch, NULL);
-    if (pcsrv == PKC_ERROR) {
-	fprintf(stderr, "rtsrv: unable to contact %s, port %s\n",
-		control_host, tcp_port);
-	return 1;
+	if (ch) {
+	    /* IPC mode: remrt created a socketpair, moved the child-end fd
+	     * above the close(3..19) sweep in bu_process_create(), and
+	     * advertised it via -I or BU_IPC_ADDR (BU_IPC_ADDR_ENVVAR).
+	     * bu_ipc_connect (or bu_ipc_connect_env) wraps the already-
+	     * inherited fd.  Wrap it into a pkg_conn so the rest of the code
+	     * is transport-agnostic.  No host/port positional args consumed. */
+	    pcsrv = pkg_open_fds(bu_ipc_fileno(ch),
+				 bu_ipc_fileno_write(ch),
+				 pkgswitch, NULL);
+	    bu_ipc_detach(ch);   /* pkg_conn owns the fds now */
+	    if (pcsrv == PKC_ERROR || pcsrv == PKC_NULL) {
+		fprintf(stderr, "rtsrv: pkg_open_fds() failed in IPC mode\n");
+		return 1;
+	    }
+	    if (debug)
+		fprintf(stderr, "rtsrv: IPC mode active (addr=%s)\n",
+			ipc_addr ? ipc_addr : getenv(BU_IPC_ADDR_ENVVAR));
+	} else {
+	    /* Normal TCP mode */
+	    if (argc != 3 && argc != 4) {
+		fprintf(stderr, "%s", srv_usage);
+		return 2;
+	    }
+
+	    control_host = argv[1];
+	    tcp_port = argv[2];
+
+	    /* Note that the LIBPKG error logger can not be
+	     * "bu_log", as that can cause bu_log to be entered recursively.
+	     * Given the special version of bu_log in use here,
+	     * that will result in a deadlock in bu_semaphore_acquire(res_syscall)!
+	     * libpkg will default to stderr via pkg_errlog(), which is fine.
+	     */
+	    pcsrv = pkg_open(control_host, tcp_port, "tcp", "", "", pkgswitch, NULL);
+	    if (pcsrv == PKC_ERROR) {
+		fprintf(stderr, "rtsrv: unable to contact %s, port %s\n",
+			control_host, tcp_port);
+		return 1;
+	    }
+	}
     }
 
 #ifdef HAVE_OPENSSL_SSL_H
     /* Attempt TLS handshake with the remrt dispatcher.  If remrt was
      * built with TLS support it will do SSL_accept() on its side;
      * if not (or the handshake fails) we continue as plaintext for
-     * backward compatibility. */
-    {
+     * backward compatibility.
+     * Skip TLS in IPC mode — the bu_ipc transport runs on the same
+     * machine and the shared-memory or socketpair channel does not
+     * need encryption.                                               */
+    if (control_host) {
 	SSL_CTX *tls_ctx = remrt_tls_client_ctx();
 	if (tls_ctx) {
 	    if (remrt_tls_connect(tls_ctx, pcsrv) == REMRT_TLS_OK) {
@@ -258,6 +315,13 @@ main(int argc, char **argv)
      * all log output is forwarded to the remrt dispatcher instead of
      * going to stderr.  Must be done after pcsrv is open. */
     rtsrv_install_log_hook();
+
+#ifdef SIGPIPE
+    /* Ignore SIGPIPE so that a broken remrt connection causes pkg_send()
+     * to return EPIPE rather than killing this process with a signal.
+     * The main loop already handles negative pkg_send returns gracefully. */
+    (void)signal(SIGPIPE, SIG_IGN);
+#endif
 
     if (argc == 4) {
 	/* Slip one command to dispatcher */
@@ -405,6 +469,12 @@ main(int argc, char **argv)
 	struct pkg_queue *lp;
 	fd_set ifds;
 	struct timeval tv;
+
+	/* Exit cleanly if the log hook detected a broken connection. */
+	if (rtsrv_connection_lost) {
+	    fprintf(stderr, "rtsrv: connection to remrt lost, exiting\n");
+	    break;
+	}
 
 	/* First, process any packages in library buffers */
 	if (pkg_process(pcsrv) < 0) {
@@ -556,8 +626,16 @@ ph_dirbuild(struct pkg_conn *UNUSED(pc), char *buf)
     bu_free(argv, "free argv");
 
     /* Build directory of GED database */
-    if ((rtip=rt_dirbuild(title_file, idbuf, sizeof(idbuf))) == RTI_NULL)
-	bu_exit(2, "ph_dirbuild:  rt_dirbuild(%s) failure\n", title_file);
+    if ((rtip=rt_dirbuild(title_file, idbuf, sizeof(idbuf))) == RTI_NULL) {
+	/* Log via bu_log so the message is forwarded to remrt over the pkg
+	 * connection before we exit, then signal the main loop to exit
+	 * cleanly (matching the ph_lines pattern).  Using bu_exit() here
+	 * races against the MSG_PRINT flush since the process terminates
+	 * immediately after all hooks return.                            */
+	bu_log("ph_dirbuild:  rt_dirbuild(%s) failure\n", title_file);
+	rtsrv_connection_lost = 1;
+	return;
+    }
     APP.a_rt_i = rtip;
     seen_dirbuild = 1;
 
@@ -624,7 +702,7 @@ ph_gettrees(struct pkg_conn *UNUSED(pc), char *buf)
 
     /* Load the desired portion of the model */
     if (rt_gettrees(rtip, argc, (const char **)argv, npsw) < 0)
-	fprintf(stderr, "rt_gettrees(%s) FAILED\n", argv[0]);
+	bu_log("rt_gettrees(%s) FAILED\n", argv[0]);
     bu_free(argv, "free argv");
 
     seen_gettrees = 1;
@@ -865,6 +943,11 @@ ph_lines(struct pkg_conn *UNUSED(pc), char *buf)
 	    bu_log("ph_lines: grid_setup failed: %s\n", bu_vls_cstr(&err));
 	    bu_vls_free(&err);
 	    free(buf);
+	    /* Signal the main loop to exit so that remrt detects the
+	     * dropped connection and requeues the pixel range to
+	     * fr_todo, rather than waiting indefinitely for a
+	     * MSG_PIXELS reply that will never arrive.              */
+	    rtsrv_connection_lost = 1;
 	    return;
 	}
 	bu_vls_free(&err);
@@ -942,7 +1025,11 @@ rtsrv_log_hook(void *clientdata, void *str)
     ret = pkg_send(MSG_PRINT, (const char *)str, strlen((const char *)str)+1, pcsrv);
     if (ret < 0) {
 	fprintf(stderr, "pkg_send MSG_PRINT failed\n");
-	bu_exit(12, NULL);
+	/* Mark the connection as lost; the main loop will break cleanly.
+	 * Do NOT call bu_exit() here — this hook may be invoked from inside
+	 * a parallel rendering thread, and bu_exit() from such a context is
+	 * not safe.                                                          */
+	rtsrv_connection_lost = 1;
     }
     return 0;
 }
