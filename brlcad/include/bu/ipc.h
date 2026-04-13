@@ -491,11 +491,24 @@ typedef struct bu_ipc_mux bu_ipc_mux_t;
 BU_EXPORT bu_ipc_mux_t *bu_ipc_mux_create(void);
 
 /**
- * Add @p fd to the watch set.
+ * Add a CRT file descriptor (pipe, stdin, regular file) to the watch set.
  *
- * Duplicate adds are a no-op.  Returns 0 on success, -1 on error.
+ * On Windows the fd must be a genuine CRT fd (returned by _open_osfhandle()
+ * or _open()) — NOT a WinSock SOCKET cast to int.  To add a socket use
+ * bu_ipc_mux_add_socket() instead.  Duplicate adds are a no-op.
+ * Returns 0 on success, -1 on error.
  */
 BU_EXPORT int bu_ipc_mux_add(bu_ipc_mux_t *m, int fd);
+
+/**
+ * Add a WinSock socket (on Windows) or plain fd (on POSIX) to the watch set.
+ *
+ * On Windows this always takes the WSAEventSelect() path, avoiding the
+ * _get_osfhandle() call that would crash for socket handle values.
+ * On POSIX this is identical to bu_ipc_mux_add().
+ * Duplicate adds are a no-op.  Returns 0 on success, -1 on error.
+ */
+BU_EXPORT int bu_ipc_mux_add_socket(bu_ipc_mux_t *m, int socket_fd);
 
 /** Remove @p fd from the watch set.  No-op if fd is not present. */
 BU_EXPORT void bu_ipc_mux_remove(bu_ipc_mux_t *m, int fd);

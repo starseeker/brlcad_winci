@@ -837,8 +837,12 @@ check_input(int waittime)
     struct pkg_conn *pc;
     int val;
 
+    fprintf(stderr, "DEBUG check_input: called waittime=%d\n", waittime); fflush(stderr);
+
     /* Step 1: Drain any packages already buffered in libpkg */
+    fprintf(stderr, "DEBUG: step1 reap\n"); fflush(stderr);
     reap_helpers();
+    fprintf(stderr, "DEBUG: step1 process loop\n"); fflush(stderr);
     for (i = 0; i < (int)MAXSERVERS; i++) {
 	pc = servers[i].sr_pc;
 	if (pc == PKC_NULL) continue;
@@ -856,15 +860,24 @@ check_input(int waittime)
      * On POSIX bu_ipc_mux wraps select(); on Windows it uses
      * WaitForMultipleObjects() for pipe handles and WSAEventSelect()
      * for WinSock sockets — callers need not know which.               */
+    fprintf(stderr, "DEBUG: step2 create mux\n"); fflush(stderr);
     bu_ipc_mux_t *mux = bu_ipc_mux_create();
-    bu_ipc_mux_add(mux, tcp_listen_fd);
+    fprintf(stderr, "DEBUG: step2 add tcp fd=%d\n", tcp_listen_fd); fflush(stderr);
+    bu_ipc_mux_add_socket(mux, tcp_listen_fd);
+    fprintf(stderr, "DEBUG: step2 added tcp\n"); fflush(stderr);
 
     for (i = 0; i < (int)MAXSERVERS; i++) {
 	pc = servers[i].sr_pc;
 	if (pc == PKC_NULL) continue;
-	int rfd = (pc->pkc_fd == PKG_STDIO_MODE) ? pc->pkc_in_fd : pc->pkc_fd;
-	if (rfd >= 0)
-	    bu_ipc_mux_add(mux, rfd);
+	if (pc->pkc_fd == PKG_STDIO_MODE) {
+	    /* Pipe: pkc_in_fd is a real CRT fd — safe for bu_ipc_mux_add() */
+	    if (pc->pkc_in_fd >= 0)
+		bu_ipc_mux_add(mux, pc->pkc_in_fd);
+	} else {
+	    /* Socket: pkc_fd is a WinSock SOCKET cast to int */
+	    if (pc->pkc_fd >= 0)
+		bu_ipc_mux_add_socket(mux, pc->pkc_fd);
+	}
     }
 
     /* Track stdin for interactive mode. */
@@ -876,7 +889,9 @@ check_input(int waittime)
 
     /* Step 3: Wait */
     int timeout_ms = (waittime > 0) ? waittime * 1000 : 0;
+    fprintf(stderr, "DEBUG check_input: before mux_wait timeout_ms=%d\n", timeout_ms); fflush(stderr);
     val = bu_ipc_mux_wait(mux, timeout_ms);
+    fprintf(stderr, "DEBUG check_input: after mux_wait val=%d\n", val); fflush(stderr);
 
     if (val < 0) {
 	bu_log("check_input: bu_ipc_mux_wait error\n");

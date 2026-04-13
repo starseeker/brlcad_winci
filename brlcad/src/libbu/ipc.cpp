@@ -804,6 +804,13 @@ bu_ipc_mux_is_ready(const bu_ipc_mux_t *m, int fd)
     return FD_ISSET(fd, &m->ready) ? 1 : 0;
 }
 
+int
+bu_ipc_mux_add_socket(bu_ipc_mux_t *m, int socket_fd)
+{
+    /* POSIX: sockets are regular fds; identical to bu_ipc_mux_add(). */
+    return bu_ipc_mux_add(m, socket_fd);
+}
+
 #else /* _WIN32 */
 
 /* Windows implementation:
@@ -851,6 +858,23 @@ bu_ipc_mux_add(bu_ipc_mux_t *m, int fd)
     HANDLE h = (HANDLE)_get_osfhandle(fd);
     ent.pipe_h = (h != INVALID_HANDLE_VALUE && GetFileType(h) == FILE_TYPE_PIPE)
                  ? h : INVALID_HANDLE_VALUE;
+    m->entries.push_back(ent);
+    return 0;
+}
+
+int
+bu_ipc_mux_add_socket(bu_ipc_mux_t *m, int socket_fd)
+{
+    /* On Windows, WinSock SOCKETs are not CRT fds; calling _get_osfhandle()
+     * on them triggers the invalid-parameter handler.  Force the WSA path by
+     * setting pipe_h = INVALID_HANDLE_VALUE unconditionally.               */
+    if (!m || socket_fd < 0) return -1;
+    for (auto &e : m->entries)
+        if (e.fd == socket_fd) return 0;  /* duplicate */
+
+    bu_ipc_mux_entry ent;
+    ent.fd = socket_fd;
+    ent.pipe_h = INVALID_HANDLE_VALUE;  /* always WSA path */
     m->entries.push_back(ent);
     return 0;
 }

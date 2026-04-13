@@ -1,23 +1,35 @@
-Start testing: Apr 12 17:03 Coordinated Universal Time
+Start testing: Apr 13 13:23 Coordinated Universal Time
 ----------------------------------------------------------
 1080/1094 Testing: regress-remrt
 1080/1094 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 12 17:03 Coordinated Universal Time
+"regress-remrt" start time: Apr 13 13:23 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: IPC 512x512 benchmark ===
+regress_remrt [IPC 512x512 benchmark]: remrt exited with status -1073740791
+  stderr:
+04/13 13:23:18  BRL-CAD Release 7.43.0  Network-Distributed RT (REMRT)    Mon, 13 Apr 2026 12:48:48 UTC, Compilation 12    runneradmin@runnervm2p0d804/13 13:23:18 Session token: 6376cfab879c303535e56de8a516b854f1ca29044d6d4f5a4469e8322a16af6504/13 13:23:18 TLS enabled (self-signed cert)pkg_permserver(rtsrv, 8): unknown service04/13 13:23:18 Automatic REMRT on 04/13 13:23:18 Assigned LIBPKG permport 004/13 13:23:18 Listening at TCP port 444604/13 13:23:18 Reading script on stdin
+FAIL: sub-test 1 (IPC benchmark render)
+
+=== remrt regression: IPC 64x64 quick ===
+regress_remrt [IPC 64x64 quick]: remrt exited with status -1073740791
+  stderr:
+04/13 13:23:21  BRL-CAD Release 7.43.0  Network-Distributed RT (REMRT)    Mon, 13 Apr 2026 12:48:48 UTC, Compilation 12    runneradmin@runnervm2p0d804/13 13:23:21 Session token: 991595a35bd4842c065e94d061c0f5e3907ac419724d5623040ee07426e9077604/13 13:23:21 TLS enabled (self-signed cert)pkg_permserver(rtsrv, 8): unknown service04/13 13:23:21 Automatic REMRT on 04/13 13:23:21 Assigned LIBPKG permport 004/13 13:23:21 Listening at TCP port 444604/13 13:23:21 Reading script on stdin
+FAIL: sub-test 2 (IPC quick render)
+
+2 remrt regression sub-test(s) FAILED.
 <end of output>
-Test time = 600.28 sec
+Test time =   8.30 sec
 ----------------------------------------------------------
 Test Failed.
-"regress-remrt" end time: Apr 12 17:13 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:10:00
+"regress-remrt" end time: Apr 13 13:23 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:08
 ----------------------------------------------------------
 
-End testing: Apr 12 17:13 Coordinated Universal Time
+End testing: Apr 13 13:23 Coordinated Universal Time
 
-Regression = 600.28 sec*proc
+Regression =   8.30 sec*proc
 
