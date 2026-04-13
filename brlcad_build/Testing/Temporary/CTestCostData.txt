@@ -1,4 +1,4 @@
-regress-remrt 8 0
+regress-remrt 10 0.286633
 regress-asc 0 0
 regress-asc2dsp 0 0
 regress-bots 0 0
@@ -149,5 +149,5 @@ regress-spdi 0 0
 regress-shaders 0 0
 regress-weight 0 0
 regress-ipc 2 0.12025
+bu_ipc_test 1 0.0633053
 ---
-regress-remrt

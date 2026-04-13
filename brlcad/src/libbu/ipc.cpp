@@ -575,7 +575,13 @@ bu_ipc_write(bu_ipc_chan_t *chan, const void *buf, size_t nbytes)
     size_t rem = nbytes;
     while (rem > 0) {
 #ifdef _WIN32
-	int n = _write(wfd, p, (unsigned)(rem > 65536 ? 65536 : rem));
+	int n;
+	if (chan->type == BU_IPC_TCP) {
+	    /* wfd is a WinSock SOCKET after tcp_accept(); must use send(). */
+	    n = send((SOCKET)wfd, p, (int)(rem > 65536 ? 65536 : rem), 0);
+	} else {
+	    n = _write(wfd, p, (unsigned)(rem > 65536 ? 65536 : rem));
+	}
 #else
 	ssize_t n = write(wfd, p, rem);
 #endif
@@ -599,11 +605,19 @@ bu_ipc_read(bu_ipc_chan_t *chan, void *buf, size_t nbytes)
     size_t rem = nbytes;
     while (rem > 0) {
 #ifdef _WIN32
-	int n = _read(rfd, p, (unsigned)(rem > 65536 ? 65536 : rem));
+	int n;
+	if (chan->type == BU_IPC_TCP) {
+	    /* rfd is a WinSock SOCKET after tcp_accept(); must use recv(). */
+	    n = recv((SOCKET)rfd, p, (int)(rem > 65536 ? 65536 : rem), 0);
+	    if (n == 0) return 0;  /* graceful close */
+	} else {
+	    n = _read(rfd, p, (unsigned)(rem > 65536 ? 65536 : rem));
+	    if (n == 0) return 0;
+	}
 #else
 	ssize_t n = read(rfd, p, rem);
-#endif
 	if (n == 0) return 0;
+#endif
 	if (n < 0)  return -1;
 	p   += n;
 	rem -= (size_t)n;
@@ -655,8 +669,15 @@ bu_ipc_close(bu_ipc_chan_t *chan)
     if (!chan) return;
 
 #ifdef _WIN32
-    if (chan->fd       >= 0) _close(chan->fd);
-    if (chan->fd_write >= 0 && chan->fd_write != chan->fd) _close(chan->fd_write);
+    if (chan->type == BU_IPC_TCP) {
+	/* TCP fds are WinSock sockets, not CRT fds — must use closesocket(). */
+	if (chan->fd       >= 0) closesocket((SOCKET)chan->fd);
+	if (chan->fd_write >= 0 && chan->fd_write != chan->fd)
+	    closesocket((SOCKET)chan->fd_write);
+    } else {
+	if (chan->fd       >= 0) _close(chan->fd);
+	if (chan->fd_write >= 0 && chan->fd_write != chan->fd) _close(chan->fd_write);
+    }
     if (chan->listen_fd >= 0) closesocket((SOCKET)chan->listen_fd);
 #else
     if (chan->fd       >= 0) close(chan->fd);

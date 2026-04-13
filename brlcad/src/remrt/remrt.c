@@ -837,12 +837,8 @@ check_input(int waittime)
     struct pkg_conn *pc;
     int val;
 
-    fprintf(stderr, "DEBUG check_input: called waittime=%d\n", waittime); fflush(stderr);
-
     /* Step 1: Drain any packages already buffered in libpkg */
-    fprintf(stderr, "DEBUG: step1 reap\n"); fflush(stderr);
     reap_helpers();
-    fprintf(stderr, "DEBUG: step1 process loop\n"); fflush(stderr);
     for (i = 0; i < (int)MAXSERVERS; i++) {
 	pc = servers[i].sr_pc;
 	if (pc == PKC_NULL) continue;
@@ -860,11 +856,8 @@ check_input(int waittime)
      * On POSIX bu_ipc_mux wraps select(); on Windows it uses
      * WaitForMultipleObjects() for pipe handles and WSAEventSelect()
      * for WinSock sockets — callers need not know which.               */
-    fprintf(stderr, "DEBUG: step2 create mux\n"); fflush(stderr);
     bu_ipc_mux_t *mux = bu_ipc_mux_create();
-    fprintf(stderr, "DEBUG: step2 add tcp fd=%d\n", tcp_listen_fd); fflush(stderr);
     bu_ipc_mux_add_socket(mux, tcp_listen_fd);
-    fprintf(stderr, "DEBUG: step2 added tcp\n"); fflush(stderr);
 
     for (i = 0; i < (int)MAXSERVERS; i++) {
 	pc = servers[i].sr_pc;
@@ -889,9 +882,7 @@ check_input(int waittime)
 
     /* Step 3: Wait */
     int timeout_ms = (waittime > 0) ? waittime * 1000 : 0;
-    fprintf(stderr, "DEBUG check_input: before mux_wait timeout_ms=%d\n", timeout_ms); fflush(stderr);
     val = bu_ipc_mux_wait(mux, timeout_ms);
-    fprintf(stderr, "DEBUG check_input: after mux_wait val=%d\n", val); fflush(stderr);
 
     if (val < 0) {
 	bu_log("check_input: bu_ipc_mux_wait error\n");
