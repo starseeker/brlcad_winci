@@ -1,23 +1,33 @@
-Start testing: Apr 12 17:03 Coordinated Universal Time
+Start testing: Apr 13 14:07 Coordinated Universal Time
 ----------------------------------------------------------
-1080/1094 Testing: regress-remrt
-1080/1094 Test: regress-remrt
+1081/1095 Testing: regress-remrt
+1081/1095 Test: regress-remrt
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 12 17:03 Coordinated Universal Time
+"regress-remrt" start time: Apr 13 14:07 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
 === remrt regression: IPC 512x512 benchmark ===
+regress_remrt [IPC 512x512 benchmark]: output file OK (786432 bytes)
+Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_ipc_bench.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
+  pixel-exact match
+PASS: sub-test 1 (IPC benchmark render matches reference)
+
+=== remrt regression: IPC 64x64 quick ===
+regress_remrt [IPC 64x64 quick]: output file OK (12288 bytes)
+PASS: sub-test 2 (IPC quick render)
+
+All remrt regression sub-tests PASSED.
 <end of output>
-Test time = 600.28 sec
+Test time =   2.87 sec
 ----------------------------------------------------------
-Test Failed.
-"regress-remrt" end time: Apr 12 17:13 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:10:00
+Test Passed.
+"regress-remrt" end time: Apr 13 14:07 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:02
 ----------------------------------------------------------
 
-End testing: Apr 12 17:13 Coordinated Universal Time
+End testing: Apr 13 14:07 Coordinated Universal Time
 
-Regression = 600.28 sec*proc
+Regression =   2.87 sec*proc
 

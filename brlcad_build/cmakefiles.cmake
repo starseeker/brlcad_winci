@@ -167,6 +167,8 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/vls_incr_uniq.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/hash.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/subprocess.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/perm_test.cpp
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/ipc/ipc_worker.c
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/ipc/run.c
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/CMakeLists.txt
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/bu_test.cpp.in
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/dylib/CMakeLists.txt
@@ -176,6 +178,7 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/dylib/dylib.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/dylib/plugin_1.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/dylib/plugin_2.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/dylib/run.c
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/ipc/CMakeLists.txt
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/path_match.in
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/tests_bitv.cmake
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/tests_vls.cmake

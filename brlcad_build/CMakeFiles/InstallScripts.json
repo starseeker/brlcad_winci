@@ -10,6 +10,7 @@
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/brledit/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/dylib/cmake_install.cmake",
+		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbn/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbn/tests/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbg/cmake_install.cmake",

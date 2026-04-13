@@ -132,6 +132,16 @@ D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/dylib/CMakeFiles/reb
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/dylib/CMakeFiles/list_install_components.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/dylib/CMakeFiles/install.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/dylib/CMakeFiles/install/local.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/ipc_worker.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/bu_ipc_test.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/package.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/package_source.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/test.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/edit_cache.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/rebuild_cache.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/list_install_components.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/install.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc/CMakeFiles/install/local.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbn/CMakeFiles/libbn.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbn/CMakeFiles/libbn-static.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbn/CMakeFiles/package.dir

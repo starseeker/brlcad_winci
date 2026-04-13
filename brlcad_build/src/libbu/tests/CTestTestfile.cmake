@@ -1133,3 +1133,4 @@ set_tests_properties([=[bu_file_realpath_2]=] PROPERTIES  _BACKTRACE_TRIPLES "D:
 add_test([=[bu_snooze]=] "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/bu_test.exe" "snooze")
 set_tests_properties([=[bu_snooze]=] PROPERTIES  _BACKTRACE_TRIPLES "D:/a/brlcad_winci/brlcad_winci/brlcad/misc/CMake/BRLCAD_Test_Wrappers.cmake:107:EVAL;1;add_test;D:/a/brlcad_winci/brlcad_winci/brlcad/misc/CMake/BRLCAD_Test_Wrappers.cmake:107:EVAL;0;;D:/a/brlcad_winci/brlcad_winci/brlcad/misc/CMake/BRLCAD_Test_Wrappers.cmake;107;cmake_language;D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/CMakeLists.txt;804;brlcad_add_test;D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/tests/CMakeLists.txt;0;")
 subdirs("dylib")
+subdirs("ipc")
