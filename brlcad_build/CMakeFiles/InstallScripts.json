@@ -472,6 +472,7 @@
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/nirt/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/nurbs/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv/cmake_install.cmake",
+		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/pkg/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/red/cmake_install.cmake",
 		"D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/repository/cmake_install.cmake",

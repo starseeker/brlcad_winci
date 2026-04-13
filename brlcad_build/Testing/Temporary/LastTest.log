@@ -1,35 +1,23 @@
-Start testing: Apr 08 23:55 Coordinated Universal Time
+Start testing: Apr 12 17:03 Coordinated Universal Time
 ----------------------------------------------------------
-1079/1093 Testing: regress-remrt
-1079/1093 Test: regress-remrt
-Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--rtsrv" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/rtsrv.exe" "--pixcmp" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/pixcmp.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
+1080/1094 Testing: regress-remrt
+1080/1094 Test: regress-remrt
+Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 08 23:55 Coordinated Universal Time
+"regress-remrt" start time: Apr 12 17:03 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
-=== remrt regression: token-auth 512x512 ===
-remrt port=4446  token=9e29fcb64e2b7a498eb6c8db8f3efd222530353e3977dc75d2647eca965ad86c
-regress_remrt [token-auth 512x512]: output file OK (786432 bytes)
-Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_token.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
-  pixel-exact match
-PASS: sub-test 1 (token-auth render matches reference)
-
-=== remrt regression: no-token 64x64 ===
-remrt port=4446  token=da4204e26104ddf1c97829b0cc5be048614c3331e1e3c1748635fe5db669e980
-regress_remrt [no-token 64x64]: output file OK (12288 bytes)
-PASS: sub-test 2 (no-token backward-compat render)
-
-All remrt regression sub-tests PASSED.
+=== remrt regression: IPC 512x512 benchmark ===
 <end of output>
-Test time =   4.62 sec
+Test time = 600.28 sec
 ----------------------------------------------------------
-Test Passed.
-"regress-remrt" end time: Apr 08 23:55 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:04
+Test Failed.
+"regress-remrt" end time: Apr 12 17:13 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:10:00
 ----------------------------------------------------------
 
-End testing: Apr 08 23:55 Coordinated Universal Time
+End testing: Apr 12 17:13 Coordinated Universal Time
 
-Regression =   4.62 sec*proc
+Regression = 600.28 sec*proc
 

@@ -16,6 +16,7 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/regress/g-dot.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/g-nff.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/gqa/gqa.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/iges/iges.sh
+D:/a/brlcad_winci/brlcad_winci/brlcad/regress/ipc/test_qged_ert.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/library.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/lights/lights.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/mged/mged.sh

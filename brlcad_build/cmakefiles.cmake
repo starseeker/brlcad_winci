@@ -67,6 +67,7 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/hook.c
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/htond.c
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/htonf.c
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/interrupt.c
+D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/ipc.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/lex.c
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/linebuf.c
 D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/list.c
@@ -4204,6 +4205,7 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/hash.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/hist.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/hook.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/interrupt.h
+D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/ipc.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/list.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/log.h
 D:/a/brlcad_winci/brlcad_winci/brlcad/include/bu/magic.h
@@ -5308,6 +5310,7 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/books/images/hacking_brlcad_x
 D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/books/HACKING_BRL-CAD.adoc
 D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/devguides/CMakeLists.txt
 D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/devguides/bool_eval_development.adoc
+D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/devguides/iterate_geometry.adoc
 D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/devguides/images/ccx_overlap_event.png
 D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/devguides/images/ssx_transverse_event.png
 D:/a/brlcad_winci/brlcad_winci/brlcad/doc/asciidoc/devguides/images/ssx_tangent_event.png
@@ -6388,6 +6391,10 @@ D:/a/brlcad_winci/brlcad_winci/brlcad/regress/nurbs/regress-nurbs-test.cmake.in
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/nurbs/sph.g
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/fbserv/fbserv_stress.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/fbserv/CMakeLists.txt
+D:/a/brlcad_winci/brlcad_winci/brlcad/regress/ipc/regress_ipc.cpp
+D:/a/brlcad_winci/brlcad_winci/brlcad/regress/ipc/CMakeLists.txt
+D:/a/brlcad_winci/brlcad_winci/brlcad/regress/ipc/test_qt_ipc.cpp
+D:/a/brlcad_winci/brlcad_winci/brlcad/regress/ipc/test_qged_ert.sh
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/pkg/regress_pkg.cpp
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/pkg/CMakeLists.txt
 D:/a/brlcad_winci/brlcad_winci/brlcad/regress/pkg/regress-pkg.cmake.in

@@ -4758,6 +4758,16 @@ D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv/CMakeFiles/rebuild_ca
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv/CMakeFiles/list_install_components.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv/CMakeFiles/install.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv/CMakeFiles/install/local.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/regress_ipc.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/regress-ipc.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/package.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/package_source.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/test.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/edit_cache.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/rebuild_cache.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/list_install_components.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/install.dir
+D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc/CMakeFiles/install/local.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/pkg/CMakeFiles/regress_pkg.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/pkg/CMakeFiles/regress-pkg.dir
 D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/pkg/CMakeFiles/package.dir

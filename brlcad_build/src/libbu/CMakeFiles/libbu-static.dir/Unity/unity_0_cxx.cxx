@@ -19,8 +19,8 @@
 #include "D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/file.cpp"
 
 /* NOLINTNEXTLINE(bugprone-suspicious-include,misc-include-cleaner) */
-#include "D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/snooze.cpp"
+#include "D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/ipc.cpp"
 
 /* NOLINTNEXTLINE(bugprone-suspicious-include,misc-include-cleaner) */
-#include "D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/vls_incr.cpp"
+#include "D:/a/brlcad_winci/brlcad_winci/brlcad/src/libbu/snooze.cpp"
 
