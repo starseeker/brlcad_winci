@@ -1,4 +1,4 @@
-regress-remrt 10 0.286633
+regress-remrt 13 1.6029
 regress-asc 0 0
 regress-asc2dsp 0 0
 regress-bots 0 0
@@ -148,6 +148,8 @@ regress-solids 0 0
 regress-spdi 0 0
 regress-shaders 0 0
 regress-weight 0 0
-regress-ipc 2 0.12025
-bu_ipc_test 1 0.0633053
+regress-ipc 5 0.113546
+bu_ipc_test 4 0.0504334
+regress-fbserv-stress-quick 1 3.66483
+regress-fbserv-stress-heavy 1 3.67335
 ---
