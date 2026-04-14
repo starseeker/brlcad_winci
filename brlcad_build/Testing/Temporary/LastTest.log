@@ -1,37 +1,324 @@
-Start testing: Apr 14 02:20 Coordinated Universal Time
+Start testing: Apr 14 02:33 Coordinated Universal Time
 ----------------------------------------------------------
-1081/1095 Testing: regress-remrt
-1081/1095 Test: regress-remrt
-Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
-Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
-"regress-remrt" start time: Apr 14 02:20 Coordinated Universal Time
+1076/1095 Testing: regress-fbserv-stress-quick
+1076/1095 Test: regress-fbserv-stress-quick
+Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/fbserv_stress.exe" "--workers" "8"
+Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv
+"regress-fbserv-stress-quick" start time: Apr 14 02:33 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
-
-=== remrt regression: IPC 512x512 benchmark ===
-regress_remrt [IPC 512x512 benchmark]: output file OK (786432 bytes)
-Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_ipc_bench.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
-  pixel-exact match
-PASS: sub-test 1 (IPC benchmark render matches reference)
-
-=== remrt regression: IPC 64x64 quick ===
-regress_remrt [IPC 64x64 quick]: output file OK (12288 bytes)
-PASS: sub-test 2 (IPC quick render)
-
-All remrt regression sub-tests PASSED.
+fbserv_stress: launching 8 parallel workers (base-port 17520)
+pkg_open: client connect: errno=2
+pkg_open: client connect: errno=2
+[worker 5] using port 17525
+[worker 6] using port 17526
+[worker 5] token 9d22175ffdf21848...
+[worker 6] token 932cbf611ded9f95...
+[worker 5] fbserv launched (pid 2592)
+[worker 6] fbserv launched (pid 8208)
+pkg_open: client connect: errno=2
+[worker 3] using port 17522
+pkg_open: client connect: errno=2
+[worker 3] token 8a3766633ee926e3...
+[worker 1] using port 17520
+[worker 1] token 9030f662d3977605...
+pkg_open: client connect: errno=2
+[worker 0] using port 17523
+[worker 0] token 8d332e6288404e74...
+pkg_open: client connect: errno=2
+[worker 7] using port 17527
+pkg_open: client connect: errno=2
+[worker 7] token 972987606844c726...
+[worker 2] using port 17521
+[worker 2] token 863b9e64f392fd53...
+[worker 3] fbserv launched (pid 7012)
+[worker 0] fbserv launched (pid 9496)
+[worker 7] fbserv launched (pid 8308)
+[worker 2] fbserv launched (pid 6980)
+[worker 1] fbserv launched (pid 2768)
+pkg_open: client connect: errno=2
+[worker 4] using port 17524
+[worker 4] token 9a254f60b29bf0b7...
+[worker 4] fbserv launched (pid 4812)
+[worker 5] connected after 1 attempt(s)
+[worker 5] fbserv opened OK: 512x512
+[worker 5] PASSED
+[worker 0] connected after 1 attempt(s)
+[worker 7] connected after 1 attempt(s)
+[worker 0] fbserv opened OK: 512x512
+[worker 7] fbserv opened OK: 512x512
+[worker 0] PASSED
+[worker 7] PASSED
+[worker 6] connected after 1 attempt(s)
+[worker 3] connected after 1 attempt(s)
+[worker 2] connected after 1 attempt(s)
+[worker 6] fbserv opened OK: 512x512
+[worker 3] fbserv opened OK: 512x512
+[worker 2] fbserv opened OK: 512x512
+[worker 3] PASSED
+[worker 6] PASSED
+[worker 2] PASSED
+[worker 1] connected after 1 attempt(s)
+[worker 4] connected after 1 attempt(s)
+[worker 1] fbserv opened OK: 512x512
+[worker 1] PASSED
+[worker 4] fbserv opened OK: 512x512
+[worker 4] PASSED
+fbserv_stress: 8/8 workers passed
 <end of output>
-Test time =   2.34 sec
+Test time =   3.66 sec
 ----------------------------------------------------------
 Test Passed.
-"regress-remrt" end time: Apr 14 02:20 Coordinated Universal Time
-"regress-remrt" time elapsed: 00:00:02
+"regress-fbserv-stress-quick" end time: Apr 14 02:33 Coordinated Universal Time
+"regress-fbserv-stress-quick" time elapsed: 00:00:03
+----------------------------------------------------------
+
+1077/1095 Testing: regress-fbserv-stress-heavy
+1077/1095 Test: regress-fbserv-stress-heavy
+Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/fbserv_stress.exe" "--workers" "32"
+Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv
+"regress-fbserv-stress-heavy" start time: Apr 14 02:33 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+fbserv_stress: launching 32 parallel workers (base-port 15040)
+pkg_open: client connect: errno=2
+[worker 25] using port 15065
+pkg_open: client connect: errno=2
+[worker 25] token 68530b28f45745e6...
+pkg_open: client connect: errno=2
+[worker 6] using port 15042
+[worker 6] token baf997173dcf3908...
+[worker 14] using port 15064
+[worker 14] token a016561ce81af582...
+pkg_open: client connect: errno=2
+pkg_open: client connect: errno=2
+[worker 3] using port 15048
+[worker 3] token b0043f195dcbbf56...
+[worker 28] using port 15068
+[worker 28] token 72486426d45bbf98...
+pkg_open: client connect: errno=2
+[worker 7] using port 15045
+pkg_open: client connect: errno=2
+[worker 7] token bdf6601687266199...
+[worker 5] using port 15041
+[worker 5] token c4eff0151cd4b2ba...
+[worker 25] fbserv launched (pid 7884)
+[worker 3] fbserv launched (pid 9208)
+pkg_open: client connect: errno=2
+[worker 13] using port 15053
+[worker 13] token a90baf1ac81e6e34...
+pkg_open: client connect: errno=2
+[worker 30] using port 15069
+[worker 30] token 6b50d3273fae6e77...
+[worker 28] fbserv launched (pid 3556)
+pkg_open: client connect: errno=2
+[worker 24] using port 15063
+[worker 24] token 65574328aa001d55...
+pkg_open: client connect: errno=2
+[worker 19] using port 15059
+[worker 19] token 7c3ebc24b460384a...
+pkg_open: client connect: errno=2
+[worker 8] using port 15046
+[worker 8] token 991dc61e536ca461...
+pkg_open: client connect: errno=2
+[worker 26] using port 15054
+[worker 26] token 5e5eb32a1553cc34...
+pkg_open: client connect: errno=2
+[worker 15] using port 15055
+[worker 15] token a3131e1b33701e13...
+[worker 14] fbserv launched (pid 2024)
+[worker 7] fbserv launched (pid 6728)
+[worker 6] fbserv launched (pid 9616)
+pkg_open: client connect: errno=2
+[worker 12] using port 15052
+[worker 12] token a60fe61b7dc746a4...
+pkg_open: client connect: errno=2
+[worker 16] using port 15056
+[worker 16] token 7f3a8423feb661db...
+pkg_open: client connect: errno=2
+[worker 22] using port 15070
+[worker 22] token 863315229364b2fc...
+pkg_open: client connect: errno=2
+[worker 4] using port 15044
+[worker 4] token c0f22815d27d8a29...
+pkg_open: client connect: errno=2
+[worker 29] using port 15067
+[worker 29] token 75452c251fb2e729...
+pkg_open: client connect: errno=2
+[worker 21] using port 15061
+[worker 21] token 8f286d2073682baf...
+pkg_open: client connect: errno=2
+[worker 0] using port 15043
+[worker 0] token b3010718a822e8e7...
+pkg_open: client connect: errno=2
+[worker 31] using port 15071
+[worker 31] token 6f4c9b2689059607...
+pkg_open: client connect: errno=2
+[worker 20] using port 15060
+[worker 20] token 8c2ca5202911021e...
+pkg_open: client connect: errno=2
+[worker 2] using port 15050
+[worker 2] token ad087719127597c5...
+pkg_open: client connect: errno=2
+[worker 1] using port 15047
+[worker 1] token b6fdcf17f2791077...
+pkg_open: client connect: errno=2
+[worker 11] using port 15051
+[worker 11] token 9621fe1e08157cd0...
+pkg_open: client connect: errno=2
+[worker 9] using port 15040
+[worker 9] token 9c1a8e1d9dc3cdf1...
+pkg_open: client connect: errno=2
+[worker 27] using port 15066
+[worker 27] token 625a7b295faaf5c4...
+pkg_open: client connect: errno=2
+pkg_open: client connect: errno=2
+[worker 23] using port 15062
+[worker 18] using port 15058
+[worker 23] token 892fdd21debada8d...
+[worker 18] token 7841f424690910b9...
+pkg_open: client connect: errno=2
+[worker 17] using port 15057
+[worker 17] token 82364c22490d896c...
+pkg_open: client connect: errno=2
+[worker 10] using port 15049
+[worker 10] token 9324351fbebf533f...
+[worker 5] fbserv launched (pid 1408)
+[worker 13] fbserv launched (pid 6624)
+[worker 24] fbserv launched (pid 2184)
+[worker 19] fbserv launched (pid 5496)
+[worker 26] fbserv launched (pid 9392)
+[worker 8] fbserv launched (pid 1096)
+[worker 15] fbserv launched (pid 9612)
+[worker 30] fbserv launched (pid 7600)
+[worker 12] fbserv launched (pid 4588)
+[worker 16] fbserv launched (pid 8304)
+[worker 22] fbserv launched (pid 5896)
+[worker 4] fbserv launched (pid 864)
+[worker 29] fbserv launched (pid 9632)
+[worker 21] fbserv launched (pid 7404)
+[worker 0] fbserv launched (pid 3984)
+[worker 31] fbserv launched (pid 9804)
+[worker 20] fbserv launched (pid 2324)
+[worker 2] fbserv launched (pid 7436)
+[worker 1] fbserv launched (pid 4600)
+[worker 11] fbserv launched (pid 1736)
+[worker 9] fbserv launched (pid 3892)
+[worker 27] fbserv launched (pid 9548)
+[worker 23] fbserv launched (pid 7384)
+[worker 17] fbserv launched (pid 7684)
+[worker 10] fbserv launched (pid 5304)
+[worker 18] fbserv launched (pid 1548)
+[worker 25] connected after 1 attempt(s)
+[worker 25] fbserv opened OK: 512x512
+[worker 25] PASSED
+[worker 3] connected after 1 attempt(s)
+[worker 3] fbserv opened OK: 512x512
+[worker 7] connected after 1 attempt(s)
+[worker 5] connected after 1 attempt(s)
+[worker 3] PASSED
+[worker 7] fbserv opened OK: 512x512
+[worker 5] fbserv opened OK: 512x512
+[worker 7] PASSED
+[worker 5] PASSED
+[worker 6] connected after 1 attempt(s)
+[worker 13] connected after 1 attempt(s)
+[worker 28] connected after 1 attempt(s)
+[worker 24] connected after 1 attempt(s)
+[worker 14] connected after 1 attempt(s)
+[worker 6] fbserv opened OK: 512x512
+[worker 28] fbserv opened OK: 512x512
+[worker 13] fbserv opened OK: 512x512
+[worker 24] fbserv opened OK: 512x512
+[worker 28] PASSED
+[worker 14] fbserv opened OK: 512x512
+[worker 13] PASSED
+[worker 6] PASSED
+[worker 24] PASSED
+[worker 14] PASSED
+[worker 8] connected after 1 attempt(s)
+[worker 15] connected after 1 attempt(s)
+[worker 26] connected after 1 attempt(s)
+[worker 19] connected after 1 attempt(s)
+[worker 30] connected after 1 attempt(s)
+[worker 12] connected after 1 attempt(s)
+[worker 15] fbserv opened OK: 512x512
+[worker 8] fbserv opened OK: 512x512
+[worker 19] fbserv opened OK: 512x512
+[worker 26] fbserv opened OK: 512x512
+[worker 30] fbserv opened OK: 512x512
+[worker 12] fbserv opened OK: 512x512
+[worker 30] PASSED
+[worker 19] PASSED
+[worker 8] PASSED
+[worker 15] PASSED
+[worker 12] PASSED
+[worker 26] PASSED
+[worker 2] connected after 1 attempt(s)
+[worker 29] connected after 1 attempt(s)
+[worker 20] connected after 1 attempt(s)
+[worker 16] connected after 1 attempt(s)
+[worker 22] connected after 1 attempt(s)
+[worker 4] connected after 1 attempt(s)
+[worker 2] fbserv opened OK: 512x512
+[worker 21] connected after 1 attempt(s)
+[worker 0] connected after 1 attempt(s)
+[worker 29] fbserv opened OK: 512x512
+[worker 31] connected after 1 attempt(s)
+[worker 16] fbserv opened OK: 512x512
+[worker 20] fbserv opened OK: 512x512
+[worker 22] fbserv opened OK: 512x512
+[worker 4] fbserv opened OK: 512x512
+[worker 21] fbserv opened OK: 512x512
+[worker 0] fbserv opened OK: 512x512
+[worker 31] fbserv opened OK: 512x512
+[worker 29] PASSED
+[worker 16] PASSED
+[worker 2] PASSED
+[worker 20] PASSED
+[worker 21] PASSED
+[worker 9] connected after 1 attempt(s)
+[worker 1] connected after 1 attempt(s)
+[worker 17] connected after 1 attempt(s)
+[worker 23] connected after 1 attempt(s)
+[worker 27] connected after 1 attempt(s)
+[worker 11] connected after 1 attempt(s)
+[worker 23] fbserv opened OK: 512x512
+[worker 22] PASSED
+[worker 17] fbserv opened OK: 512x512
+[worker 9] fbserv opened OK: 512x512
+[worker 1] fbserv opened OK: 512x512
+[worker 11] fbserv opened OK: 512x512
+[worker 4] PASSED
+[worker 27] fbserv opened OK: 512x512
+[worker 0] PASSED
+[worker 31] PASSED
+[worker 9] PASSED
+[worker 23] PASSED
+[worker 17] PASSED
+[worker 1] PASSED
+[worker 27] PASSED
+[worker 11] PASSED
+[worker 10] connected after 1 attempt(s)
+[worker 18] connected after 1 attempt(s)
+[worker 18] fbserv opened OK: 512x512
+[worker 10] fbserv opened OK: 512x512
+[worker 10] PASSED
+[worker 18] PASSED
+fbserv_stress: 32/32 workers passed
+<end of output>
+Test time =   3.67 sec
+----------------------------------------------------------
+Test Passed.
+"regress-fbserv-stress-heavy" end time: Apr 14 02:33 Coordinated Universal Time
+"regress-fbserv-stress-heavy" time elapsed: 00:00:03
 ----------------------------------------------------------
 
 1078/1095 Testing: regress-ipc
 1078/1095 Test: regress-ipc
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_ipc.exe" "--verbose"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/ipc
-"regress-ipc" start time: Apr 14 02:20 Coordinated Universal Time
+"regress-ipc" start time: Apr 14 02:33 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 
@@ -103,7 +390,7 @@ PASS: fbsl_ipc_child non-NULL after tclcad_listen_ipc
 PASS: poll timer token installed in fbsc_chan
 PASS: $fbserv(ipc_addr) is set by tclcad_listen_ipc
 PASS: $fbserv(ipc_addr) is non-empty
-  $fbserv(ipc_addr) = "pipe_win:288,294"
+  $fbserv(ipc_addr) = "pipe_win:278,284"
 PASS: Tcl script reads $fbserv(ipc_addr)
 PASS: $fbserv(ipc_addr) has positive length in Tcl
 PASS: poll timer canceled after fbs_close()
@@ -118,7 +405,7 @@ PASS: poll timer canceled after fbs_close()
 Test time =   0.19 sec
 ----------------------------------------------------------
 Test Passed.
-"regress-ipc" end time: Apr 14 02:20 Coordinated Universal Time
+"regress-ipc" end time: Apr 14 02:33 Coordinated Universal Time
 "regress-ipc" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -126,7 +413,7 @@ Test Passed.
 567/1095 Test: bu_ipc_test
 Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/bu_ipc_test.exe" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/ipc_worker.exe"
 Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/src/libbu/tests/ipc
-"bu_ipc_test" start time: Apr 14 02:20 Coordinated Universal Time
+"bu_ipc_test" start time: Apr 14 02:33 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
 bu_ipc round-trip tests
@@ -142,211 +429,43 @@ bu_ipc_pair: transport 2 failed, trying next
 
 --- Summary: 3 passed, 0 skipped, 0 failed ---
 <end of output>
-Test time =   0.07 sec
+Test time =   0.06 sec
 ----------------------------------------------------------
 Test Passed.
-"bu_ipc_test" end time: Apr 14 02:20 Coordinated Universal Time
+"bu_ipc_test" end time: Apr 14 02:33 Coordinated Universal Time
 "bu_ipc_test" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-1076/1095 Testing: regress-fbserv-stress-quick
-1076/1095 Test: regress-fbserv-stress-quick
-Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/fbserv_stress.exe" "--workers" "8"
-Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv
-"regress-fbserv-stress-quick" start time: Apr 14 02:20 Coordinated Universal Time
+1081/1095 Testing: regress-remrt
+1081/1095 Test: regress-remrt
+Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/regress_remrt.exe" "--remrt" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/remrt.exe" "--m35g" "D:/a/brlcad_winci/brlcad_winci/brlcad_build/share/db/m35.g" "--refpix" "D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix"
+Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/remrt
+"regress-remrt" start time: Apr 14 02:33 Coordinated Universal Time
 Output:
 ----------------------------------------------------------
-fbserv_stress: launching 8 parallel workers (base-port 13000)
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-[worker 6] using port 13006
-[worker 6] token 5c06a71357a55a8b...
-[worker 1] using port 13000
-[worker 1] token 6cf4900fcc57245f...
-[worker 0] using port 13001
-pkg_open: client connect: errno=2
-[worker 0] token 6ff1580f16ae4def...
-[worker 7] using port 13007
-[worker 7] token 580adf140c4f31fa...
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-[worker 5] using port 13005
-[worker 3] using port 13003
-[worker 5] token 5f036f12a1fc821c...
-[worker 3] token 66fc001136aad33d...
-[worker 6] fbserv launched (pid 6168)
-pkg_open: client connect: errno=2
-[worker 4] using port 13004
-[worker 4] token 62ff3711ec53abac...
-pkg_open: client connect: errno=2
-[worker 2] using port 13002
-[worker 2] token 69f8c8108100fcce...
-[worker 0] fbserv launched (pid 7488)
-[worker 5] fbserv launched (pid 8828)
-[worker 1] fbserv launched (pid 8456)
-[worker 7] fbserv launched (pid 5540)
-[worker 3] fbserv launched (pid 3548)
-[worker 4] fbserv launched (pid 6140)
-[worker 2] fbserv launched (pid 2136)
-[worker 6] connected after 1 attempt(s)
+
+=== remrt regression: IPC 512x512 benchmark ===
+regress_remrt [IPC 512x512 benchmark]: output file OK (786432 bytes)
+Comparing D:\a\brlcad_winci\brlcad_winci\brlcad_build\regress\remrt/m35_remrt_ipc_bench.pix.0 with D:/a/brlcad_winci/brlcad_winci/brlcad/bench/ref/m35.pix ...
+  pixel-exact match
+PASS: sub-test 1 (IPC benchmark render matches reference)
+
+=== remrt regression: IPC 64x64 quick ===
+regress_remrt [IPC 64x64 quick]: output file OK (12288 bytes)
+PASS: sub-test 2 (IPC quick render)
+
+All remrt regression sub-tests PASSED.
 <end of output>
-Test time =  77.31 sec
+Test time =   2.06 sec
 ----------------------------------------------------------
-Test Failed.
-"regress-fbserv-stress-quick" end time: Apr 14 02:22 Coordinated Universal Time
-"regress-fbserv-stress-quick" time elapsed: 00:01:17
-----------------------------------------------------------
-
-1077/1095 Testing: regress-fbserv-stress-heavy
-1077/1095 Test: regress-fbserv-stress-heavy
-Command: "D:/a/brlcad_winci/brlcad_winci/brlcad_build/bin/fbserv_stress.exe" "--workers" "32"
-Directory: D:/a/brlcad_winci/brlcad_winci/brlcad_build/regress/fbserv
-"regress-fbserv-stress-heavy" start time: Apr 14 02:20 Coordinated Universal Time
-Output:
-----------------------------------------------------------
-fbserv_stress: launching 32 parallel workers (base-port 16320)
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-[worker 0] using port 16321
-pkg_open: client connect: errno=2
-[worker 26] using port 16347
-[worker 27] using port 16345
-[worker 26] token 95fb8b44cb4cf815...
-[worker 27] token 92fec34581f6d084...
-[worker 30] using port 16349
-[worker 30] token a2ecac42f5a79a58...
-[worker 0] token 741fb94be1e9646e...
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-[worker 25] using port 16346
-[worker 25] token 8b063247eb487f63...
-pkg_open: client connect: errno=2
-[worker 12] using port 16332
-[worker 12] token 672d984eb78ec22b...
-[worker 7] using port 16327
-[worker 7] token 840da248569b2e41...
-[worker 25] fbserv launched (pid 916)
-pkg_open: client connect: errno=2
-[worker 15] using port 16335
-[worker 15] token 6a2a614d02e5ebbb...
-pkg_open: client connect: errno=2
-[worker 13] using port 16333
-[worker 13] token 6431d04f6d389a9a...
-pkg_open: client connect: errno=2
-[worker 23] using port 16343
-pkg_open: client connect: errno=2
-[worker 23] token b9d3253dff06b54d...
-[worker 19] using port 16339
-[worker 19] token ace20440d5ac140a...
-pkg_open: client connect: errno=2
-[worker 22] using port 16342
-[worker 22] token bcd0ed3c4a5ddedd...
-pkg_open: client connect: errno=2
-[worker 16] using port 16336
-[worker 16] token a8e53c408b55eb79...
-pkg_open: client connect: errno=2
-[worker 28] using port 16348
-[worker 28] token 9bf41b4360fa4936...
-[worker 27] fbserv launched (pid 4420)
-[worker 12] fbserv launched (pid 5456)
-[worker 7] fbserv launched (pid 6000)
-[worker 30] fbserv launched (pid 6264)
-[worker 0] fbserv launched (pid 9808)
-pkg_open: client connect: errno=2
-[worker 6] using port 16325
-[worker 6] token 88096a47a1f257d2...
-pkg_open: client connect: errno=2
-[worker 24] using port 16344
-[worker 24] token 8e02fa46369fa7f3...
-pkg_open: client connect: errno=2
-[worker 18] using port 16338
-[worker 18] token afdecc3f20023c9b...
-pkg_open: client connect: errno=2
-[worker 20] using port 16340
-[worker 20] token b5d75d3eb5b08dbc...
-pkg_open: client connect: errno=2
-[worker 29] using port 16350
-[worker 29] token 98f7534416a321a6...
-pkg_open: client connect: errno=2
-[worker 5] using port 16324
-[worker 5] token 7e141249c1eddd20...
-pkg_open: client connect: errno=2
-[worker 4] using port 16322
-[worker 4] token 8110da490c4406b0...
-[worker 26] fbserv launched (pid 5684)
-[worker 13] fbserv launched (pid 3976)
-pkg_open: client connect: errno=2
-pkg_open: client connect: errno=2
-[worker 17] using port 16337
-[worker 1] using port 16323
-[worker 17] token a5e9744140fec3e8...
-[worker 1] token 7122f14c97923bdd...
-[worker 23] fbserv launched (pid 5848)
-[worker 19] fbserv launched (pid 2972)
-[worker 22] fbserv launched (pid 9400)
-[worker 15] fbserv launched (pid 9284)
-pkg_open: client connect: errno=2
-[worker 11] using port 16331
-[worker 11] token 5d384050d78a4978...
-pkg_open: client connect: errno=2
-[worker 31] using port 16351
-pkg_open: client connect: errno=2
-[worker 21] using port 16341
-[worker 21] token b2db943e6a59642b...
-[worker 31] token 9ff0e342ab5172c7...
-pkg_open: client connect: errno=2
-[worker 2] using port 16320
-[worker 2] token 7b18494a7797b58f...
-pkg_open: client connect: errno=2
-[worker 3] using port 16326
-[worker 3] token 771b814b2c408cfe...
-pkg_open: client connect: errno=2
-[worker 8] using port 16328
-[worker 8] token 5a3c78518d3320e8...
-pkg_open: client connect: errno=2
-[worker 9] using port 16329
-[worker 9] token 573fb05142ddf857...
-pkg_open: client connect: errno=2
-[worker 10] using port 16330
-[worker 10] token 6134084f22e17109...
-pkg_open: client connect: errno=2
-[worker 14] using port 16334
-[worker 14] token 6e26294d4c3c134c...
-[worker 16] fbserv launched (pid 10060)
-[worker 28] fbserv launched (pid 4352)
-[worker 6] fbserv launched (pid 9860)
-[worker 24] fbserv launched (pid 9236)
-[worker 18] fbserv launched (pid 4404)
-[worker 20] fbserv launched (pid 5172)
-[worker 5] fbserv launched (pid 3056)
-[worker 4] fbserv launched (pid 7004)
-[worker 29] fbserv launched (pid 3364)
-[worker 17] fbserv launched (pid 1444)
-[worker 1] fbserv launched (pid 5444)
-[worker 11] fbserv launched (pid 6112)
-[worker 21] fbserv launched (pid 5980)
-[worker 31] fbserv launched (pid 7048)
-[worker 2] fbserv launched (pid 5808)
-[worker 3] fbserv launched (pid 7836)
-[worker 8] fbserv launched (pid 6704)
-[worker 9] fbserv launched (pid 3316)
-[worker 10] fbserv launched (pid 8404)
-[worker 14] fbserv launched (pid 5380)
-[worker 7] connected after 1 attempt(s)
-[worker 30] connected after 1 attempt(s)
-<end of output>
-Test time = 151.14 sec
-----------------------------------------------------------
-Test Failed.
-"regress-fbserv-stress-heavy" end time: Apr 14 02:23 Coordinated Universal Time
-"regress-fbserv-stress-heavy" time elapsed: 00:02:31
+Test Passed.
+"regress-remrt" end time: Apr 14 02:33 Coordinated Universal Time
+"regress-remrt" time elapsed: 00:00:02
 ----------------------------------------------------------
 
-End testing: Apr 14 02:23 Coordinated Universal Time
+End testing: Apr 14 02:33 Coordinated Universal Time
 
-Regression =   2.34 sec*proc
+Regression =   2.06 sec*proc
 
-STAND_ALONE = 228.64 sec*proc
+STAND_ALONE =   7.53 sec*proc
 
