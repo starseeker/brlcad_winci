@@ -1,7 +1,7 @@
 /*                        E D P I P E . C
  * BRL-CAD
  *
- * Copyright (c) 1995-2025 United States Government as represented by
+ * Copyright (c) 1995-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -321,7 +321,7 @@ rt_edit_pipe_edit_desc(void)
 }
 
 
-void
+static void
 pipe_split_pnt(struct bu_list *pipe_hd, struct wdb_pipe_pnt *ps, point_t new_pt)
 {
     struct wdb_pipe_pnt *next;

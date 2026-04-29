@@ -1,7 +1,7 @@
 /*                          B B O X . C
  * BRL-CAD
  *
- * Copyright (c) 1995-2025 United States Government as represented by
+ * Copyright (c) 1995-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@
 #include "bu/path.h"
 #include "vmath.h"
 #include "raytrace.h"
-
+#include "./librt_private.h"
 
 int
 rt_bound_tree(const union tree *tp, vect_t tree_min, vect_t tree_max)
@@ -355,8 +355,7 @@ rt_traverse_tree(struct rt_i *rtip, const union tree *tp, fastf_t *tree_min, fas
 		     * correct bb as we are going through the proper
 		     * switch case in each step down the tree
 		     */
-		    if (!rt_db_lookup_internal(rtip->rti_dbip, tp->tr_l.tl_name, &dp, &intern, LOOKUP_NOISY,
-					       &rt_uniresource)) {
+		    if (!rt_db_lookup_internal(rtip->rti_dbip, tp->tr_l.tl_name, &dp, &intern, LOOKUP_NOISY)) {
 			bu_log("rt_traverse_tree: rt_db_lookup_internal(%s) failed to get the internal form",
 			       tp->tr_l.tl_name);
 			return -1;
@@ -417,11 +416,10 @@ rt_bound_instance(point_t *bmin, point_t *bmax,
 		  struct db_i *dbip,
 		  const struct bg_tess_tol *ttol,
 		  const struct bn_tol *tol,
-		  mat_t *s_mat,
-		  struct resource *res
+		  mat_t *s_mat
     )
 {
-    if (UNLIKELY(!bmin || !bmax || !dp || !dbip || !res))
+    if (UNLIKELY(!bmin || !bmax || !dp || !dbip))
 	return -1;
 
     VSET(*bmin, INFINITY, INFINITY, INFINITY);
@@ -430,7 +428,7 @@ rt_bound_instance(point_t *bmin, point_t *bmax,
     struct rt_db_internal dbintern;
     RT_DB_INTERNAL_INIT(&dbintern);
     struct rt_db_internal *ip = &dbintern;
-    int ret = rt_db_get_internal(ip, dp, dbip, *s_mat, res);
+    int ret = rt_db_get_internal(ip, dp, dbip, *s_mat);
     if (ret < 0)
 	return -1;
 
@@ -490,7 +488,7 @@ rt_bound_internal(struct db_i *dbip, struct directory *dp,
     }
 
 
-    if (!rt_db_lookup_internal(dbip, dp->d_namep, &dp, &intern, LOOKUP_NOISY, &rt_uniresource)) {
+    if (!rt_db_lookup_internal(dbip, dp->d_namep, &dp, &intern, LOOKUP_NOISY)) {
 	bu_exit(1, "rt_bound_internal: rt_db_lookup_internal(%s) failed to get the internal form", dp->d_namep);
 	rt_free_rti(rtip);
 	return -1;

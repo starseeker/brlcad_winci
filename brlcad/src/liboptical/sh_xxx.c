@@ -1,7 +1,7 @@
 /*                        S H _ X X X . C
  * BRL-CAD
  *
- * Copyright (c) 2004-2025 United States Government as represented by
+ * Copyright (c) 2004-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -204,7 +204,7 @@ xxx_setup(register struct region *rp, struct bu_vls *matparm, void **dpp, const 
      * Alternatively, shading may be done in "region coordinates"
      * if desired:
      *
-     * db_region_mat(xxx_sp->xxx_m_to_r, rtip->rti_dbip, rp->reg_name, &rt_uniresource);
+     * db_region_mat(xxx_sp->xxx_m_to_r, rtip->rti_dbip, rp->reg_name);
      *
      */
 

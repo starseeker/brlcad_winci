@@ -1,7 +1,7 @@
 /*                       G E D _ U T I L . C
  * BRL-CAD
  *
- * Copyright (c) 2000-2025 United States Government as represented by
+ * Copyright (c) 2000-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -668,7 +668,7 @@ _ged_read_densities(struct analyze_densities **dens, char **den_src, struct ged 
 
 	if (dp != (struct directory *)NULL) {
 
-	    if (rt_db_get_internal(&intern, dp, gedp->dbip, NULL, &rt_uniresource) < 0) {
+	    if (rt_db_get_internal(&intern, dp, gedp->dbip, NULL) < 0) {
 		bu_vls_printf(gedp->ged_result_str, "could not import %s\n", dp->d_namep);
 		return BRLCAD_ERROR;
 	    }
@@ -1199,7 +1199,7 @@ _ged_do_list(struct ged *gedp, struct directory *dp, int verbose)
     } else {
 
 	if ((id = rt_db_get_internal(&intern, dp, gedp->dbip,
-				     (fastf_t *)NULL, &rt_uniresource)) < 0) {
+				     (fastf_t *)NULL)) < 0) {
 	    bu_vls_printf(gedp->ged_result_str, "rt_db_get_internal(%s) failure\n", dp->d_namep);
 	    rt_db_free_internal(&intern);
 	    return;
@@ -2144,7 +2144,7 @@ _ged_combadd(struct ged *gedp,
 	return RT_DIR_NULL;
 
     /* Done changing stuff - update nref. */
-    db_update_nref(gedp->dbip, &rt_uniresource);
+    db_update_nref(gedp->dbip);
 
     return db_lookup(gedp->dbip, combname, LOOKUP_QUIET);
 }
@@ -2230,7 +2230,7 @@ _ged_combadd2(struct ged *gedp,
     }
 
     /* combination exists, add a new member */
-    GED_DB_GET_INTERNAL(gedp, &intern, dp, (fastf_t *)NULL, &rt_uniresource, 0);
+    GED_DB_GET_INTERN(gedp, &intern, dp, (fastf_t *)NULL, 0);
 
     comb = (struct rt_comb_internal *)intern.idb_ptr;
     RT_CK_COMB(comb);
@@ -2242,7 +2242,7 @@ _ged_combadd2(struct ged *gedp,
 
 addmembers:
     if (comb->tree && db_ck_v4gift_tree(comb->tree) < 0) {
-	db_non_union_push(comb->tree, &rt_uniresource);
+	db_non_union_push(comb->tree);
 	if (db_ck_v4gift_tree(comb->tree) < 0) {
 	    bu_vls_printf(gedp->ged_result_str, "Cannot flatten tree for editing\n");
 	    rt_db_free_internal(&intern);
@@ -2257,7 +2257,7 @@ addmembers:
 
     /* flatten tree */
     if (comb->tree) {
-	actual_count = argc + (struct rt_tree_array *)db_flatten_tree(tree_list, comb->tree, OP_UNION, 1, &rt_uniresource) - tree_list;
+	actual_count = argc + (struct rt_tree_array *)db_flatten_tree(tree_list, comb->tree, OP_UNION, 1) - tree_list;
 	BU_ASSERT(actual_count == node_count);
 	comb->tree = TREE_NULL;
     }
@@ -2304,15 +2304,15 @@ addmembers:
     }
 
     /* rebuild the tree */
-    comb->tree = (union tree *)db_mkgift_tree(tree_list, node_count, &rt_uniresource);
+    comb->tree = (union tree *)db_mkgift_tree(tree_list, node_count);
 
     /* and finally, write it out */
-    GED_DB_PUT_INTERNAL(gedp, dp, &intern, &rt_uniresource, 0);
+    GED_DB_PUT_INTERN(gedp, dp, &intern, 0);
 
     bu_free((char *)tree_list, "combadd: tree_list");
 
     /* Done changing stuff - update nref. */
-    db_update_nref(gedp->dbip, &rt_uniresource);
+    db_update_nref(gedp->dbip);
 
     return BRLCAD_OK;
 }

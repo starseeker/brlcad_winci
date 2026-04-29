@@ -1,7 +1,7 @@
 /*                     A R T . C P P
  * BRL-CAD
  *
- * Copyright (c) 2004-2025 United States Government as represented by
+ * Copyright (c) 2004-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -404,7 +404,7 @@ register_region(struct db_tree_state* tsp,
     struct rt_db_internal intern;
     struct rt_material_internal* material_ip;
     if (dp1 != RT_DIR_NULL) {
-	if (rt_db_get_internal(&intern, dp1, tsp->ts_dbip, NULL, &rt_uniresource) >= 0) {
+	if (rt_db_get_internal(&intern, dp1, tsp->ts_dbip, NULL) >= 0) {
 	    if (intern.idb_minor_type == DB5_MINORTYPE_BRLCAD_MATERIAL) {
 		material_ip = (struct rt_material_internal*)intern.idb_ptr;
 		bu_vls_printf(&m, "%s", bu_avs_get(&material_ip->opticalProperties, "OSL"));
@@ -583,10 +583,10 @@ do_ae(double azim, double elev)
     if (rtip == NULL)
 	return;
 
-    if (rtip->nsolids <= 0)
+    if (rtip->stats.nsolids <= 0)
 	bu_exit(EXIT_FAILURE, "ERROR: no primitives active\n");
 
-    if (rtip->nregions <= 0)
+    if (rtip->stats.nregions <= 0)
 	bu_exit(EXIT_FAILURE, "ERROR: no regions active\n");
 
     if (rtip->mdl_max[X] >= INFINITY) {

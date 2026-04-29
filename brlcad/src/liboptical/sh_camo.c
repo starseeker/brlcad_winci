@@ -1,7 +1,7 @@
 /*                       S H _ C A M O . C
  * BRL-CAD
  *
- * Copyright (c) 2004-2025 United States Government as represented by
+ * Copyright (c) 2004-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -190,7 +190,7 @@ setup(register struct region *rp, struct bu_vls *matparm, void **dpp, struct rt_
     /* Optional:  get the matrix which maps model space into
      * "region" or "shader" space
      */
-    db_region_mat(model_to_region, rtip->rti_dbip, rp->reg_name, &rt_uniresource);
+    db_region_mat(model_to_region, rtip->rti_dbip, rp->reg_name);
 
     /* add the noise-space scaling */
     MAT_IDN(tmp);

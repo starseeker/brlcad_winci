@@ -1,7 +1,7 @@
 /*                      S U B M O D E L . C
  * BRL-CAD
  *
- * Copyright (c) 2000-2025 United States Government as represented by
+ * Copyright (c) 2000-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -129,11 +129,11 @@ rt_submodel_prep(struct soltab *stp, struct rt_db_internal *ip, struct rt_i *rti
     for (BU_PTBL_FOR(rtipp, (struct rt_i **), &sub_dbip->i->dbi_clients)) {
 	char *ttp;
 	RT_CK_RTI(*rtipp);
-	ttp = (*rtipp)->rti_treetop;
+	ttp = (*rtipp)->i->rti_treetop;
 	if (ttp && BU_STR_EQUAL(ttp, bu_vls_addr(&sip->treetop))) {
 	    /* Re-cycle an already prepped rti */
 	    sub_rtip = *rtipp;
-	    sub_rtip->rti_uses++;
+	    sub_rtip->i->rti_uses++;
 
 	    bu_semaphore_release(RT_SEM_MODEL);
 
@@ -151,7 +151,7 @@ rt_submodel_prep(struct soltab *stp, struct rt_db_internal *ip, struct rt_i *rti
     RT_CK_RTI(sub_rtip);
 
     /* Set search term before leaving critical section */
-    sub_rtip->rti_treetop = bu_vls_strdup(&sip->treetop);
+    sub_rtip->i->rti_treetop = bu_vls_strdup(&sip->treetop);
 
     bu_semaphore_release(RT_SEM_MODEL);
 
@@ -194,7 +194,7 @@ rt_submodel_prep(struct soltab *stp, struct rt_db_internal *ip, struct rt_i *rti
 	return -2;
     }
 
-    if (sub_rtip->nsolids <= 0) {
+    if (sub_rtip->stats.nsolids <= 0) {
 	bu_log("rt_submodel_prep(%s): %s No primitives found\n",
 	       stp->st_dp->d_namep, bu_vls_addr(&sip->file));
 	/* Can't call rt_free_rti(sub_rtip) because it may have
@@ -628,7 +628,6 @@ rt_submodel_wireframe_leaf(struct db_tree_state *tsp, const struct db_full_path 
     BG_CK_TESS_TOL(tsp->ts_ttol);
     BN_CK_TOL(tsp->ts_tol);
     RT_CK_DB_INTERNAL(ip);
-    RT_CK_RESOURCE(tsp->ts_resp);
 
     gp = (struct goodies *)tsp->ts_m;	/* hack */
     if (gp)

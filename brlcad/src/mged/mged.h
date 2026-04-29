@@ -1,7 +1,7 @@
 /*                           M G E D . H
  * BRL-CAD
  *
- * Copyright (c) 1985-2025 United States Government as represented by
+ * Copyright (c) 1985-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -62,12 +62,8 @@
 #endif
 #include <time.h>
 
-// Workaround broken macOS/Xcode signal.h that
-// uses but doesn't define NSIG
-#if defined(__APPLE__) && !defined(NSIG)
-#define NSIG 32
-#endif
-#include <signal.h>
+// For signal.h
+#include "bu/interrupt.h"
 
 #include "tcl.h"
 #ifdef HAVE_TK

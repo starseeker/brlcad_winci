@@ -1,7 +1,7 @@
 /*                         Q G M O D E L . C P P
  * BRL-CAD
  *
- * Copyright (c) 2014-2025 United States Government as represented by
+ * Copyright (c) 2014-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -869,7 +869,7 @@ QgModel::run_cmd(struct bu_vls *msg, int argc, const char **argv)
     // the nref updates (can that happen?).
     if (gedp->dbip && need_update_nref) {
 	// bu_log("missing callback in librt?\n");
-	db_update_nref(gedp->dbip, &rt_uniresource);
+	db_update_nref(gedp->dbip);
     }
 
     // If we have a new .g file, set the changed flag

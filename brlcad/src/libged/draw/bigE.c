@@ -1,7 +1,7 @@
 /*                          B I G E . C
  * BRL-CAD
  *
- * Copyright (c) 1997-2025 United States Government as represented by
+ * Copyright (c) 1997-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -120,7 +120,7 @@ add_solid(const struct directory *dp,
     BU_ALLOC(eptr, union E_tree);
     eptr->magic = E_TREE_MAGIC;
 
-    id = rt_db_get_internal(&intern, dp, dgcdp->gedp->dbip, mat, &rt_uniresource);
+    id = rt_db_get_internal(&intern, dp, dgcdp->gedp->dbip, mat);
     if (id < 0) {
 	bu_vls_printf(dgcdp->gedp->ged_result_str, "Failed to get internal form of %s\n", dp->d_namep);
 	eptr->l.m = (struct model *)NULL;
@@ -2078,10 +2078,7 @@ ged_E_core(struct ged *gedp, int argc, const char *argv[])
 	if (rt_gettrees(dgcdp->rtip, ac, (const char **)av, 1)) {
 	    bu_ptbl_free(&dgcdp->leaf_list);
 
-	    /* do not do an rt_free_rti() (closes the database!!!!) */
-	    rt_clean(dgcdp->rtip);
-
-	    bu_free((char *)dgcdp->rtip, "rt_i structure for 'E'");
+	    rt_free_rti(dgcdp->rtip);
 	    bu_free(dgcdp, "dgcdp");
 
 	    bu_vls_printf(gedp->ged_result_str, "Failed to get objects\n");
@@ -2111,10 +2108,7 @@ ged_E_core(struct ged *gedp, int argc, const char *argv[])
 		_ged_drawH_part2(0, &vhead, &path, &ts, dgcdp);
 		db_free_full_path(&path);
 	    }
-	    /* do not do an rt_free_rti() (closes the database!!!!) */
-	    rt_clean(dgcdp->rtip);
-
-	    bu_free((char *)dgcdp->rtip, "rt_i structure for 'E'");
+	    rt_free_rti(dgcdp->rtip);
 	}
     }
 

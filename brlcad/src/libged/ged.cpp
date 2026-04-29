@@ -1,7 +1,7 @@
 /*                       G E D . C P P
  * BRL-CAD
  *
- * Copyright (c) 2000-2025 United States Government as represented by
+ * Copyright (c) 2000-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -334,7 +334,7 @@ ged_open(const char *dbtype, const char *filename, int existing_only)
     gedp = ged_create();
     gedp->dbip = wdbp->dbip;
 
-    db_update_nref(gedp->dbip, &rt_uniresource);
+    db_update_nref(gedp->dbip);
 
     gedp->ged_lod = NULL;
 

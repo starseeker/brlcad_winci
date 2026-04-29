@@ -1,7 +1,7 @@
 /*                         E D I T _ M E T A B A L L . C
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -306,7 +306,7 @@ ged_metaball_add_pnt_core(struct ged *gedp, int argc, const char *argv[])
 	    VMOVE(curr_mbp->coord, curr_pt);
 	}
 
-	GED_DB_PUT_INTERNAL(gedp, dp, &intern, &rt_uniresource, BRLCAD_ERROR);
+	GED_DB_PUT_INTERN(gedp, dp, &intern, BRLCAD_ERROR);
     }
 
     rt_db_free_internal(&intern);
@@ -401,7 +401,7 @@ ged_metaball_delete_pnt_core(struct ged *gedp, int argc, const char *argv[])
 	return BRLCAD_ERROR;
     }
 
-    if (rt_db_get_internal(&intern, dp, gedp->dbip, (fastf_t *)NULL, &rt_uniresource) < 0) {
+    if (rt_db_get_internal(&intern, dp, gedp->dbip, (fastf_t *)NULL) < 0) {
 	bu_vls_printf(gedp->ged_result_str, "%s: failed to get internal for %s", argv[0], argv[1]);
 	return BRLCAD_ERROR;
     }
@@ -427,7 +427,7 @@ ged_metaball_delete_pnt_core(struct ged *gedp, int argc, const char *argv[])
 	return BRLCAD_ERROR;
     }
 
-    GED_DB_PUT_INTERNAL(gedp, dp, &intern, &rt_uniresource, BRLCAD_ERROR);
+    GED_DB_PUT_INTERN(gedp, dp, &intern, BRLCAD_ERROR);
 
     rt_db_free_internal(&intern);
     return BRLCAD_OK;
@@ -541,7 +541,7 @@ ged_metaball_move_pnt_core(struct ged *gedp, int argc, const char *argv[])
 	    VMOVE(curr_mbp->coord, curr_pt);
 	}
 
-	GED_DB_PUT_INTERNAL(gedp, dp, &intern, &rt_uniresource, BRLCAD_ERROR);
+	GED_DB_PUT_INTERN(gedp, dp, &intern, BRLCAD_ERROR);
     }
 
     rt_db_free_internal(&intern);

@@ -1,7 +1,7 @@
 /*                         E D I T . H
  * BRL-CAD
  *
- * Copyright (c) 1993-2025 United States Government as represented by
+ * Copyright (c) 1993-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -77,7 +77,6 @@
 #include "bv/defines.h"
 #include "rt/defines.h"
 #include "rt/db_internal.h"
-#include "rt/resource.h"
 
 __BEGIN_DECLS
 
@@ -215,6 +214,7 @@ struct rt_edit {
 
     // Tolerance for calculations
     const struct bn_tol *tol;
+    struct db_i *dbip;          /**< @brief database instance (for checkpoint/revert) */
 
     // Main view associated with the edit.  This may not be the only view in
     // which the edit is *visible*, but this should hold the pointer to the

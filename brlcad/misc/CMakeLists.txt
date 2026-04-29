@@ -1,7 +1,3 @@
-if(BUILD_STATIC_LIBS AND BRLCAD_ENABLE_BRLCAD_LIBRARY)
-  add_subdirectory(win32-msvc)
-endif(BUILD_STATIC_LIBS AND BRLCAD_ENABLE_BRLCAD_LIBRARY)
-
 set(prefix "${CMAKE_INSTALL_PREFIX}")
 set(exec_prefix "\${prefix}")
 set(libdir "\${exec_prefix}/lib")
@@ -137,14 +133,6 @@ set(
   profont/profont_IIx_readme.pdf
   profont/readme.txt
   uncpowerplant2g.sh
-  win32-msvc/CMakeLists.txt
-  win32-msvc/Dll/BrlcadCore.def
-  win32-msvc/Dll/BrlcadCore.rc
-  win32-msvc/Dll/CMakeLists.txt
-  win32-msvc/Dll/TclDummies.c
-  win32-msvc/Dll/brlcad.def
-  win32-msvc/Dll/brlcad.rc
-  win32-msvc/bootstrap.cpp
   wix/License.rtf
   wix/brlcad_banner.bmp
   wix/brlcad_dialog.bmp

@@ -1,7 +1,7 @@
 /*                         S H O O T . C
  * BRL-CAD
  *
- * Copyright (c) 2000-2025 United States Government as represented by
+ * Copyright (c) 2000-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 
 #include "raytrace.h"
 #include "bv/plot3.h"
+#include "librt_private.h"
 
 
 #define V3PT_DEPARTING_RPP(_step, _lo, _hi, _pt)			\
@@ -53,7 +54,7 @@ shoot_setup_status(struct rt_shootray_status *ss, struct application *ap)
 
 
 void
-rt_res_pieces_init(struct resource *resp, struct rt_i *rtip)
+_res_pieces_init(struct resource *resp, struct rt_i *rtip)
 {
     struct rt_piecestate *psptab;
     struct rt_piecestate *psp;
@@ -62,7 +63,7 @@ rt_res_pieces_init(struct resource *resp, struct rt_i *rtip)
     RT_CK_RESOURCE(resp);
     RT_CK_RTI(rtip);
 
-    psptab = (struct rt_piecestate *)bu_calloc(rtip->rti_nsolids_with_pieces, sizeof(struct rt_piecestate), "re_pieces[]");
+    psptab = (struct rt_piecestate *)bu_calloc(rtip->i->rti_nsolids_with_pieces, sizeof(struct rt_piecestate), "re_pieces[]");
     resp->re_pieces = psptab;
 
     RT_VISIT_ALL_SOLTABS_START(stp, rtip) {
@@ -75,11 +76,16 @@ rt_res_pieces_init(struct resource *resp, struct rt_i *rtip)
 	rt_htbl_init(&psp->htab, 8, "psp->htab");
 	psp->cutp = CUTTER_NULL;
     } RT_VISIT_ALL_SOLTABS_END
-	  }
-
+}
 
 void
-rt_res_pieces_clean(struct resource *resp, struct rt_i *rtip)
+rt_res_pieces_init(struct resource *resp, struct rt_i *rtip)
+{
+    _res_pieces_init(resp, rtip);
+}
+
+void
+_res_pieces_clean(struct resource *resp, struct rt_i *rtip)
 {
     struct rt_piecestate *psp;
     int i;
@@ -95,14 +101,14 @@ rt_res_pieces_clean(struct resource *resp, struct rt_i *rtip)
     if (!resp->re_pieces) {
 	/* no pieces allocated, nothing to do */
 	if (rtip) {
-	    rtip->rti_nsolids_with_pieces = 0;
+	    rtip->i->rti_nsolids_with_pieces = 0;
 	}
 	return;
     }
 
     /* pieces allocated, need to clean up */
     if (rtip) {
-	for (i = rtip->rti_nsolids_with_pieces-1; i >= 0; i--) {
+	for (i = rtip->i->rti_nsolids_with_pieces-1; i >= 0; i--) {
 	    psp = &resp->re_pieces[i];
 
 	    /*
@@ -110,7 +116,7 @@ rt_res_pieces_clean(struct resource *resp, struct rt_i *rtip)
 	     *
 	     * Doing this until we figure out why all "struct
 	     * rt_piecestate" array members are NOT getting
-	     * initialized in rt_res_pieces_init() above.  Initial
+	     * initialized in _res_pieces_init() above.  Initial
 	     * glance looks like tree.c/rt_gettrees_muves() can be
 	     * called in such a way as to assign
 	     * stp->st_piecestate_num multiple times, each time with a
@@ -129,12 +135,17 @@ rt_res_pieces_clean(struct resource *resp, struct rt_i *rtip)
 	    psp->magic = 0;
 	}
 
-	rtip->rti_nsolids_with_pieces = 0;
+	rtip->i->rti_nsolids_with_pieces = 0;
     }
     bu_free((char *)resp->re_pieces, "re_pieces[]");
     resp->re_pieces = NULL;
 }
 
+void
+rt_res_pieces_clean(struct resource *resp, struct rt_i *rtip)
+{
+    _res_pieces_clean(resp, rtip);
+}
 
 _BU_ATTR_FLATTEN const union cutter *
 rt_advance_to_next_cell(register struct rt_shootray_status *ssp)
@@ -148,7 +159,7 @@ rt_advance_to_next_cell(register struct rt_shootray_status *ssp)
 
     ssp->box_num++;
 
-    if (curcut == &ssp->ap->a_rt_i->rti_inf_box) {
+    if (curcut == &ssp->ap->a_rt_i->i->rti_inf_box) {
 	/* Last pass did the infinite solids, there is nothing more */
 	ssp->curcut = CUTTER_NULL;
 	return CUTTER_NULL;
@@ -425,7 +436,7 @@ rt_advance_to_next_cell(register struct rt_shootray_status *ssp)
      * the caller to process.
      */
 escaped_from_model:
-    curcut = &ssp->ap->a_rt_i->rti_inf_box;
+    curcut = &ssp->ap->a_rt_i->i->rti_inf_box;
     if (curcut->bn.bn_len <= 0 && curcut->bn.bn_piecelen <= 0)
 	curcut = CUTTER_NULL;
     ssp->curcut = curcut;
@@ -462,7 +473,7 @@ rt_find_backing_dist(struct rt_shootray_status *ss, struct bu_bitv *backbits) {
     /* get a bit vector of our own to avoid duplicate bounding box
      * intersection calculations
      */
-    solidbits = rt_get_solidbitv(rtip->nsolids, resp);
+    solidbits = rt_get_solidbitv(rtip->stats.nsolids, resp);
 
     ray = ss->ap->a_ray;	/* struct copy, don't mess with the original */
 
@@ -476,7 +487,7 @@ rt_find_backing_dist(struct rt_shootray_status *ss, struct bu_bitv *backbits) {
 	/* descend into the space partitioning tree based on this
 	 * point.
 	 */
-	cutp = &ss->ap->a_rt_i->rti_CutHead;
+	cutp = &ss->ap->a_rt_i->i->rti_CutHead;
 	while (cutp->cut_type == CUT_CUTNODE) {
 	    if (curr_pt[cutp->cn.cn_axis] >= cutp->cn.cn_point) {
 		cutp=cutp->cn.cn_r;
@@ -606,7 +617,7 @@ rt_plot_cell(const union cutter *cutp, const struct rt_shootray_status *ssp, str
 	for (; stpp >= cutp->bn.bn_list; stpp--) {
 	  register struct soltab *stp = *stpp;
 
-	  rt_plot_solid(fp, rtip, stp, ap->a_resource);
+	  rt_plot_solid(fp, rtip, stp);
 	}
       }
 
@@ -684,7 +695,6 @@ rt_shootray(register struct application *ap)
     RT_CK_RTI(rtip);
     resp = ap->a_resource;
     RT_CK_RESOURCE(resp);
-    ss.resp = resp;
 
     if (RT_G_DEBUG) {
 	/* only test extensively if something in run-time debug is enabled */
@@ -732,7 +742,7 @@ rt_shootray(register struct application *ap)
     if (resp != &rt_uniresource)
 	BU_ASSERT(BU_PTBL_GET(&rtip->rti_resources, resp->re_cpu) != NULL);
 
-    solidbits = rt_get_solidbitv(rtip->nsolids, resp);
+    solidbits = rt_get_solidbitv(rtip->stats.nsolids, resp);
 
     if (BU_LIST_IS_EMPTY(&resp->re_region_ptbl)) {
 	BU_ALLOC(regionbits, struct bu_ptbl);
@@ -743,9 +753,9 @@ rt_shootray(register struct application *ap)
 	BU_CK_PTBL(regionbits);
     }
 
-    if (!resp->re_pieces && rtip->rti_nsolids_with_pieces > 0) {
+    if (!resp->re_pieces && rtip->i->rti_nsolids_with_pieces > 0) {
 	/* Initialize this processors 'solid pieces' state */
-	rt_res_pieces_init(resp, rtip);
+	_res_pieces_init(resp, rtip);
     }
     if (UNLIKELY(!BU_LIST_MAGIC_EQUAL(&resp->re_pieces_pending.l, BU_PTBL_MAGIC))) {
 	/* only happens first time through */
@@ -817,7 +827,7 @@ rt_shootray(register struct application *ap)
      */
     if (!rt_in_rpp(&ap->a_ray, ss.inv_dir, rtip->mdl_min, rtip->mdl_max)  ||
 	ap->a_ray.r_max < 0.0) {
-	cutp = &ap->a_rt_i->rti_inf_box;
+	cutp = &ap->a_rt_i->i->rti_inf_box;
 	if (cutp->bn.bn_len > 0) {
 	    /* Model has infinite solids, need to fire at them. */
 	    ss.box_start = BACKING_DIST;
@@ -897,7 +907,7 @@ rt_shootray(register struct application *ap)
     ss.box_start = ss.model_start = ap->a_ray.r_min;
     ss.box_end = ss.model_end = ap->a_ray.r_max;
 
-    if (ap->a_rt_i->rti_nsolids_with_pieces > 0) {
+    if (ap->a_rt_i->i->rti_nsolids_with_pieces > 0) {
 	/* pieces are present */
 	if (ss.box_start < BACKING_DIST) {
 	    /* the first ray intersection with the model bounding box
@@ -909,7 +919,7 @@ rt_shootray(register struct application *ap)
 	     * having bounding boxes extending behind the ray start
 	     * point and using pieces)
 	     */
-	    backbits = rt_get_solidbitv(rtip->nsolids, resp);
+	    backbits = rt_get_solidbitv(rtip->stats.nsolids, resp);
 
 	    /* call "rt_find_backing_dist()" to calculate the required
 	     * start point for calculation, and to fill in the
@@ -925,7 +935,7 @@ rt_shootray(register struct application *ap)
 
     ss.lastcut = CUTTER_NULL;
     ss.old_status = (struct rt_shootray_status *)NULL;
-    ss.curcut = &ap->a_rt_i->rti_CutHead;
+    ss.curcut = &ap->a_rt_i->i->rti_CutHead;
 
     if (ss.curcut->cut_type == CUT_CUTNODE || ss.curcut->cut_type == CUT_BOXNODE) {
 	ss.lastcell = ss.curcut;
@@ -1346,7 +1356,6 @@ rt_cell_n_on_ray(register struct application *ap, int n)
     RT_CK_RTI(rtip);
     resp = ap->a_resource;
     RT_CK_RESOURCE(resp);
-    ss.resp = resp;
 
     if (RT_G_DEBUG&(RT_DEBUG_ALLRAYS|RT_DEBUG_SHOOT|RT_DEBUG_PARTITION|RT_DEBUG_ALLHITS)) {
 	bu_log_indent_delta(2);
@@ -1437,7 +1446,7 @@ rt_cell_n_on_ray(register struct application *ap, int n)
      */
     if (!rt_in_rpp(&ap->a_ray, ss.inv_dir, rtip->mdl_min, rtip->mdl_max)  ||
 	ap->a_ray.r_max < 0.0) {
-	cutp = &ap->a_rt_i->rti_inf_box;
+	cutp = &ap->a_rt_i->i->rti_inf_box;
 	if (cutp->bn.bn_len > 0) {
 	    if (n == 0) return cutp;
 	}
@@ -1472,7 +1481,7 @@ rt_cell_n_on_ray(register struct application *ap, int n)
 
     ss.lastcut = CUTTER_NULL;
     ss.old_status = (struct rt_shootray_status *)NULL;
-    ss.curcut = &ap->a_rt_i->rti_CutHead;
+    ss.curcut = &ap->a_rt_i->i->rti_CutHead;
 
     if (ss.curcut->cut_type == CUT_CUTNODE || ss.curcut->cut_type == CUT_BOXNODE) {
 	ss.lastcell = ss.curcut;
@@ -1536,17 +1545,17 @@ rt_add_res_stats(register struct rt_i *rtip, register struct resource *resp)
     }
     RT_CK_RESOURCE(resp);
 
-    rtip->rti_nrays += resp->re_nshootray;
-    rtip->nmiss_model += resp->re_nmiss_model;
+    rtip->stats.rti_nrays += resp->re_nshootray;
+    rtip->stats.nmiss_model += resp->re_nmiss_model;
 
-    rtip->nshots += resp->re_shots + resp->re_piece_shots;
-    rtip->nhits += resp->re_shot_hit + resp->re_piece_shot_hit;
-    rtip->nmiss += resp->re_shot_miss + resp->re_piece_shot_miss;
+    rtip->stats.nshots += resp->re_shots + resp->re_piece_shots;
+    rtip->stats.nhits += resp->re_shot_hit + resp->re_piece_shot_hit;
+    rtip->stats.nmiss += resp->re_shot_miss + resp->re_piece_shot_miss;
 
-    rtip->nmiss_solid += resp->re_prune_solrpp;
+    rtip->stats.nmiss_solid += resp->re_prune_solrpp;
 
-    rtip->ndup += resp->re_ndup + resp->re_piece_ndup;
-    rtip->nempty_cells += resp->re_nempty_cells;
+    rtip->stats.ndup += resp->re_ndup + resp->re_piece_ndup;
+    rtip->stats.nempty_cells += resp->re_nempty_cells;
 
     /* Zero out resource totals, so repeated calls are not harmful */
     rt_zero_res_stats(resp);

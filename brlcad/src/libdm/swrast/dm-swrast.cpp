@@ -1,7 +1,7 @@
 /*                    D M - S W R A S T . C P P
  * BRL-CAD
  *
- * Copyright (c) 1988-2025 United States Government as represented by
+ * Copyright (c) 1988-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -737,7 +737,8 @@ struct dm_impl dm_swrast_impl = {
     FB_NULL,
     0,				/* Tcl interpreter */
     NULL,                       /* Drawing context */
-    NULL                        /* App data */
+    NULL,                       /* App data */
+    NULL                        /* dlist sensors */
 };
 
 struct dm dm_swrast = { DM_MAGIC, &dm_swrast_impl, 0 };

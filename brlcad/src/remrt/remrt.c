@@ -1,7 +1,7 @@
 /*                         R E M R T . C
  * BRL-CAD
  *
- * Copyright (c) 1989-2025 United States Government as represented by
+ * Copyright (c) 1989-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -34,7 +34,6 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <ctype.h>
-#include <signal.h>
 #include <errno.h>
 #include <math.h>
 #include <string.h>
@@ -50,6 +49,7 @@
 #include "bresource.h"
 #include "bsocket.h"
 #include "bu/app.h"
+#include "bu/interrupt.h"
 
 /* decls for strict c90 */
 

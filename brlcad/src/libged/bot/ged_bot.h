@@ -1,7 +1,7 @@
 /*                    G E D _ B O T . H
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -68,6 +68,7 @@ extern int ged_bot_condense_core(struct ged *gedp, int argc, const char **argv);
 extern int ged_bot_decimate_core(struct ged *gedp, int argc, const char **argv);
 extern int ged_bot_dump_core(struct ged *gedp, int argc, const char **argv);
 extern int ged_bot_exterior(struct ged *gedp, int argc, const char **argv);
+extern int ged_bot_extrude(struct ged *gedp, int argc, const char **argv);
 extern int ged_bot_face_fuse_core(struct ged *gedp, int argc, const char **argv);
 extern int ged_bot_face_sort_core(struct ged *gedp, int argc, const char **argv);
 extern int ged_bot_flip_core(struct ged *gedp, int argc, const char **argv);
@@ -86,6 +87,8 @@ extern int ged_dbot_dump_core(struct ged *gedp, int argc, const char **argv);
 extern int _bot_cmd_decimate(void* bs, int argc, const char** argv);
 
 extern int _bot_cmd_dump(void* bs, int argc, const char** argv);
+
+extern int _bot_cmd_exterior(void *bs, int argc, const char **argv);
 
 extern int _bot_cmd_extrude(void *bs, int argc, const char **argv);
 

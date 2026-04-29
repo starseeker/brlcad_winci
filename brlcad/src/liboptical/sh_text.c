@@ -1,7 +1,7 @@
 /*                       S H _ T E X T . C
  * BRL-CAD
  *
- * Copyright (c) 1998-2025 United States Government as represented by
+ * Copyright (c) 1998-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -161,7 +161,7 @@ txt_load_datasource(struct txt_specific *texture, struct db_i *dbInstance, const
 	    RT_CK_DIR(dirEntry);
 
 	    /* the object was in the directory, so go get it */
-	    if (rt_db_get_internal(dbip, dirEntry, dbInstance, NULL, NULL) <= 0) {
+	    if (rt_db_get_internal(dbip, dirEntry, dbInstance, NULL) <= 0) {
 		/* unable to load/create the texture database record object */
 		return -1;
 	    }

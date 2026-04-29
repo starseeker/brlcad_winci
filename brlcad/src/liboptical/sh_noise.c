@@ -1,7 +1,7 @@
 /*                      S H _ N O I S E . C
  * BRL-CAD
  *
- * Copyright (c) 1998-2025 United States Government as represented by
+ * Copyright (c) 1998-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -228,7 +228,7 @@ noise_setup(register struct region *rp, struct bu_vls *matparm, void **dpp, cons
 found:
     noise_sp->shader_number = i;
 
-    db_region_mat(model_to_region, rtip->rti_dbip, rp->reg_name, &rt_uniresource);
+    db_region_mat(model_to_region, rtip->rti_dbip, rp->reg_name);
 
     MAT_IDN(tmp);
     if (!EQUAL(noise_sp->size, 1.0)) {

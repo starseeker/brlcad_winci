@@ -1,7 +1,7 @@
 /*                       D B _ A N I M . C
  * BRL-CAD
  *
- * Copyright (c) 1987-2025 United States Government as represented by
+ * Copyright (c) 1987-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -273,7 +273,7 @@ db_parse_1anim(struct db_i *dbip, int argc, const char *argv[])
     BU_ALLOC(anp, struct animate);
     anp->magic = ANIMATE_MAGIC;
 
-    db_init_db_tree_state(&ts, dbip, &rt_uniresource);
+    db_init_db_tree_state(&ts, dbip);
     db_full_path_init(&anp->an_path);
     if (db_follow_path_for_state(&ts, &(anp->an_path), argv[1], LOOKUP_NOISY) < 0)
 	goto bad;

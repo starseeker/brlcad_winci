@@ -1,7 +1,7 @@
 /*                         L O D . C P P
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -210,7 +210,7 @@ _view_cmd_lod(void *bs, int argc, const char **argv)
 			struct rt_db_internal dbintern;
 			RT_DB_INTERNAL_INIT(&dbintern);
 			struct rt_db_internal *ip = &dbintern;
-			int ret = rt_db_get_internal(ip, dp, gedp->dbip, NULL, &rt_uniresource);
+			int ret = rt_db_get_internal(ip, dp, gedp->dbip, NULL);
 			if (ret < 0)
 			    continue;
 
@@ -242,7 +242,7 @@ _view_cmd_lod(void *bs, int argc, const char **argv)
 			struct rt_db_internal dbintern;
 			RT_DB_INTERNAL_INIT(&dbintern);
 			struct rt_db_internal *ip = &dbintern;
-			int ret = rt_db_get_internal(ip, dp, gedp->dbip, NULL, &rt_uniresource);
+			int ret = rt_db_get_internal(ip, dp, gedp->dbip, NULL);
 			if (ret < 0)
 			    continue;
 

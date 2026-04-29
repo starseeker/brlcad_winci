@@ -1,7 +1,7 @@
 /*                        V I E W . H
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -213,7 +213,6 @@ struct draw_update_data_t {
     const struct bn_tol *tol;
     const struct bg_tess_tol *ttol;
     struct bv_mesh_lod_context *mesh_c;
-    struct resource *res;
 };
 
 GED_EXPORT extern unsigned long long dl_name_hash(struct ged *gedp);

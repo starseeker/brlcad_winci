@@ -1,7 +1,7 @@
 /*                         T O P S . C
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ ged_tops_core(struct ged *gedp, int argc, const char *argv[])
 
     /* Can this be executed only sometimes?
        Perhaps a "dirty bit" on the database? */
-    db_update_nref(gedp->dbip, &rt_uniresource);
+    db_update_nref(gedp->dbip);
 
     /*
      * Find number of possible entries and allocate memory

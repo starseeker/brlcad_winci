@@ -1,7 +1,7 @@
 /*                      M E T A B A L L . C
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -144,7 +144,7 @@ mix_balls(struct db_i *dbip, const char *name, int ac, const char *av[])
 	}
 
 	/* load the existing database object */
-	if (rt_db_get_internal(&dir, dp, dbip, NULL, &rt_uniresource) < 0) {
+	if (rt_db_get_internal(&dir, dp, dbip, NULL) < 0) {
 	    bu_log("Unable to load %s\n", av[i]);
 	    continue;
 	}

@@ -1,7 +1,7 @@
 /*                    C Y C L I C . C P P
  * BRL-CAD
  *
- * Copyright (c) 2014-2025 United States Government as represented by
+ * Copyright (c) 2014-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -112,7 +112,7 @@ cyclic_search(struct db_full_path *fp, void *client_data)
 	struct rt_db_internal in;
 	struct rt_comb_internal *comb;
 
-	if (rt_db_get_internal(&in, dp, gedp->dbip, NULL, &rt_uniresource) < 0) return;
+	if (rt_db_get_internal(&in, dp, gedp->dbip, NULL) < 0) return;
 
 	comb = (struct rt_comb_internal *)in.idb_ptr;
 	cyclic_search_subtree(fp, OP_UNION, comb->tree, cyclic_search, client_data);

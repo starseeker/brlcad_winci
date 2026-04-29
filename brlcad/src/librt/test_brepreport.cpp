@@ -1,7 +1,7 @@
 /*              T E S T _ B R E P R E P O R T . C P P
  * BRL-CAD
  *
- * Copyright (c) 2015-2025 United States Government as represented by
+ * Copyright (c) 2015-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -200,7 +200,7 @@ main(int argc, char *argv[])
 	ON_Brep *brep;
 	RT_DB_INTERNAL_INIT(&intern);
 	dp = (struct directory *)BU_PTBL_GET(&unique_breps, i);
-	if (rt_db_get_internal(&intern, dp, dbip, bn_mat_identity, &rt_uniresource) < 0) {
+	if (rt_db_get_internal(&intern, dp, dbip, bn_mat_identity) < 0) {
 	    bu_log("Error getting internal: %s\n", dp->d_namep);
 	    continue;
 	}
@@ -252,7 +252,7 @@ main(int argc, char *argv[])
 
 
     RT_DB_INTERNAL_INIT(&intern)
-    if (rt_db_get_internal(&intern, dp, dbip, NULL, &rt_uniresource) < 0) {
+    if (rt_db_get_internal(&intern, dp, dbip, NULL) < 0) {
 	bu_exit(1, "ERROR: Unable to get internal representation of %s\n", argv[2]);
     }
 

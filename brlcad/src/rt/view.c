@@ -1,7 +1,7 @@
 /*                          V I E W . C
  * BRL-CAD
  *
- * Copyright (c) 1985-2025 United States Government as represented by
+ * Copyright (c) 1985-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -164,6 +164,7 @@ struct bu_structparse view_parse[] = {
     {"%g", 1, "ambRadius", 0, BU_STRUCTPARSE_FUNC_NULL, NULL, NULL},
     {"%g", 1, "ambOffset", 0, BU_STRUCTPARSE_FUNC_NULL, NULL, NULL},
     {"%d", 1, "ambSlow", 0, BU_STRUCTPARSE_FUNC_NULL, NULL, NULL},
+    {"%d", 1, "embed_icv_metadata", 0, BU_STRUCTPARSE_FUNC_NULL, NULL, NULL},
     {"", 0, (char *)0, 0, BU_STRUCTPARSE_FUNC_NULL, NULL, NULL}
 };
 
@@ -611,7 +612,7 @@ view_setup(struct rt_i *rtip)
 			bu_log("mlib_setup: drop region %s\n", regp->reg_name);
 
 		    /* zap reg_udata? beware of light structs */
-		    rt_del_regtree(rtip, regp, &rt_uniresource);
+		    rt_del_regtree(rtip, regp);
 		    regp = r;
 		    continue;
 		}
@@ -627,7 +628,7 @@ view_setup(struct rt_i *rtip)
 	    case 2:
 		/* Full success, and this region should get dropped later */
 		/* Add to list of regions to drop */
-		bu_ptbl_ins(&rtip->delete_regs, (long *)regp);
+		rt_mark_region_deleted(rtip, regp);
 		break;
 	}
 	regp = BU_LIST_NEXT(region, &regp->l);
@@ -656,7 +657,7 @@ view_re_setup(struct rt_i *rtip)
 		    {
 			struct region *r = BU_LIST_NEXT(region, &rp->l);
 			/* zap reg_udata? beware of light structs */
-			rt_del_regtree(rtip, rp, &rt_uniresource);
+			rt_del_regtree(rtip, rp);
 			rp = r;
 			continue;
 		    }
@@ -1755,16 +1756,18 @@ view_2init(struct application *ap, char *UNUSED(framename))
      * structures in the space partitioning tree
      */
     bu_ptbl_init(&stps, 8, "soltabs to delete");
-    if (OPTICAL_DEBUG & OPTICAL_DEBUG_LIGHT)
-	bu_log("deleting %zu invisible light regions\n", BU_PTBL_LEN(&ap->a_rt_i->delete_regs));
 
-    for (i=0; i<BU_PTBL_LEN(&ap->a_rt_i->delete_regs); i++) {
+    size_t reg_del_cnt = rt_deleted_regions_cnt(ap->a_rt_i);
+    if (OPTICAL_DEBUG & OPTICAL_DEBUG_LIGHT)
+	bu_log("deleting %zu invisible light regions\n", reg_del_cnt);
+
+    for (i=0; i<reg_del_cnt; i++) {
 	struct region *rp;
 	struct soltab *stp;
 	size_t j;
 
 
-	rp = (struct region *)BU_PTBL_GET(&ap->a_rt_i->delete_regs, i);
+	rp = rt_deleted_region_get(ap->a_rt_i, i);
 
 	/* make a list of soltabs containing primitives referenced by
 	 * invisible light regions
@@ -1843,12 +1846,14 @@ application_init(void)
     view_parse[ 9].sp_offset = bu_byteoffset(ambRadius);
     view_parse[10].sp_offset = bu_byteoffset(ambOffset);
     view_parse[11].sp_offset = bu_byteoffset(ambSlow);
+    view_parse[12].sp_offset = bu_byteoffset(embed_icv_metadata);
 
     option("", "-A #", "Set image brightness, ambient light intensity (default: 0.4)", 0);
     option("Raytrace", "-i", "Enable incremental (progressive-style) rendering", 1);
     option("Raytrace", "-t", "Render from top to bottom (default: from bottom up)", 1);
     option("Advanced", "-O file.dpix", "Render to .dpix format file, double precision image data", 1);
     option("Advanced", "-m density, r, g, b", "Render hazy air (e.g., 0.0002, 0.8, 0.9, 1 for sky-blue haze)", 1);
+    option("Advanced", "-c 'set embed_icv_metadata=1'", "Embed scene+camera metadata in output PNG for icv_diff/imgdiff nirt analysis", 1);
     option("Developer", "-l #", "Select lighting model (default is 0)", 1);
 
     /* this reassignment hack ensures help is last in the first list */

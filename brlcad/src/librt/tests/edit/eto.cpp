@@ -1,7 +1,7 @@
 /*                         E T O . C P P
  * BRL-CAD
  *
- * Copyright (c) 2025 United States Government as represented by
+ * Copyright (c) 2025-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -151,10 +151,10 @@ main(int argc, char *argv[])
 
     /* Grab copies for reference and comparison */
     struct rt_db_internal intern;
-    rt_db_get_internal(&intern, dp, dbip, NULL, &rt_uniresource);
+    rt_db_get_internal(&intern, dp, dbip, NULL);
     struct rt_eto_internal *orig_eto = (struct rt_eto_internal *)intern.idb_ptr;
     struct rt_db_internal cmpintern;
-    rt_db_get_internal(&cmpintern, dp, dbip, NULL, &rt_uniresource);
+    rt_db_get_internal(&cmpintern, dp, dbip, NULL);
     struct rt_eto_internal *cmp_eto = (struct rt_eto_internal *)cmpintern.idb_ptr;
 
     struct bn_tol tol = BN_TOL_INIT_TOL;

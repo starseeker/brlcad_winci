@@ -1,7 +1,7 @@
 /*                  S H _ B I L L B O A R D . C
  * BRL-CAD
  *
- * Copyright (c) 2004-2025 United States Government as represented by
+ * Copyright (c) 2004-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -226,7 +226,7 @@ bbd_setup(struct region *rp, struct bu_vls *matparm, void **dpp, const struct mf
     MAT_IDN(mat);
     RT_DB_INTERNAL_INIT(&intern);
     s = rt_db_get_internal(&intern, rp->reg_treetop->tr_a.tu_stp->st_dp, rtip->rti_dbip,
-			   mat, &rt_uniresource);
+			   mat);
 
     if (intern.idb_minor_type != ID_TGC &&
 	intern.idb_minor_type != ID_REC) {

@@ -1,7 +1,7 @@
 /*                       R E P A I R . C P P
  * BRL-CAD
  *
- * Copyright (c) 2020-2025 United States Government as represented by
+ * Copyright (c) 2020-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -83,21 +83,23 @@ struct lint_worker_vars {
     void *ptr;
 };
 
-class lint_worker_data {
-    public:
-	lint_worker_data(struct rt_i *rtip, struct resource *res);
-	~lint_worker_data();
-	void shoot(int ind, bool reverse);
+namespace {
+    class lint_worker_data {
+	public:
+	    lint_worker_data(struct rt_i *rtip, struct resource *res);
+	    ~lint_worker_data();
+	    void shoot(int ind, bool reverse);
 
-	int curr_tri = -1;
-	double ttol = 0.0;
+	    int curr_tri = -1;
+	    double ttol = 0.0;
 
-	bool error_found = false;
+	    bool error_found = false;
 
-	struct application ap;
-	struct rt_bot_internal *bot = NULL;
-	const std::unordered_set<int> *bad_faces = NULL;
-};
+	    struct application ap;
+	    struct rt_bot_internal *bot = NULL;
+	    const std::unordered_set<int> *bad_faces = NULL;
+    };
+}
 
 static bool
 bot_face_normal(vect_t *n, struct rt_bot_internal *bot, int i)

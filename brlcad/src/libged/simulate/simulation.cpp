@@ -1,7 +1,7 @@
 /*                  S I M U L A T I O N . C P P
  * BRL-CAD
  *
- * Copyright (c) 2014-2025 United States Government as represented by
+ * Copyright (c) 2014-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -42,6 +42,7 @@
 #include "bu/str.h"
 #include "rt/db_attr.h"
 #include "rt/db_io.h"
+#include "rt/rt_instance.h"
 #include "rt/search.h"
 
 #include <cerrno>
@@ -137,8 +138,13 @@ get_aabb(db_i &db, const db_full_path &path)
     rt_prep_parallel(rti.ptr, 0);
     std::stack<const tree *> stack;
 
-    for (std::size_t i = 0; i < rti.ptr->nregions; ++i)
-	stack.push(rti.ptr->Regions[i]->reg_treetop);
+    rt_iterate_regions(rti.ptr,
+        [](struct region *regp, void *udata) -> int {
+            auto *s = static_cast<std::stack<const tree *> *>(udata);
+            s->push(regp->reg_treetop);
+            return 0;
+        },
+        &stack);
 
     std::pair<btVector3, btVector3> result(btVector3(0.0, 0.0, 0.0),
 					   btVector3(0.0, 0.0, 0.0));
@@ -441,7 +447,7 @@ Simulation::Region::get_regions(db_i &db, const db_full_path &path,
     RT_CK_DBI(&db);
     RT_CK_FULL_PATH(&path);
 
-    db_update_nref(&db, &rt_uniresource);
+    db_update_nref(&db);
 
     bu_ptbl found = BU_PTBL_INIT_ZERO;
     const AutoPtr<bu_ptbl, db_search_free> autofree_found(&found);

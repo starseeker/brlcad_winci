@@ -1,7 +1,7 @@
 /*                  B V _ P O L Y _ S K E T C H . C
  * BRL-CAD
  *
- * Copyright (c) 2013-2025 United States Government as represented by
+ * Copyright (c) 2013-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -50,7 +50,7 @@ main(int argc, char *argv[])
 	bu_exit(EXIT_FAILURE, "ERROR: Unable to read from %s\n", argv[1]);
     }
 
-    db_update_nref(dbip, &rt_uniresource);
+    db_update_nref(dbip);
 
     dp = db_lookup(dbip, "poly.s", LOOKUP_QUIET);
     if (dp == RT_DIR_NULL)
@@ -80,8 +80,8 @@ main(int argc, char *argv[])
     int dret = db_diff_dp(dbip, wfp->dbip, dp, odp, &tol, DB_COMPARE_PARAM, NULL);
     if (dret) {
 	struct rt_db_internal ointern, nintern;
-	int old_id = rt_db_get_internal(&ointern, dp, dbip, NULL, &rt_uniresource);
-	int new_id = rt_db_get_internal(&nintern, odp, wfp->dbip, NULL, &rt_uniresource);
+	int old_id = rt_db_get_internal(&ointern, dp, dbip, NULL);
+	int new_id = rt_db_get_internal(&nintern, odp, wfp->dbip, NULL);
 	struct bu_vls msg = BU_VLS_INIT_ZERO;
 	if (OBJ[old_id].ft_describe)
 	    OBJ[old_id].ft_describe(&msg, &ointern, 100, dbip->dbi_base2local);

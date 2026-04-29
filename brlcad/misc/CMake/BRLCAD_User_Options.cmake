@@ -1,7 +1,7 @@
 #       B R L C A D _ U S E R _ O P T I O N S . C M A K E
 # BRL-CAD
 #
-# Copyright (c) 2020-2025 United States Government as represented by
+# Copyright (c) 2020-2026 United States Government as represented by
 # the U.S. Army Research Laboratory.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -46,11 +46,6 @@ mark_as_advanced(BUILD_SHARED_LIBS)
 
 # Build static libs by default.
 option(BUILD_STATIC_LIBS "Build static libraries" ON)
-
-# Turn off the brlcad.dll build.
-# It's an expert's setting at the moment.
-option(BRLCAD_ENABLE_BRLCAD_LIBRARY "Build the brlcad.dll" OFF)
-mark_as_advanced(BRLCAD_ENABLE_BRLCAD_LIBRARY)
 
 # Global third party controls - these options enable and disable ALL bext
 # copies of libraries.

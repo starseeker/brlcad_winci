@@ -1,7 +1,7 @@
 /*                         R M A P . C
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -81,8 +81,7 @@ ged_rmap_core(struct ged *gedp, int argc, const char *argv[])
 	    if (rt_db_get_internal(&intern,
 				   dp,
 				   gedp->dbip,
-				   (fastf_t *)NULL,
-				   &rt_uniresource) < 0) {
+				   (fastf_t *)NULL) < 0) {
 		bu_vls_printf(gedp->ged_result_str, "%s: Database read error, aborting", argv[0]);
 		return BRLCAD_ERROR;
 	    }

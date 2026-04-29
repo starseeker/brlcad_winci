@@ -1,7 +1,7 @@
 /*                 R E G R E S S _ P K G . C P P
  * BRL-CAD
  *
- * Copyright (c) 2020-2025 United States Government as represented by
+ * Copyright (c) 2020-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -36,13 +36,13 @@
 
 /* system headers */
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
 #include "bio.h"
 
 /* interface headers */
 #include "bu/app.h"
 #include "bu/getopt.h"
+#include "bu/interrupt.h"
 #include "bu/log.h"
 #include "bu/malloc.h"
 #include "bu/snooze.h"

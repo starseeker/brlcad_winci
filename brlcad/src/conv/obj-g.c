@@ -1,7 +1,7 @@
 /*                     O B J - G . C
  * BRL-CAD
  *
- * Copyright (c) 2010-2025 United States Government as represented by
+ * Copyright (c) 2010-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -3842,7 +3842,6 @@ main(int argc, char **argv)
     }
 
     db_close(fd_out->dbip);
-    rt_clean_resource_complete(NULL, &rt_uniresource);
 
     (void)time(&overall_end_time);
     overall_elapsed_time = overall_end_time - overall_start_time;

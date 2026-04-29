@@ -1,7 +1,7 @@
 /*                     S H _ S C L O U D . C
  * BRL-CAD
  *
- * Copyright (c) 1998-2025 United States Government as represented by
+ * Copyright (c) 1998-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -153,7 +153,7 @@ scloud_setup(register struct region *rp, struct bu_vls *matparm, void **dpp, con
 	/* bad thing */
 	bu_bomb("db_string_to_path() error");
     }
-    if (! db_path_to_mat(rtip->rti_dbip, &full_path, region_to_model, 0, &rt_uniresource)) {
+    if (! db_path_to_mat(rtip->rti_dbip, &full_path, region_to_model, 0)) {
 	/* bad thing */
 	bu_bomb("db_path_to_mat() error");
     }

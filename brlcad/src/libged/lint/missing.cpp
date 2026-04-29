@@ -1,7 +1,7 @@
 /*                   M I S S I N G . C P P
  * BRL-CAD
  *
- * Copyright (c) 2014-2025 United States Government as represented by
+ * Copyright (c) 2014-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -163,7 +163,7 @@ _ged_missing_check(lint_data *mdata)
 		if (dp->d_flags & RT_DIR_COMB) {
 		    struct rt_db_internal in;
 		    struct rt_comb_internal *comb;
-		    if (rt_db_get_internal(&in, dp, gedp->dbip, NULL, &rt_uniresource) < 0) continue;
+		    if (rt_db_get_internal(&in, dp, gedp->dbip, NULL) < 0) continue;
 		    comb = (struct rt_comb_internal *)in.idb_ptr;
 		    comb_find_missing(mdata, dp->d_namep, gedp->dbip, comb->tree);
 		} else {
@@ -178,7 +178,7 @@ _ged_missing_check(lint_data *mdata)
 	    if (dp->d_flags & RT_DIR_COMB) {
 		struct rt_db_internal in;
 		struct rt_comb_internal *comb;
-		if (rt_db_get_internal(&in, dp, gedp->dbip, NULL, &rt_uniresource) < 0) continue;
+		if (rt_db_get_internal(&in, dp, gedp->dbip, NULL) < 0) continue;
 		comb = (struct rt_comb_internal *)in.idb_ptr;
 		comb_find_missing(mdata, dp->d_namep, gedp->dbip, comb->tree);
 	    } else {

@@ -1,7 +1,7 @@
 /*                     C A C H E _ L O D . C
  * BRL-CAD
  *
- * Copyright (c) 2016-2025 United States Government as represented by
+ * Copyright (c) 2016-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -136,7 +136,7 @@ db_mesh_lod_update(struct db_i *dbip, const char *name)
     struct rt_db_internal dbintern;
     RT_DB_INTERNAL_INIT(&dbintern);
     struct rt_db_internal *ip = &dbintern;
-    int ret = rt_db_get_internal(ip, dp, dbip, NULL, &rt_uniresource);
+    int ret = rt_db_get_internal(ip, dp, dbip, NULL);
     if (ret < 0)
 	return BRLCAD_ERROR;
     if (ip->idb_minor_type != DB5_MINORTYPE_BRLCAD_BOT) {

@@ -1,7 +1,7 @@
 /*                  S M O O T H . C P P
  * BRL-CAD
  *
- * Copyright (c) 2019-2025 United States Government as represented by
+ * Copyright (c) 2019-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -209,7 +209,7 @@ _bot_cmd_smooth(void* bs, int argc, const char** argv)
     }
     bu_vls_free(&output_bot_name);
 
-    if (rt_db_put_internal(dp, dbip, &intern, &rt_uniresource) < 0) {
+    if (rt_db_put_internal(dp, dbip, &intern) < 0) {
 	rt_db_free_internal(&intern);
 	return BRLCAD_ERROR;
     }

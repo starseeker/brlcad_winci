@@ -1,7 +1,7 @@
 /*                       S H _ F I R E . C
  * BRL-CAD
  *
- * Copyright (c) 1997-2025 United States Government as represented by
+ * Copyright (c) 1997-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -240,7 +240,7 @@ fire_setup(register struct region *rp, struct bu_vls *matparm, void **dpp, const
      */
 
     rt_shader_mat(fire_sp->fire_m_to_sh, rtip, rp, fire_sp->fire_min,
-		  fire_sp->fire_max, &rt_uniresource);
+		  fire_sp->fire_max);
 
     /* Build matrix to map shader space to noise space.
      * XXX If only we could get the frametime at this point

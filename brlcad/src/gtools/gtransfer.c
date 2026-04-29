@@ -1,7 +1,7 @@
 /*                     G _ T R A N S F E R . C
  * BRL-CAD
  *
- * Copyright (c) 2006-2025 United States Government as represented by
+ * Copyright (c) 2006-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This program is free software; you can redistribute it and/or
@@ -35,13 +35,13 @@
 
 /* system headers */
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
 #include "bio.h"
 
 /* interface headers */
 #include "bu/app.h"
 #include "bu/getopt.h"
+#include "bu/interrupt.h"
 #include "bu/units.h"
 #include "bu/snooze.h"
 #include "raytrace.h"
@@ -362,7 +362,7 @@ run_server(int port)
 /**
  * base routine that the client uses to send an object to the server.
  * this is the hook callback function for both the primitives and
- * combinations encountered during a db_functree() traversal.
+ * combinations encountered during a db_treewalk_basic() traversal.
  *
  * returns 0 if unsuccessful
  * returns 1 if successful
@@ -445,7 +445,7 @@ run_client(const char *server, int port, struct db_i *dbip, int geomc, const cha
     /* send geometry to the server */
     if (geomc > 0) {
 	/* geometry was specified. look it up and process the
-	 * hierarchy using db_functree() where all combinations and
+	 * hierarchy using db_treewalk_basic() where all combinations and
 	 * primitives are sent that get encountered.
 	 */
 	for (i = 0; i < geomc; i++) {
@@ -465,7 +465,7 @@ run_client(const char *server, int port, struct db_i *dbip, int geomc, const cha
 		bu_log("Unable to lookup %s\n", geomv[i]);
 		bu_exit(EXIT_FAILURE, "ERROR: requested geometry could not be found\n");
 	    }
-	    db_functree(dbip, dp, send_to_server, send_to_server, &rt_uniresource, (void *)&stash);
+	    db_treewalk_basic(dbip, dp, send_to_server, send_to_server, (void *)&stash);
 	}
     } else {
 	/* no geometry was specified so traverse the array of linked

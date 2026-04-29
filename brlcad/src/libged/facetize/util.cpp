@@ -1,7 +1,7 @@
 /*                        U T I L . C P P
  * BRL-CAD
  *
- * Copyright (c) 2008-2025 United States Government as represented by
+ * Copyright (c) 2008-2026 United States Government as represented by
  * the U.S. Army Research Laboratory.
  *
  * This library is free software; you can redistribute it and/or
@@ -136,7 +136,7 @@ _ged_facetize_write_bot(struct db_i *dbip, struct rt_bot_internal *bot, const ch
 	return BRLCAD_ERROR;
     }
 
-    if (rt_db_put_internal(dp, dbip, &intern, &rt_uniresource) < 0) {
+    if (rt_db_put_internal(dp, dbip, &intern) < 0) {
 	if (verbosity >= 0)
 	    bu_log("Failed to write %s to database\n", name);
 	rt_db_free_internal(&intern);
@@ -259,7 +259,7 @@ _ged_facetize_working_file_setup(struct _ged_facetize_state *s, struct bu_ptbl *
 
 		if (ldp->d_minor_type == ID_DSP) {
 		    struct rt_db_internal intern;
-		    if (rt_db_get_internal(&intern, ldp, dbip, NULL, &rt_uniresource) < 0)
+		    if (rt_db_get_internal(&intern, ldp, dbip, NULL) < 0)
 			continue;
 		    dsp_data_cpy(dbip, (struct rt_dsp_internal *)intern.idb_ptr, s->wdir);
 		    rt_db_free_internal(&intern);
@@ -335,7 +335,7 @@ bot_fixup(struct _ged_facetize_state *s, struct db_i *wdbip, struct directory *b
 
     struct rt_db_internal bot_intern;
     RT_DB_INTERNAL_INIT(&bot_intern);
-    if (rt_db_get_internal(&bot_intern, bot_dp, wdbip, NULL, &rt_uniresource) < 0) {
+    if (rt_db_get_internal(&bot_intern, bot_dp, wdbip, NULL) < 0) {
 	return NULL;
     }
 
@@ -483,7 +483,7 @@ facetize_primitives_summary(struct _ged_facetize_state *s)
     struct db_i *cdbip = db_open(bu_vls_cstr(s->wfile), DB_OPEN_READONLY);
     if (cdbip) {
 	db_dirbuild(cdbip);
-	db_update_nref(cdbip, &rt_uniresource);
+	db_update_nref(cdbip);
 	method_scan(&method_sets, cdbip);
 	for (m_it = method_sets.begin(); m_it != method_sets.end(); ++m_it) {
 	    if (m_it->first == std::string("REPAIR")) {
