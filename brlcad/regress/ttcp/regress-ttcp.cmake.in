@@ -285,6 +285,7 @@ if(USE_BAT)
     native_path("${outfile}" _outfile_win)
     native_path("${errfile}" _errfile_win)
     set(_bat "${CBDIR}/ttcp_receiver_${name}.bat")
+    native_path("${_bat}" _bat_win)
     set(_receiver_cmd "\"${_ttcp_exec_win}\" ${opts} -r -p${port} > \"${_outfile_win}\" 2> \"${_errfile_win}\"")
     set(${out_cmd_var} "${_receiver_cmd}")
     file(WRITE "${_bat}"
@@ -292,7 +293,7 @@ if(USE_BAT)
 ${_receiver_cmd}
 ")
     execute_process(
-      COMMAND cmd /c start /b ttcp_receiver_${name} "${_bat}"
+      COMMAND powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '${_bat_win}' -WindowStyle Hidden"
       WORKING_DIRECTORY "${CBDIR}"
     )
   endmacro()

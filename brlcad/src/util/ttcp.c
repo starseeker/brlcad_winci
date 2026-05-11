@@ -37,6 +37,8 @@
 #  define USE_WINSOCK
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
+#  include <fcntl.h>
+#  include <io.h>
 #endif
 #ifdef HAVE_WINDOWS_H
 #  include <windows.h>
@@ -77,12 +79,14 @@ typedef unsigned int socklen_t;
 #ifdef USE_WINSOCK
 typedef SOCKET socket_t;
 #  define close_socket closesocket
+#  define INVALID_SOCKET_FD INVALID_SOCKET
 #  define READSOCKET(s, b, l) recv((s), (b), (l), 0)
 #  define WRITESOCKET(s, b, l) send((s), (b), (l), 0)
 #  define ERRNO WSAGetLastError()
 #else
 typedef int socket_t;
 #  define close_socket close
+#  define INVALID_SOCKET_FD (-1)
 #  define READSOCKET(s, b, l) read((s), (b), (l))
 #  define WRITESOCKET(s, b, l) write((s), (b), (l))
 #  define ERRNO errno
@@ -496,7 +500,7 @@ main(int argc, char **argv)
         nbuf, buflen, port);
 
     fd = socket(AF_INET, udp?SOCK_DGRAM:SOCK_STREAM, 0);
-    if (fd < 0)
+    if (fd == INVALID_SOCKET_FD)
         err("socket");
     mes("socket");
 
@@ -524,9 +528,12 @@ main(int argc, char **argv)
             }
             fromlen = (socklen_t)sizeof(frominet);
             domain = AF_INET;
-            fd = accept(fd, (struct sockaddr *)&frominet, &fromlen);
-            if (fd < 0)
+            socket_t accepted_fd;
+            accepted_fd = accept(fd, (struct sockaddr *)&frominet, &fromlen);
+            if (accepted_fd == INVALID_SOCKET_FD)
                 err("accept");
+            close_socket(fd);
+            fd = accepted_fd;
             mes("accept");
         }
     }
@@ -609,6 +616,13 @@ main(int argc, char **argv)
         (void)Nwrite(fd, buf, 4); /* rcvr end */
         (void)Nwrite(fd, buf, 4); /* rcvr end */
     }
+    if (!udp && trans)
+#ifdef USE_WINSOCK
+        (void)shutdown(fd, SD_SEND);
+#else
+        (void)shutdown(fd, SHUT_WR);
+#endif
+    close_socket(fd);
     free(buf);
     fprintf(stderr, "ttcp%s: %s\n", trans?"-t":"-r", stats);
     if (cput <= 0.0) cput = 0.001;
