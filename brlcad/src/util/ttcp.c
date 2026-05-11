@@ -549,18 +549,6 @@ main(int argc, char **argv)
             if (udp) (void)Nwrite(fd, buf, 4); /* rcvr end */
         } else {
             while ((cnt=Nread(fd, buf, buflen)) > 0) {
-                /* --- UDP control packet fix: skip 4-byte all-zero packets --- */
-                if (udp && cnt == 4) {
-                    int all_zero = 1;
-                    for (int i = 0; i < 4; i++) {
-                        if (buf[i] != 0) {
-                            all_zero = 0;
-                            break;
-                        }
-                    }
-                    if (all_zero)
-                        continue; /* skip control packet */
-                }
                 if (cnt <= 4) {
                     if (going)
                         break;	/* "EOF" */
@@ -584,7 +572,6 @@ main(int argc, char **argv)
                 nbytes += cnt;
         } else {
             while ((cnt=Nread(fd, buf, buflen)) > 0) {
-                /* --- UDP control packet fix: skip 4-byte all-zero packets --- */
                 if (udp && cnt == 4) {
                     int all_zero = 1;
                     for (int i = 0; i < 4; i++) {
@@ -594,7 +581,7 @@ main(int argc, char **argv)
                         }
                     }
                     if (all_zero)
-                        continue; /* skip UDP end marker */
+                        break; /* UDP end marker */
                 }
 #if defined(USE_WINSOCK)
                 if (_write(1, buf, cnt) != cnt) break;
