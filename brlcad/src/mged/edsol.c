@@ -373,7 +373,7 @@ get_solid_keypoint(struct mged_state *s, fastf_t *pt, const char **strp, struct 
 		    snprintf(buf, BUFSIZ, "no point selected");
 		} else {
 		    VMOVE(mpt, es_metaball_pnt->coord);
-		    snprintf(buf, BUFSIZ, "V %f", es_metaball_pnt->fldstr);
+		    snprintf(buf, BUFSIZ, "V %f", es_metaball_pnt->field_strength);
 		}
 		*strp = buf;
 		break;
@@ -1485,7 +1485,7 @@ pscale(struct mged_state *s)
 		} else {
 		    newrad = tor->r_a * MEDIT(s)->es_scale;
 		}
-		if (newrad < SMALL) newrad = 4*SMALL;
+		if (newrad < SQRT_SMALL_FASTF) newrad = 4*SQRT_SMALL_FASTF;
 		if (tor->r_h <= newrad)
 		    tor->r_a = newrad;
 	    }
@@ -1505,7 +1505,7 @@ pscale(struct mged_state *s)
 		} else {
 		    newrad = tor->r_h * MEDIT(s)->es_scale;
 		}
-		if (newrad < SMALL) newrad = 4*SMALL;
+		if (newrad < SQRT_SMALL_FASTF) newrad = 4*SQRT_SMALL_FASTF;
 		if (newrad <= tor->r_a)
 		    tor->r_h = newrad;
 	    }
@@ -1527,7 +1527,7 @@ pscale(struct mged_state *s)
 		} else {
 		    newrad = eto->eto_r * MEDIT(s)->es_scale;
 		}
-		if (newrad < SMALL) newrad = 4*SMALL;
+		if (newrad < SQRT_SMALL_FASTF) newrad = 4*SQRT_SMALL_FASTF;
 		VMOVE(Nu, eto->eto_N);
 		VUNITIZE(Nu);
 		/* get horiz and vert components of C and Rd */
@@ -1557,7 +1557,7 @@ pscale(struct mged_state *s)
 		} else {
 		    newrad = eto->eto_rd * MEDIT(s)->es_scale;
 		}
-		if (newrad < SMALL) newrad = 4*SMALL;
+		if (newrad < SQRT_SMALL_FASTF) newrad = 4*SQRT_SMALL_FASTF;
 		work = MAGNITUDE(eto->eto_C);
 		if (newrad <= work) {
 		    VMOVE(Nu, eto->eto_N);
@@ -2348,10 +2348,10 @@ pscale(struct mged_state *s)
 	case MENU_METABALL_PT_SET_GOO:
 	    {
 		if (!es_metaball_pnt || !MEDIT(s)->e_inpara) {
-		    Tcl_AppendResult(s->interp, "pscale: no metaball point selected for scaling goo\n", (char *)NULL);
+		    Tcl_AppendResult(s->interp, "pscale: no metaball point selected for scaling blobbiness\n", (char *)NULL);
 		    return;
 		}
-		es_metaball_pnt->sweat *= *MEDIT(s)->e_para * ((MEDIT(s)->es_scale > -SMALL_FASTF) ? MEDIT(s)->es_scale : 1.0);
+		es_metaball_pnt->blobbiness *= *MEDIT(s)->e_para * ((MEDIT(s)->es_scale > -SMALL_FASTF) ? MEDIT(s)->es_scale : 1.0);
 	    }
 	    break;
 	case MENU_METABALL_PT_FLDSTR:
@@ -2360,7 +2360,7 @@ pscale(struct mged_state *s)
 		    Tcl_AppendResult(s->interp, "pscale: no metaball point selected for scaling strength\n", (char *)NULL);
 		    return;
 		}
-		es_metaball_pnt->fldstr *= *MEDIT(s)->e_para * ((MEDIT(s)->es_scale > -SMALL_FASTF) ? MEDIT(s)->es_scale : 1.0);
+		es_metaball_pnt->field_strength *= *MEDIT(s)->e_para * ((MEDIT(s)->es_scale > -SMALL_FASTF) ? MEDIT(s)->es_scale : 1.0);
 	    }
 	    break;
     }
@@ -5098,7 +5098,7 @@ sedit(struct mged_state *s)
 		es_metaball_pnt = BU_LIST_FIRST(wdb_metaball_pnt, &metaball->metaball_ctrl_head);
 		VMOVE(n->coord, MEDIT(s)->e_para);
 		n->l.magic = WDB_METABALLPT_MAGIC;
-		n->fldstr = 1.0;
+		n->field_strength = 1.0;
 		BU_LIST_APPEND(&es_metaball_pnt->l, &n->l);
 		es_metaball_pnt = n;
 	    }

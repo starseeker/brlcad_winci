@@ -241,12 +241,18 @@ view_pixel(struct application *ap)
 	    b = inonbackground[2];
 	}
 
-	/* Make sure it's never perfect black */
-	if (r==0 && g==0 && b==0 && benchmark==0)
+	/* Make sure it's never perfect black, even in benchmark mode.
+	 * A genuine hit that renders to (0,0,0) is indistinguishable
+	 * from a background miss for any compositing that works with
+	 * pixel values.  The reference image bench/ref/m35.pix was
+	 * generated with this guard always active.  Benchmark mode
+	 * removes random effects (dither) but must not change semantic
+	 * hit-vs-miss distinguishability. */
+	if (r==0 && g==0 && b==0)
 	    b = 1;
     }
 
-    if (OPTICAL_DEBUG&OPTICAL_DEBUG_HITS) bu_log("rgb=%3d, %3d, %3d xy=%3d, %3d (%g, %g, %g)\n",
+    if (OPTICAL_DEBUG&OPTICAL_DEBUG_HITS)bu_log("rgb=%3d, %3d, %3d xy=%3d, %3d (%g, %g, %g)\n",
 						 r, g, b, ap->a_x, ap->a_y,
 						 V3ARGS(ap->a_color));
 
@@ -1401,6 +1407,7 @@ reproject_splat(int ix, int iy, struct floatpixel *ip, const fastf_t *new_view_p
 extern int per_processor_chunk;	/* how many pixels to do at once */
 extern int cur_pixel;		/* current pixel number, 0..last_pixel */
 extern int last_pixel;		/* last pixel number */
+extern int pix_start;		/* starting pixel of frame, from do.c */
 
 void
 reproject_worker(int UNUSED(cpu), void *UNUSED(arg))
@@ -1558,9 +1565,23 @@ view_2init(struct application *ap, char *UNUSED(framename))
 	/* Have each CPU do a whole scanline.  Saves lots of semaphore
 	 * overhead.  For load balancing make sure each CPU has
 	 * several lines to do.
+	 *
+	 * BUFMODE_SCANLINE relies on each parallel chunk covering
+	 * exactly one scanline so that scanline[].sl_buf / sl_left can
+	 * be updated without RT_SEM_RESULTS protection.  That requires
+	 * the chunk start (cur_pixel == pix_start) to lie on a scanline
+	 * boundary.  If the user supplied an unaligned -b X Y starting
+	 * pixel, fall back to BUFMODE_DYNAMIC which uses RT_SEM_RESULTS
+	 * to serialize concurrent updates to the same scanline.
 	 */
-	per_processor_chunk = width;
-	buf_mode = BUFMODE_SCANLINE;
+	if (width > 0 && pix_start >= 0
+	    && ((size_t)pix_start % width) != 0)
+	{
+	    buf_mode = BUFMODE_DYNAMIC;
+	} else {
+	    per_processor_chunk = width;
+	    buf_mode = BUFMODE_SCANLINE;
+	}
     }
     else {
 	buf_mode = BUFMODE_DYNAMIC;
@@ -1607,6 +1628,10 @@ view_2init(struct application *ap, char *UNUSED(framename))
 	    break;
 #ifdef RTSRV
 	case BUFMODE_RTSRV:
+	    if (scanbuf) {
+		bu_free(scanbuf, "scanbuf [multi-line]");
+		scanbuf = NULL;
+	    }
 	    scanbuf = (unsigned char *)bu_malloc(srv_scanlen*pwidth + sizeof(long), "scanbuf [multi-line]");
 	    break;
 #endif

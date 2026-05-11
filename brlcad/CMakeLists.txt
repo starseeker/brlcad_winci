@@ -231,7 +231,7 @@ set(CMAKE_FIND_USE_PACKAGE_REGISTRY FALSE)
 # Prepare to manage and build BRL-CAD's external dependencies. Specifies a
 # specific commit hash to use in the 'bext' repository.
 include(BRLCAD_ExternalDeps)
-brlcad_bext_init(b78aa614945bb0fd1188002cdbc11f55f6e7c871)
+brlcad_bext_init(9a4f748199f593831f8e4dfd32d147ce76e6a2c6)
 
 #---------------------------------------------------------------------
 # Define various utilities.
@@ -898,6 +898,93 @@ check_c_flag(Qunused-arguments)
 check_cxx_flag(Qunused-arguments)
 
 cmake_pop_check_state()
+
+# *******************************************************************
+# Compiler feature checks used by embedded geogram (libbg)
+# *******************************************************************
+
+# Check whether the compiler supports __restrict__ (GCC/Clang form)
+check_c_source_compiles(
+  "int main(int argc, char *argv[]) { int * __restrict__ p = (int *)0; (void)p; (void)argc; (void)argv; return 0; }"
+  HAVE_RESTRICT__
+)
+if(HAVE_RESTRICT__)
+  config_h_append(BRLCAD "#define HAVE_RESTRICT__ 1\n")
+endif(HAVE_RESTRICT__)
+
+# Check whether the compiler supports __restrict (MSVC / other single-underscore form).
+# GCC and Clang also accept __restrict, but HAVE_RESTRICT__ above is preferred.
+# This check is here so that memory.h can fall back to __restrict on MSVC.
+if(NOT HAVE_RESTRICT__)
+  check_c_source_compiles(
+    "int main(int argc, char *argv[]) { int * __restrict p = (int *)0; (void)p; (void)argc; (void)argv; return 0; }"
+    HAVE_RESTRICT
+  )
+  if(HAVE_RESTRICT)
+    config_h_append(BRLCAD "#define HAVE_RESTRICT 1\n")
+  endif(HAVE_RESTRICT)
+endif()
+
+# Check whether the compiler supports __builtin_assume_aligned (GCC/Clang)
+check_c_source_compiles(
+  "int main(int argc, char *argv[]) { void *p = (void *)0; p = __builtin_assume_aligned(p, 64); (void)p; (void)argc; (void)argv; return 0; }"
+  HAVE_BUILTIN_ASSUME_ALIGNED
+)
+if(HAVE_BUILTIN_ASSUME_ALIGNED)
+  config_h_append(BRLCAD "#define HAVE_BUILTIN_ASSUME_ALIGNED 1\n")
+endif(HAVE_BUILTIN_ASSUME_ALIGNED)
+
+# Check whether the compiler supports __debugbreak() (MSVC/Windows)
+check_c_source_compiles(
+  "int main(int argc, char *argv[]) { __debugbreak(); (void)argc; (void)argv; return 0; }"
+  HAVE_DEBUGBREAK
+)
+if(HAVE_DEBUGBREAK)
+  config_h_append(BRLCAD "#define HAVE_DEBUGBREAK 1\n")
+endif(HAVE_DEBUGBREAK)
+
+# Check whether #pragma fp_contract(off) is accepted without warnings (MSVC only).
+# GCC/Clang only warn about this unknown pragma; the test must be run with
+# -Werror so that unsupported compilers cause the test to fail.
+cmake_push_check_state()
+if(NOT MSVC)
+  set(CMAKE_REQUIRED_FLAGS "-Werror=unknown-pragmas")
+endif()
+check_c_source_compiles(
+  "#pragma fp_contract(off)\nint main(int argc, char *argv[]) { (void)argc; (void)argv; return 0; }"
+  HAVE_PRAGMA_FP_CONTRACT
+)
+cmake_pop_check_state()
+if(HAVE_PRAGMA_FP_CONTRACT)
+  config_h_append(BRLCAD "#define HAVE_PRAGMA_FP_CONTRACT 1\n")
+endif(HAVE_PRAGMA_FP_CONTRACT)
+
+# Check for _mm_pause (x86/x86_64 spinlock hint via Intel intrinsics)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|x86|i[36789]86")
+  check_c_source_compiles(
+    "#include <immintrin.h>\nint main(int argc, char *argv[]) { _mm_pause(); (void)argc; (void)argv; return 0; }"
+    HAVE_MM_PAUSE
+  )
+  if(HAVE_MM_PAUSE)
+    config_h_append(BRLCAD "#define HAVE_MM_PAUSE 1\n")
+  endif(HAVE_MM_PAUSE)
+endif()
+
+# Check for _aligned_malloc / _aligned_free (Windows-specific)
+check_c_source_compiles(
+  "#include <malloc.h>\nint main(int argc, char *argv[]) { void *p = _aligned_malloc(64, 64); _aligned_free(p); (void)argc; (void)argv; return 0; }"
+  HAVE_ALIGNED_MALLOC
+)
+if(HAVE_ALIGNED_MALLOC)
+  config_h_append(BRLCAD "#define HAVE_ALIGNED_MALLOC 1\n")
+endif(HAVE_ALIGNED_MALLOC)
+
+# On Linux the default thread stack is 8-10 MB (vs 1 MB on Windows, 512 KB on
+# macOS).  geogram's exact-arithmetic predicates use this to allocate
+# multi-precision temporaries on the stack for performance.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  config_h_append(BRLCAD "#define BRLCAD_HAS_BIG_STACK 1\n")
+endif()
 
 # The following tests are almost entirely for gcc/llvm style flags, so
 # we don't unnecessarily slow down the Windows build.
@@ -2172,17 +2259,17 @@ verbose_add_subdirectory("" include)
 # require geometry conversion tools
 verbose_add_subdirectory("" db)
 
-# docs after we're all done with build tasks
-# NOTE: doc/docbook/resources is added separately (earlier)
-# NOTE: doc/doxygenis added separately (earlier)
-verbose_add_subdirectory("" doc)
-
 # scripts that primarily require rendering
 if(TARGET rt)
   verbose_add_subdirectory("" sh)
   verbose_add_subdirectory("" bench)
   verbose_add_subdirectory("" regress)
 endif(TARGET rt)
+
+# docs after we're all done with build tasks
+# NOTE: doc/docbook/resources is added separately (earlier)
+# NOTE: doc/doxygenis added separately (earlier)
+verbose_add_subdirectory("" doc)
 
 # add misc last
 # NOTE: misc/tools is added separately (earlier)
