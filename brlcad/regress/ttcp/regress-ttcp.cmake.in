@@ -37,8 +37,9 @@
 
 # ---- Define macros before any use ----
 macro(ttcp_status MSG)
-  file(APPEND "${LOGFILE}" "${MSG}\n")
-  message(STATUS "${MSG}")
+  string(REPLACE "\\" "/" _TTCP_STATUS_MSG "${MSG}")
+  file(APPEND "${LOGFILE}" "${_TTCP_STATUS_MSG}\n")
+  message(STATUS "${_TTCP_STATUS_MSG}")
 endmacro()
 
 macro(ttcp_cleanup)
@@ -281,23 +282,34 @@ if(USE_BAT)
     set(${out_var} "${_native_path_tmp}")
   endmacro()
   macro(ttcp_make_and_launch_receiver name port opts outfile errfile out_cmd_var)
-    native_path("${TTCP_EXEC}" _ttcp_exec_win)
-    native_path("${outfile}" _outfile_win)
-    native_path("${errfile}" _errfile_win)
     set(_bat "${CBDIR}/ttcp_receiver_${name}.bat")
-    set(_receiver_cmd "\"${_ttcp_exec_win}\" ${opts} -r -p${port} > \"${_outfile_win}\" 2> \"${_errfile_win}\"")
+    native_path("${_bat}" _bat_win)
+    set(_receiver_cmd "\"${TTCP_EXEC}\" ${opts} -r -p${port} > \"${outfile}\" 2> \"${errfile}\"")
     set(${out_cmd_var} "${_receiver_cmd}")
     file(WRITE "${_bat}"
 "@echo off
 ${_receiver_cmd}
 ")
     execute_process(
-      COMMAND cmd /c start /b ttcp_receiver_${name} "${_bat}"
+      COMMAND powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '${_bat_win}' -WindowStyle Hidden"
       WORKING_DIRECTORY "${CBDIR}"
     )
   endmacro()
   macro(ttcp_sleep dur)
     execute_process(COMMAND "${CMAKE_COMMAND}" -E sleep ${dur})
+  endmacro()
+  macro(ttcp_run_sender name cmd errfile result_var)
+    set(_bat "${CBDIR}/ttcp_sender_${name}.bat")
+    file(WRITE "${_bat}"
+"@echo off
+${cmd}
+")
+    execute_process(
+      COMMAND cmd /c "${_bat}"
+      WORKING_DIRECTORY "${CBDIR}"
+      RESULT_VARIABLE ${result_var}
+      ERROR_FILE "${errfile}"
+    )
   endmacro()
 else()
   macro(ttcp_make_and_launch_receiver name port opts outfile errfile out_cmd_var)
@@ -341,12 +353,7 @@ ttcp_status("Transmitter command: ${SENDER_CMD}")
 ttcp_sleep(3)
 ttcp_status("Launching transmitter for TCP test ...")
 if(USE_BAT)
-  execute_process(
-    COMMAND cmd /c "${SENDER_CMD}"
-    WORKING_DIRECTORY "${CBDIR}"
-    RESULT_VARIABLE transmit_result
-    ERROR_FILE "${CBDIR}/ttcp_transmitter.err"
-  )
+  ttcp_run_sender("tcp" "${SENDER_CMD}" "${CBDIR}/ttcp_transmitter.err" transmit_result)
 else()
   execute_process(
     COMMAND /bin/sh -c "${SENDER_CMD}"
@@ -382,9 +389,7 @@ ttcp_make_and_launch_receiver("udp" "${TTCP_PORT_UDP}" "-u" "${DATA_OUT_UDP}" "$
 ttcp_status("Receiver command: ${RECEIVER_CMD_UDP}")
 
 if(USE_BAT)
-  native_path("${TTCP_EXEC}" _ttcp_exec_win)
-  native_path("${DATA_IN}" _data_in_win)
-  set(SENDER_CMD_UDP "type \"${_data_in_win}\" | \"${_ttcp_exec_win}\" -t -p${TTCP_PORT_UDP} -u 127.0.0.1")
+  set(SENDER_CMD_UDP "type \"${DATA_IN}\" | \"${TTCP_EXEC}\" -t -p${TTCP_PORT_UDP} -u 127.0.0.1")
 else()
   set(SENDER_CMD_UDP "\"${TTCP_EXEC}\" -t -p${TTCP_PORT_UDP} -u localhost < \"${DATA_IN}\"")
 endif()
@@ -393,16 +398,7 @@ ttcp_status("Transmitter command: ${SENDER_CMD_UDP}")
 ttcp_sleep(7)
 ttcp_status("Launching transmitter for UDP test ...")
 if(USE_BAT)
-  file(WRITE "${CBDIR}/ttcp_udp_sender.bat"
-"@echo off
-${SENDER_CMD_UDP}
-")
-  execute_process(
-    COMMAND cmd /c ttcp_udp_sender.bat
-    WORKING_DIRECTORY "${CBDIR}"
-    RESULT_VARIABLE transmit_result_udp
-    ERROR_FILE "${CBDIR}/ttcp_transmitter_udp.err"
-  )
+  ttcp_run_sender("udp" "${SENDER_CMD_UDP}" "${CBDIR}/ttcp_transmitter_udp.err" transmit_result_udp)
 else()
   execute_process(
     COMMAND /bin/sh -c "${SENDER_CMD_UDP}"
@@ -446,12 +442,7 @@ ttcp_status("Transmitter command: ${SENDER_CMD_L}")
 ttcp_sleep(3)
 ttcp_status("Launching transmitter for buffer size test ...")
 if(USE_BAT)
-  execute_process(
-    COMMAND cmd /c "${SENDER_CMD_L}"
-    WORKING_DIRECTORY "${CBDIR}"
-    RESULT_VARIABLE transmit_result_l
-    ERROR_FILE "${CBDIR}/ttcp_transmitter_l.err"
-  )
+  ttcp_run_sender("l" "${SENDER_CMD_L}" "${CBDIR}/ttcp_transmitter_l.err" transmit_result_l)
 else()
   execute_process(
     COMMAND /bin/sh -c "${SENDER_CMD_L}"
@@ -491,12 +482,7 @@ ttcp_status("Transmitter command: ${SENDER_CMD_SRC}")
 ttcp_sleep(3)
 ttcp_status("Launching transmitter for source mode test ...")
 if(USE_BAT)
-  execute_process(
-    COMMAND cmd /c "${SENDER_CMD_SRC}"
-    WORKING_DIRECTORY "${CBDIR}"
-    RESULT_VARIABLE transmit_result_src
-    ERROR_FILE "${CBDIR}/ttcp_transmitter_src.err"
-  )
+  ttcp_run_sender("src" "${SENDER_CMD_SRC}" "${CBDIR}/ttcp_transmitter_src.err" transmit_result_src)
 else()
   execute_process(
     COMMAND /bin/sh -c "${SENDER_CMD_SRC}"
@@ -545,12 +531,7 @@ ttcp_status("Transmitter command: ${SENDER_CMD_SINK}")
 ttcp_sleep(3)
 ttcp_status("Launching transmitter for sink mode test ...")
 if(USE_BAT)
-  execute_process(
-    COMMAND cmd /c "${SENDER_CMD_SINK}"
-    WORKING_DIRECTORY "${CBDIR}"
-    RESULT_VARIABLE transmit_result_sink
-    ERROR_FILE "${CBDIR}/ttcp_transmitter_sink.err"
-  )
+  ttcp_run_sender("sink" "${SENDER_CMD_SINK}" "${CBDIR}/ttcp_transmitter_sink.err" transmit_result_sink)
 else()
   execute_process(
     COMMAND /bin/sh -c "${SENDER_CMD_SINK}"
@@ -589,12 +570,7 @@ ttcp_status("Transmitter command: ${SENDER_CMD_B}")
 ttcp_sleep(3)
 ttcp_status("Launching transmitter for -B block mode test ...")
 if(USE_BAT)
-  execute_process(
-    COMMAND cmd /c "${SENDER_CMD_B}"
-    WORKING_DIRECTORY "${CBDIR}"
-    RESULT_VARIABLE transmit_result_B
-    ERROR_FILE "${CBDIR}/ttcp_transmitter_B.err"
-  )
+  ttcp_run_sender("B" "${SENDER_CMD_B}" "${CBDIR}/ttcp_transmitter_B.err" transmit_result_B)
 else()
   execute_process(
     COMMAND /bin/sh -c "${SENDER_CMD_B}"
