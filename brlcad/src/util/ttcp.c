@@ -140,6 +140,12 @@ int b_flag = 0;			/* use mread() */
 
 double cput, realt;		/* user, real time (seconds) */
 
+static void
+pr_usage(void)
+{
+    fprintf(stderr, "%s%s", Usage, Usage2);
+}
+
 /*
  * This function performs the function of a read(II) but will
  * call read(II) multiple times in order to get the requested
@@ -443,6 +449,9 @@ main(int argc, char **argv)
         case 'u':
             udp = 1;
             break;
+        case 'h':
+            pr_usage();
+            return 0;
         default:
             goto usage;
         }
@@ -632,7 +641,7 @@ main(int argc, char **argv)
     return 0;
 
 usage:
-    fprintf(stderr, "%s%s", Usage, Usage2);
+    pr_usage();
 #ifdef USE_WINSOCK
     WSACleanup();
 #endif
