@@ -7,6 +7,7 @@ find_package(OpenSSL QUIET)
 
 brlcad_addexec(fbserv "fbserv.c;server.c" libdm)
 add_target_deps(fbserv dm_plugins)
+target_link_libraries(fbserv ${WINSOCK_LIB})
 if(OpenSSL_FOUND OR OPENSSL_FOUND)
   target_link_libraries(fbserv OpenSSL::SSL OpenSSL::Crypto)
   target_compile_definitions(fbserv PRIVATE HAVE_OPENSSL_RAND_H=1 HAVE_OPENSSL_SSL_H=1)
