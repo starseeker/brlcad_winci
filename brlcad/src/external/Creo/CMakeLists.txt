@@ -546,6 +546,8 @@ else(NOT DEFINED BRLCAD_BUILDTEST_EXTERNALS)
   #----------------------------------------------------------------------#
   check_cxx_flag("Wno-maybe-uninitialized")
 
+  brlcad_find_package(REGEX REQUIRED)
+
   set(CREO2BRL_SOURCES ${CREO2BRL_SOURCES} shim.cpp)
   add_library(creo-brl ${CREO2BRL_SOURCES})
   target_include_directories(creo-brl BEFORE PRIVATE ${CREO_DIRS})
