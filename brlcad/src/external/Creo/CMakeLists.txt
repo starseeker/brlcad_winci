@@ -560,6 +560,8 @@ else(NOT DEFINED BRLCAD_BUILDTEST_EXTERNALS)
     libbv
     libbn
     libbu
+    regex_brl
+    ${WINSOCK_LIB}
   )
   set_target_properties(creo-brl PROPERTIES FOLDER "BRL-CAD Executables/Build Only")
   if(HIDE_INTERNAL_SYMBOLS)
