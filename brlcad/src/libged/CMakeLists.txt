@@ -335,12 +335,12 @@ set_property(
 )
 
 # Note - libged_deps is defined by ${BRLCAD_SOURCE_DIR}/src/source_dirs.cmake
+set(GED_PUBLIC_LIBS ${libged_deps})
 set(
-  GED_LIBS
-  ${libged_deps}
-  ${PNG_LIBRARIES}
-  ${LMDB_LIBRARIES}
-  ${REGEX_LIBRARIES}
+  GED_PRIVATE_LIBS
+  PNG::PNG
+  LMDB::LMDB
+  REGEX::REGEX
   ${WINSOCK_LIB}
   ${M_LIBRARY}
 )
@@ -357,7 +357,9 @@ set(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-brlcad_addlib(libged "${LIBGED_SOURCES}" "${GED_LIBS}" "" "${GED_LOCAL_INCLUDE_DIRS}"
+brlcad_addlib(libged "${LIBGED_SOURCES}" "" "${GED_LOCAL_INCLUDE_DIRS}"
+  PUBLIC_LIBS ${GED_PUBLIC_LIBS}
+  PRIVATE_LIBS ${GED_PRIVATE_LIBS}
   UNITY_BUILD_SKIP ged_init.cpp
 )
 set_target_properties(libged PROPERTIES VERSION 20.0.1 SOVERSION 20)
