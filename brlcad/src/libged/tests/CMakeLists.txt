@@ -63,6 +63,9 @@ if(TARGET ged_check_prim_cmds)
 endif(TARGET ged_check_prim_cmds)
 brlcad_add_test(NAME ged_test_prim_cmds_exist COMMAND ged_check_prim_cmds)
 
+brlcad_addexec(ged_test_mann_docs check_mann_docs.cpp "" TEST)
+brlcad_add_test(NAME ged_test_mann_docs COMMAND ged_test_mann_docs "${CMAKE_SOURCE_DIR}")
+
 add_subdirectory(bot)
 add_subdirectory(draw)
 add_subdirectory(edit)
@@ -77,7 +80,6 @@ cmakefiles(
   obb_tests.g
   ged_tests.g
   pnts_in_out.g
-  ged_test_rm.c
 )
 
 cmakefiles(CMakeLists.txt)
