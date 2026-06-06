@@ -101,8 +101,6 @@ Recent Bugs
   unintuitive.  specifying gqa -p"" annoyingly outputs ""exp_air.plot3
   with quotes embedded in the name.
 
-* rtweight reports nan,nan,nan centroid when density is 0
-
 * rtweight/gqa volumes seem wrong with simple sphere test case, with
   values consistently and quickly converging less than the actual
   volume regardless of the grid size.
@@ -462,9 +460,6 @@ Recent Bugs
   tclscripts/mged/tclIndex for examples:
   https://sourceforge.net/tracker/?func=detail&atid=640802&aid=2923199&group_id=105292
 
-* vdeck truncates the region names in the 'regions' file, probably
-  wrong bu_strlcpy() length.
-
 * hyp tessellation routine creates bot that does not raytrace
 
 * hyp used in a boolean with other objects (even unions) does not
@@ -640,9 +635,6 @@ Recent Bugs
 * dsp primitive is going into what seems to be an unbounded memory
   allocation loop during prep, inside dsp_layers().
 
-* crashes during photonmap raytrace of m35 where right node is invalid
-  rt -o test.pix -V 1.0 -P4 -J0 -l7 -A0 ~/Desktop/m35.g all.g box.r sph.r
-
 * libfb cannot utilize standard output/error "device" files without
   path trickery.  it recognizes the /dev/ prefix and presumes it's a
   libfb device instead of a filesystem device.
@@ -741,8 +733,6 @@ Recent Bugs
 
 * mged primitive editor doesn't accept/apply values to disk for
   certain primitives (e.g. sph)
-
-* photon map cache file doesn't work (seems to crash rt on use)
 
 * enabling perspective mode horks shaded mode, also Z clipping
   shouldn't be required to get the shading.

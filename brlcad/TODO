@@ -32,34 +32,17 @@ THESE TASKS SHOULD HAPPEN BEFORE THE NEXT RELEASE
   auto-update script that warns about deprecated use and/or applies
   minimally impacting changes to a given file.
 
-* document rt_db_get_internal() and any others like that in CHANGES.
-  will required careful consideration whether it's minimally-impacting
-  (or if we need to restore arg as a no-op to not break builds).
-
-* settle on sane gist quality defaults and/or implement quality knob
-
 THESE TASKS SHOULD HAPPEN WITHIN TWO RELEASE ITERATIONS
 -------------------------------------------------------
 
 * fix ARB8 promotion to BoT, so calls between prep and shot don't get
   inconsistent data (soltab needs to match).
 
-* Adjust bext patching to use file copying for cases where we are
-  adding our own files wholesale
-
 * verify arb6 editing in cheese wedge tutorial
 
 * rtarea is sometimes missing regions on summary reporting, at least
   on Windows, possibly a threading issue setting up the results
   container.
-
-* Create EXPORT targets for BRL-CAD libraries to support newer CMake
-  find_package style.  If possible, try to also support older style
-  variables in FindBRLCAD.cmake
-
-* Wire arb lint check into edit as a preliminary step - if we have
-  non-standard point ordering, it's all too likely strange things
-  could happen editing the arb.
 
 
 THESE ARE UNSCHEDULED BACKLOG TASKS
@@ -111,23 +94,13 @@ THESE ARE UNSCHEDULED BACKLOG TASKS
   worth considering whether shader related functionality should go
   under a "mater shader" subcommand.
 
-* user request for a way to scan arbs in a .g looking for invalid
-  definitions (non-convex, non-planar faces, etc.)
-
 * implement nirt flag to report a secondary ray fired in the direction
   of the hit point surface normal.
 
 * calculate maximum/minimum presented area az/el for a given model
 
-* optimize mged/libged init and exit performance.  profiling shows
-  over 90% of entire execution time to run a single command is
-  dominated by libged's dlopen/dlclose.  cumulatively about 1sec on
-  Mac, but likely extrapolates to all platforms.
-
 * convert non-planar arb's to brep objects for ray-tracing.  see how
   well it works to see if we can remove an arb limitation.
-
-* combine solid_report with the "who" command (subcommand options)
 
 * explore c++ fastf_t class.  compile-time support for using GMP or CLN
   for arbitrary exact precision arithmetic computation support
@@ -239,14 +212,6 @@ lookup check to ensure none are missing.
 
 * integrate gen-registered-attributes-html output into website
 
-* brlcad-config build helper script is not working (not reporting
-  -llibs, reporting semicolon list for 'brlcad' lib).  Example working output:
-  $ /usr/brlcad/rel-7.18.0/bin/brlcad-config brlcad
-  -L/usr/brlcad/rel-7.18.0/lib -m64 -L/usr/local/lib64 -L/usr/local/lib -pipe -fno-strict-aliasing -fno-common -fexceptions -ggdb3 -D_FORTIFY_SOURCE=2 -O3 -w -L/usr/brlcad/rel-7.18.0/lib -lbrlcad -lged -lwdb -lrt -lbn -lbu -ltcl8.5 -ldl -lm -lpng14 -lz -lc -lpthread -lregex -lsysv -lopenNURBS -lanalyze
-
-  $ /usr/brlcad/rel-7.18.0/bin/brlcad-config rt
-  -L/usr/brlcad/rel-7.18.0/lib -m64 -L/usr/local/lib64 -L/usr/local/lib -pipe -fno-strict-aliasing -fno-common -fexceptions -ggdb3 -D_FORTIFY_SOURCE=2 -O3 -w -L/usr/brlcad/rel-7.18.0/lib -lrt -lbn -lbu -ltcl8.5 -ldl -lm -lpng14 -lz -lc -lpthread -lregex -lsysv -lopenNURBS
-
 * OpenCL for enhanced performance boolweave sorting
 
 * create boolweave+boolfinal unit tests to validate weaving behavior
@@ -322,17 +287,6 @@ lookup check to ensure none are missing.
 
 * default ls to undecorated, deprecate -n, add ls -p
 
-* make mv and mvall not accept slashes on destination:
-
-  mged> mv sph.r sph.r/R
-  db_lookup(R) failed: R does not exist
-  db_string_to_path() of 'sph.r/R' failed on 'R'
-  mged> tops
-  sph.r/R/R
-  mged> mv sph.r/R sph.r
-  mged> tops
-  sph.r/R
-
 * consider not using spaces in the default installer path on Windows
   for simplified scripting usage (e.g., when installed to C:\)
 
@@ -394,25 +348,11 @@ lookup check to ensure none are missing.
   3. Shoot rays from outside at exterior vertices, retain all mesh faces
      and objects encountered (i.e., not reconstructed, but extracted)
 
+* look into using Manifold::Hull() to replace our copy of QuickHull -
+  manifold made some robustness improvements and we rely on them anyway,
+  so we should probably just leverage them.
+
 * RTAREA
-
-  * add an option to rtarea for onehit.  this is probably best as an
-    option that reports the requested objects only and then has a
-    verbose option for the more detailed hierarchical report that is
-    currently produced.
-
-  * verify rtarea.  There are reports that the rtarea
-    command may have a bug in its calculations.  This needs to be
-    investigated.
-
-  * review and fix rtarea's taxonomy for describing
-    presented/projected areas.  users expect presented area to
-    represent what is currently referred to as exposed area.  may make
-    more sense to introduce a different terms for other shotline
-    encounters.
-
-  * make rtarea display a cross-hair and perhaps coordinates for the
-    center of area if run from within mged.
 
   * add an option to rtarea for onehit.  this is probably best as an
     option that reports the requested objects only and then has a
@@ -806,8 +746,6 @@ lookup check to ensure none are missing.
   codes in the implementation is okay (as are library functions, but
   just don't rely on any).  name ideas: gdbg, dbadmin, dbtool, dbmaint
 
-* BU_SETJUMP/BU_UNSETJUMP into macros
-
 * convert all calls to BU_SETJUMP/BU_UNSETJUMP into familiar try/catch
   logic layout using if/else.
 
@@ -820,8 +758,6 @@ lookup check to ensure none are missing.
 * investigate INFINITY spatial partitioning issue.
 
 * kill material_head static global in src/librt/mater.c
-
-* add an mk_extrude() routine to libwdb.
 
 * Teach CMake to respect and use user-defined CMAKE_C_FLAGS and other
   options supplied at the command line and in environment variables.
@@ -883,10 +819,6 @@ lookup check to ensure none are missing.
 
 * investigate integrating Pixar's OpenSubdiv for subdivision surfaces:
   http://graphics.pixar.com/opensubdiv/
-
-* the scale structure in bn_cmd_noise_slice (bn_tcl.c) was never
-  initialized. it looks like somebody has planned to extend the
-  function but never carried out
 
 * implement a null spatial partitioning method so we can determine
   what other intersection hits are being masked (and what impact a
@@ -1014,8 +946,6 @@ lookup check to ensure none are missing.
   src/libged/glob.c code, very similar.
 
 * update g-xxx_facets to use libgcv
-
-* bu_cv_optimize() should be using bu_byteorder().
 
 * render annotated images to the OpenDocument format.  this is
   particularly useful for rtedge-style renderings with object
@@ -1605,9 +1535,6 @@ LIBGED
   cost: bot_split, killtree, and
   make s sph; make a arb8; sed a; e a; tra 0 0 500; r hemi u s - a; tol norm 1 ; facetize hemi.bot hemi
   # compared to tol norm 2, # triangles is up ~20% but facetize is >200%
-
-* translate lc command to libged (discovered in Feb. 2015 to have already
-  been done -- need information regarding when this was done and committed).
 
 * BoT mesh editing command.  Subtasks:
 
