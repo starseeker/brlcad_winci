@@ -59,22 +59,8 @@
 /* Tuneable parameters                                                  */
 /* ------------------------------------------------------------------ */
 
-/*
- * Accuracy pass: use convergence-based sampling rather than a fixed
- * single-pass ray count.  CROFTON_ACCURACY_THRESH is kept as a positive
- * sentinel value so that run_crofton() knows to use the convergence path;
- * its numeric magnitude is not used directly.
- *
- * The convergence criterion is stability_mm: sampling stops once the
- * equivalent-sphere-radius estimate changes by less than CROFTON_STAB_MM
- * between successive 2 000-ray batches.  At typical DSP geometry sizes
- * (r_sa ~ 10–100 units) this requires ~20k–200k rays (< 0.1 s) and keeps
- * Crofton SA noise well below 1 %, avoiding borderline threshold failures
- * that arise from a fixed low ray count hitting an unlucky random sequence.
- */
-#define CROFTON_ACCURACY_THRESH  3.0   /* positive sentinel: use convergence path */
-#define CROFTON_STAB_MM          0.05  /* equivalent-radius stability target (mm) */
-#define CROFTON_TIMEOUT_MS    5000.0   /* safety wall-clock timeout (ms)          */
+/* Accuracy pass: use a fixed ray count for stable cross-platform behavior. */
+#define CROFTON_ACCURACY_RAYS  300000u
 
 /* Rays for the single-iteration timing measurement. */
 #define CROFTON_TIMING_RAYS     50000u
@@ -283,32 +269,16 @@ struct crofton_result {
 };
 
 static struct crofton_result
-run_crofton(struct rt_i *rtip, size_t nrays, double thresh_pct)
+run_crofton(struct rt_i *rtip, size_t nrays)
 {
     struct crofton_result r;
     memset(&r, 0, sizeof(r));
 
     struct rt_crofton_params p;
-    if (thresh_pct > 0.0) {
-	/* Accuracy run: convergence-based sampling with a safety timeout.
-	 * Fire 2 000-ray batches until the equivalent-sphere-radius estimate
-	 * changes by less than CROFTON_STAB_MM between successive batches, or
-	 * until CROFTON_TIMEOUT_MS wall-clock milliseconds have elapsed.
-	 *
-	 * For the DSP test geometries (r_sa ~ 10–100 units) this typically
-	 * converges in 20k–200k total rays (< 0.1 s), keeping Crofton SA
-	 * noise well below 1 % and avoiding the outlier results produced by a
-	 * fixed low ray count that hits an unlucky random sequence.            */
-	p.n_rays       = 0;
-	p.stability_mm = CROFTON_STAB_MM;
-	p.time_ms      = CROFTON_TIMEOUT_MS;
-    } else {
-	/* Timing run: fixed ray count so the throughput measurement is
-	 * reproducible regardless of geometry or convergence behaviour.        */
-	p.n_rays       = nrays;
-	p.stability_mm = 0.0;
-	p.time_ms      = 0.0;
-    }
+    /* Fixed ray count makes the test less sensitive to platform RNG differences. */
+    p.n_rays       = nrays;
+    p.stability_mm = 0.0;
+    p.time_ms      = 0.0;
 
     int64_t t0 = bu_gettime();
     r.ok = rt_crofton_shoot(rtip, &p, &r.sa, &r.vol);
@@ -353,11 +323,8 @@ compare_paths(const char  *label,
     if (prep_sec > 0.0)
 	printf("    Prep (DDA/HBB): %.3f s\n", prep_sec);
 
-    struct crofton_result dda_acc = run_crofton(rtip,
-	    0 /* n_rays: 0 → use convergence-based path (thresh_pct > 0) */,
-	    CROFTON_ACCURACY_THRESH);
-    struct crofton_result dda_tim = run_crofton(rtip,
-	    CROFTON_TIMING_RAYS, 0.0);
+    struct crofton_result dda_acc = run_crofton(rtip, CROFTON_ACCURACY_RAYS);
+    struct crofton_result dda_tim = run_crofton(rtip, CROFTON_TIMING_RAYS);
 
     printf("\n    %-12s  %14s  %14s  %10s  %10s\n",
 	    "PATH", "SA", "VOL", "SA_err%", "VOL_err%");
