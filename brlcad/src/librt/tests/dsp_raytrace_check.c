@@ -59,10 +59,14 @@
 /* Tuneable parameters                                                  */
 /* ------------------------------------------------------------------ */
 
-/* Accuracy pass: use a fixed ray count for stable cross-platform behavior. */
-#define CROFTON_ACCURACY_RAYS  300000u
+/* Accuracy pass: convergence-based stopping — stop when the equivalent-radius
+ * estimate is stable to within CROFTON_STABILITY_MM between successive
+ * iterations, with a wall-clock safety budget of CROFTON_TIME_MS.          */
+#define CROFTON_STABILITY_MM    0.05
+#define CROFTON_TIME_MS         2000.0
 
-/* Rays for the single-iteration timing measurement. */
+/* Rays for the single-iteration timing measurement (fixed count so the
+ * rays/sec figure is directly comparable across runs).                      */
 #define CROFTON_TIMING_RAYS     50000u
 
 /* 129 vertices define 128 cells, a power-of-two cell count common in terrain
@@ -269,19 +273,13 @@ struct crofton_result {
 };
 
 static struct crofton_result
-run_crofton(struct rt_i *rtip, size_t nrays)
+run_crofton(struct rt_i *rtip, const struct rt_crofton_params *p)
 {
     struct crofton_result r;
     memset(&r, 0, sizeof(r));
 
-    struct rt_crofton_params p;
-    /* Fixed ray count makes the test less sensitive to platform RNG differences. */
-    p.n_rays       = nrays;
-    p.stability_mm = 0.0;
-    p.time_ms      = 0.0;
-
     int64_t t0 = bu_gettime();
-    r.ok = rt_crofton_shoot(rtip, &p, &r.sa, &r.vol);
+    r.ok = rt_crofton_shoot(rtip, p, &r.sa, &r.vol);
     r.wall_sec = (double)(bu_gettime() - t0) / 1e6;
     return r;
 }
@@ -323,8 +321,16 @@ compare_paths(const char  *label,
     if (prep_sec > 0.0)
 	printf("    Prep (DDA/HBB): %.3f s\n", prep_sec);
 
-    struct crofton_result dda_acc = run_crofton(rtip, CROFTON_ACCURACY_RAYS);
-    struct crofton_result dda_tim = run_crofton(rtip, CROFTON_TIMING_RAYS);
+    /* Accuracy pass: convergence-based stopping.  Sampling continues until the
+     * equivalent-radius estimate stabilises or the time budget is reached.   */
+    static const struct rt_crofton_params acc_p =
+        { 0u, CROFTON_STABILITY_MM, CROFTON_TIME_MS };
+    /* Timing pass: fixed ray count so the rays/sec figure is directly
+     * comparable across platforms and runs.                                  */
+    static const struct rt_crofton_params tim_p =
+        { CROFTON_TIMING_RAYS, 0.0, 0.0 };
+    struct crofton_result dda_acc = run_crofton(rtip, &acc_p);
+    struct crofton_result dda_tim = run_crofton(rtip, &tim_p);
 
     printf("\n    %-12s  %14s  %14s  %10s  %10s\n",
 	    "PATH", "SA", "VOL", "SA_err%", "VOL_err%");
