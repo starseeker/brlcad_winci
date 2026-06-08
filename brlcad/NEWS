@@ -13,7 +13,13 @@ changes made.  See document footer for additional details.
 --- 20XX-XX-XX  Release 7.44.0                                     ---
 ----------------------------------------------------------------------
 
-* improved DSP raytracing robustness - CLiff Yapp
+* added new manual pages for over 30 tools & utilities - Sean Morrison
+* fixed mged/rt/gui apps on Mac w/ ogl device windows - Sean Morrison
+* modified gist long title printing to maximally fit - Sean Morrison
+* modified gist hierarchy summary to include counts - Sean Morrison
+* added get/put/adjust/g2asc support for datum objects - Sean Morrison
+* added gcv & g-obj color .mtl material export support - Sean Morrison
+* improved DSP raytrace consistency, robustness, & speed - Cliff Yapp
 * added arb repair command to fix various ARB8 issues - Cliff Yapp
 * fixed convex hull tolerance handling for thin shapes - Cliff Yapp
 * fixed vdeck truncating/overflowing long region names - Sean Morrison
@@ -25,7 +31,6 @@ changes made.  See document footer for additional details.
 * added new manual pages for over 110 GED commands - Sean Morrison
 * improved facetize tolerance and coplanar face handling - Cliff Yapp
 * added support for alternate plane forms to rt -k option - Cliff Yapp
-* added loadview manual page - Sean Morrison
 * improved ~85 manual page synopses, docs, & examples - Sean Morrison
 * fixed bug in gqa material object lookup - Cliff Yapp
 * fixed bug in rtweight material object lookup - Cliff Yapp

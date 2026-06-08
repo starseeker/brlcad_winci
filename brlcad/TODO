@@ -2442,10 +2442,6 @@ DOCUMENTATION
   docs and/or clean presentation layout with overview, tutorials, and
   reference.
 
-* "apropos man" does not exist
-
-* "help man" does not exist
-
 * Need ability to search manual pages
 
 * rename MGED Help->Apropos to Help->Search Commands (apropos)
@@ -2470,51 +2466,6 @@ DOCUMENTATION
 
 * document the new NURBS/BREP primitive, capabilities and limitations
 
-* Low-hanging fruit, add missing manual pages:
-
-    archer
-    bombardier
-    damdf
-    dauto
-    dauto2
-    dconv
-    ddisp
-    dfft
-    dmod
-    dpeak
-    dsel
-    dstats
-    dwin
-    gcv
-    ihist
-    imod
-    isst
-    istats
-    lowp
-    pix3filter
-    pixcount
-    pixelswap
-    pixembed
-    plot3stat
-    rtsil
-    rtsrv
-    smod
-    step-g
-    umod
-    ustats
-
-  Shape tools installed without docs.  may absorb into ged as plugins
-  or may rename, but still need docs:
-
-    bolt
-    fence
-    gastank
-    handle
-    human
-    picket_fence
-    window
-    window_frame
-    wire
 
   Need to revisit utility of spherical mapping, used by sh_spm and
   sh_points, used for environment mapping (e.g., stars):

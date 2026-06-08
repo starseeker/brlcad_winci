@@ -564,6 +564,135 @@ function(brlcad_bext_process)
   # Find the tool we use to scrub EXT paths from files
   find_program(STRCLEAR_EXECUTABLE strclear HINTS ${BRLCAD_EXT_NOINSTALL_DIR}/${BIN_DIR} REQUIRED)
 
+  set(BRLCAD_EXT_INSTALL_POSTPROCESS_SCRIPT "${CMAKE_BINARY_DIR}/CMakeFiles/BRLCADInstallPostprocess.cmake")
+  set(BRLCAD_EXT_INSTALL_POSTPROCESS_STAMP_DIR "${CMAKE_BINARY_DIR}/CMakeFiles/install-postprocess")
+  file(MAKE_DIRECTORY "${BRLCAD_EXT_INSTALL_POSTPROCESS_STAMP_DIR}")
+  file(WRITE "${BRLCAD_EXT_INSTALL_POSTPROCESS_SCRIPT}" [=[
+function(_brlcad_postprocess_stamp_path outvar stamp_dir source file signature)
+  file(MAKE_DIRECTORY "${stamp_dir}")
+  string(SHA256 _brlcad_stamp_key "${source}|${file}|${signature}")
+  set(${outvar} "${stamp_dir}/${_brlcad_stamp_key}.sha256" PARENT_SCOPE)
+endfunction()
+
+function(_brlcad_postprocess_needed outvar stamp_dir source file signature)
+  if(NOT EXISTS "${source}")
+    set(${outvar} FALSE PARENT_SCOPE)
+    return()
+  endif()
+
+  file(SHA256 "${source}" _brlcad_source_hash)
+  _brlcad_postprocess_stamp_path(_brlcad_stamp_file "${stamp_dir}" "${source}" "${file}" "${signature}")
+  if(EXISTS "${file}" AND EXISTS "${_brlcad_stamp_file}")
+    file(SHA256 "${file}" _brlcad_current_hash)
+    file(READ "${_brlcad_stamp_file}" _brlcad_stamp_contents)
+    string(REGEX MATCH "^([0-9a-fA-F]+)\n([0-9a-fA-F]+)" _brlcad_stamp_match "${_brlcad_stamp_contents}")
+    if(_brlcad_stamp_match)
+      set(_brlcad_stamped_source_hash "${CMAKE_MATCH_1}")
+      set(_brlcad_stamped_clean_hash "${CMAKE_MATCH_2}")
+      if("${_brlcad_source_hash}" STREQUAL "${_brlcad_stamped_source_hash}" AND "${_brlcad_current_hash}" STREQUAL "${_brlcad_stamped_clean_hash}")
+        set(${outvar} FALSE PARENT_SCOPE)
+        return()
+      endif()
+    endif()
+  endif()
+
+  set(${outvar} TRUE PARENT_SCOPE)
+endfunction()
+
+function(_brlcad_postprocess_finish stamp_dir source file signature)
+  if(NOT EXISTS "${source}" OR NOT EXISTS "${file}")
+    return()
+  endif()
+
+  file(SHA256 "${source}" _brlcad_source_hash)
+  file(SHA256 "${file}" _brlcad_clean_hash)
+  _brlcad_postprocess_stamp_path(_brlcad_stamp_file "${stamp_dir}" "${source}" "${file}" "${signature}")
+  file(WRITE "${_brlcad_stamp_file}" "${_brlcad_source_hash}\n${_brlcad_clean_hash}\n")
+endfunction()
+
+function(_brlcad_install_copy source file install_type)
+  get_filename_component(_brlcad_dest_dir "${file}" DIRECTORY)
+  file(MAKE_DIRECTORY "${_brlcad_dest_dir}")
+  file(INSTALL DESTINATION "${_brlcad_dest_dir}" TYPE ${install_type} FILES "${source}")
+endfunction()
+
+function(brlcad_install_strclear_replace stamp_dir strclear source file install_type from_path to_path)
+  set(_brlcad_signature "strclear-replace|${strclear}|${install_type}|${from_path}|${to_path}")
+  _brlcad_postprocess_needed(_brlcad_needed "${stamp_dir}" "${source}" "${file}" "${_brlcad_signature}")
+  if(NOT _brlcad_needed)
+    return()
+  endif()
+
+  _brlcad_install_copy("${source}" "${file}" "${install_type}")
+  execute_process(
+    COMMAND "${strclear}" -v -r "${file}" "${from_path}" "${to_path}"
+    RESULT_VARIABLE _brlcad_result
+  )
+  if(_brlcad_result EQUAL 0)
+    _brlcad_postprocess_finish("${stamp_dir}" "${source}" "${file}" "${_brlcad_signature}")
+  else()
+    message(WARNING "Post-install path replacement failed for ${file}")
+  endif()
+endfunction()
+
+function(brlcad_install_binary_postprocess stamp_dir strclear source file install_type mode rpath_tool install_rpath build_lib_path rel_rpath)
+  set(_brlcad_signature "binary-postprocess|${install_type}|${mode}|${rpath_tool}|${install_rpath}|${build_lib_path}|${rel_rpath}|${strclear}")
+  _brlcad_postprocess_needed(_brlcad_needed "${stamp_dir}" "${source}" "${file}" "${_brlcad_signature}")
+  if(NOT _brlcad_needed)
+    return()
+  endif()
+
+  _brlcad_install_copy("${source}" "${file}" "${install_type}")
+  set(_brlcad_result 0)
+  if("${mode}" STREQUAL "RPATH_TOOL")
+    execute_process(
+      COMMAND "${rpath_tool}" --set-rpath "${install_rpath}" "${file}"
+      RESULT_VARIABLE _brlcad_result
+    )
+  elseif("${mode}" STREQUAL "APPLE")
+    execute_process(
+      COMMAND install_name_tool -delete_rpath "${build_lib_path}" "${file}"
+      RESULT_VARIABLE _brlcad_result
+      OUTPUT_VARIABLE _brlcad_output
+      ERROR_VARIABLE _brlcad_error
+    )
+    if(_brlcad_result EQUAL 0)
+      execute_process(
+        COMMAND install_name_tool -add_rpath "${rel_rpath}" "${file}"
+        RESULT_VARIABLE _brlcad_result
+      )
+    endif()
+  endif()
+
+  if(NOT _brlcad_result EQUAL 0)
+    message(WARNING "Post-install RPATH update failed for ${file}")
+    return()
+  endif()
+
+  execute_process(
+    COMMAND "${strclear}" -v -b -c "${file}" "${build_lib_path}"
+    RESULT_VARIABLE _brlcad_result
+  )
+  if(NOT _brlcad_result EQUAL 0)
+    message(WARNING "Post-install binary path cleanup failed for ${file}")
+    return()
+  endif()
+
+  if("${mode}" STREQUAL "APPLE")
+    execute_process(
+      COMMAND codesign --force -s - "${file}"
+      RESULT_VARIABLE _brlcad_result
+    )
+    if(NOT _brlcad_result EQUAL 0)
+      message(WARNING "Post-install codesign failed for ${file}")
+      return()
+    endif()
+  endif()
+
+  _brlcad_postprocess_finish("${stamp_dir}" "${source}" "${file}" "${_brlcad_signature}")
+endfunction()
+]=])
+
   # If we got to ${BRLCAD_EXT_DIR}/install through a symlink, we need to
   # expand it so we can spot the path that would have been used in
   # ${BRLCAD_EXT_DIR}/install files
@@ -852,81 +981,48 @@ function(brlcad_bext_process)
       message("Error - unexpected toplevel ext file: ${tf} ")
       continue()
     endif(NOT dir)
-    # If we know it's a binary file, treat it accordingly
+
+    # If we know it's a binary file, install it through the guarded
+    # postprocess helper.  The helper owns the copy step because the
+    # postprocessed install result intentionally differs from the raw
+    # build-tree source.
     if("${tf}" IN_LIST ALL_BINARY_FILES)
-      install(PROGRAMS "${CMAKE_BINARY_DIR}/${tf}" DESTINATION "${dir}")
+      set(REL_RPATH)
+      find_relative_rpath("${tf}" REL_RPATH)
+      set(_brlcad_install_postprocess_mode "STRCLEAR_ONLY")
+      set(_brlcad_install_postprocess_tool "")
+      set(_brlcad_install_postprocess_rpath "")
+      if(P_RPATH_EXECUTABLE)
+        set(_brlcad_install_postprocess_mode "RPATH_TOOL")
+        set(_brlcad_install_postprocess_tool "${P_RPATH_EXECUTABLE}")
+        set(_brlcad_install_postprocess_rpath "${CMAKE_INSTALL_PREFIX}/${LIB_DIR}${REL_RPATH}")
+      elseif(APPLE)
+        set(_brlcad_install_postprocess_mode "APPLE")
+      endif(P_RPATH_EXECUTABLE)
+      install(
+        CODE
+          "include(\"${BRLCAD_EXT_INSTALL_POSTPROCESS_SCRIPT}\")\nbrlcad_install_binary_postprocess(\"${BRLCAD_EXT_INSTALL_POSTPROCESS_STAMP_DIR}\" \"${STRCLEAR_EXECUTABLE}\" \"${CMAKE_BINARY_DIR}/${tf}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${tf}\" \"PROGRAM\" \"${_brlcad_install_postprocess_mode}\" \"${_brlcad_install_postprocess_tool}\" \"${_brlcad_install_postprocess_rpath}\" \"${CMAKE_BINARY_DIR}/${LIB_DIR}\" \"${REL_RPATH}\")"
+      )
       continue()
     endif("${tf}" IN_LIST ALL_BINARY_FILES)
+
     # BIN_DIR may contain scripts that aren't explicitly binary files
     # - catch those based on path
     if(${dir} MATCHES "${BIN_DIR}$")
       install(PROGRAMS "${CMAKE_BINARY_DIR}/${tf}" DESTINATION "${dir}")
     else(${dir} MATCHES "${BIN_DIR}$")
-      install(FILES "${CMAKE_BINARY_DIR}/${tf}" DESTINATION "${dir}")
       is_cmake_file(${tf} CMAKE_FILE)
       if(CMAKE_FILE)
-	message("Adding install rule for CMake find_package file ${CMAKE_INSTALL_PREFIX}/${tf}")
-	install(
-	  CODE
-	  "execute_process(COMMAND ${STRCLEAR_EXECUTABLE} -v -r \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${tf}\" \"${CMAKE_BINARY_DIR}\" \"${CMAKE_INSTALL_PREFIX}\")"
-	  )
+        message("Adding install rule for CMake find_package file ${CMAKE_INSTALL_PREFIX}/${tf}")
+        install(
+          CODE
+          "include(\"${BRLCAD_EXT_INSTALL_POSTPROCESS_SCRIPT}\")\nbrlcad_install_strclear_replace(\"${BRLCAD_EXT_INSTALL_POSTPROCESS_STAMP_DIR}\" \"${STRCLEAR_EXECUTABLE}\" \"${CMAKE_BINARY_DIR}/${tf}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${tf}\" \"FILE\" \"${CMAKE_BINARY_DIR}\" \"\${CMAKE_INSTALL_PREFIX}\")"
+          )
+      else(CMAKE_FILE)
+        install(FILES "${CMAKE_BINARY_DIR}/${tf}" DESTINATION "${dir}")
       endif(CMAKE_FILE)
     endif(${dir} MATCHES "${BIN_DIR}$")
   endforeach(tf ${TP_FILES})
-
-  # When installing, need to fix the RPATH on binary files again,
-  # similarly to what we did when staging in the build directory.
-  # Again we don't process symlinks since following them will just
-  # result in re-processing the same file's RPATH multiple times.
-  # This time, in contrast to the build directory setup, our goal is
-  # to define an RPATH that will allow the binary files to work when
-  # the install directory is relocated.
-  foreach(bf ${ALL_BINARY_FILES})
-    if(IS_SYMLINK ${bf})
-      continue()
-    endif(IS_SYMLINK ${bf})
-    # Finalize the rpaths
-    set(REL_RPATH)
-    find_relative_rpath("${bf}" REL_RPATH)
-    if(P_RPATH_EXECUTABLE)
-      install(
-        CODE
-          "execute_process(COMMAND ${P_RPATH_EXECUTABLE} --set-rpath \"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}${REL_RPATH}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${bf}\")"
-      )
-    elseif(APPLE)
-      install(
-        CODE
-          "execute_process(COMMAND install_name_tool -delete_rpath \"${CMAKE_BINARY_DIR}/${LIB_DIR}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${bf}\" OUTPUT_VARIABLE OOUT RESULT_VARIABLE ORESULT ERROR_VARIABLE OERROR)"
-      )
-      install(
-        CODE
-          "execute_process(COMMAND install_name_tool -add_rpath \"${REL_RPATH}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${bf}\")"
-      )
-    endif(P_RPATH_EXECUTABLE)
-    # Overwrite any stale paths in the binary files with null chars,
-    # to make sure they're not interfering with the behavior of the
-    # final executables.  This is a little fraught in that there's no
-    # guarantee these changes aren't going to break something, but
-    # given that reliance on invalid full paths was going to break
-    # something in any case eventually doing this will let us find out
-    # about it sooner.  If the path is just a stale, unused leftover
-    # this should have no impact on functionality, and otherwise this
-    # offers a way to avoid "accidental success" where the program is
-    # using a build dir file to successfully run when we don't want it
-    # to see them.
-    install(
-      CODE
-        "execute_process(COMMAND  ${STRCLEAR_EXECUTABLE} -v -b -c \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${bf}\" \"${CMAKE_BINARY_DIR}/${LIB_DIR}\")"
-    )
-    if(APPLE)
-      # As with the configure time processing, use codesign at install
-      # time to appease OSX:
-      # https://developer.apple.com/documentation/security/updating_mac_software
-      # https://developer.apple.com/documentation/xcode/embedding-nonstandard-code-structures-in-a-bundle
-      # https://stackoverflow.com/questions/71744856/install-name-tool-errors-on-arm64
-      install(CODE "execute_process(COMMAND codesign --force -s - \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${bf}\")")
-    endif(APPLE)
-  endforeach(bf ${ALL_BINARY_FILES})
 
   # Because ${BRLCAD_EXT_DIR}/install is handled at configure time
   # (and indeed MUST be handled at configure time so find_package
@@ -1292,6 +1388,13 @@ macro(find_package_qt)
   mark_as_advanced(Qt5Gui_DIR)
 endmacro(find_package_qt)
 
+macro(_check_bullet_double RESULT_VAR INCDIRS LIBS)
+  set(CMAKE_REQUIRED_INCLUDES ${INCDIRS})
+  set(CMAKE_REQUIRED_LIBRARIES ${LIBS})
+  set(CMAKE_REQUIRED_DEFINITIONS "-DBT_USE_DOUBLE_PRECISION")
+  check_cxx_source_compiles("${_bullet_check_src}" ${RESULT_VAR})
+endmacro()
+
 # Bullet - physics library
 macro(find_package_bullet)
   cmake_parse_arguments(F "REQUIRED" "" "" ${ARGN})
@@ -1307,7 +1410,6 @@ macro(find_package_bullet)
   unset(BULLET_SOFTBODY_LIBRARY CACHE)
   unset(BULLET_SOFTBODY_LIBRARY_DEBUG CACHE)
   unset(BULLET_STATUS CACHE)
-  unset(BULLET_BT_USE_DOUBLE_PRECISION CACHE)
 
   # Bullet is staged from bext's install tree into the build directory,
   # so prefer that location rather than noinstall.
@@ -1318,7 +1420,7 @@ macro(find_package_bullet)
     find_package(Bullet)
   endif()
 
-  if(BULLET_LIBRARIES)
+  if(BULLET_LIBRARIES OR Bullet_FOUND)
     list(GET BULLET_LIBRARIES 0 _bullet_lib0)
 
     is_subpath("${CMAKE_BINARY_DIR}" "${_bullet_lib0}" BULLET_LOCAL_TEST)
@@ -1330,27 +1432,66 @@ macro(find_package_bullet)
       set(BULLET_STATUS "System" CACHE STRING "Bullet bundled status" FORCE)
     endif()
 
-    set(_bullet_double ON)
-
     if(BULLET_STATUS STREQUAL "System")
-      if("${BULLET_DEFINITIONS}" MATCHES "BT_USE_DOUBLE_PRECISION")
-        set(_bullet_double ON)
-      else()
-        # if system Bullet does not explicitly define double, we'll
-        # default to OFF as many/most system packages default to float
-        # and/or install the double version adjacent in ad hoc ways.
-        set(_bullet_double OFF)
-      endif()
-    endif()
+      include(CheckCXXSourceCompiles)
 
-    if(_bullet_double)
-      set(BULLET_BT_USE_DOUBLE_PRECISION ON CACHE BOOL "Bullet btScalar is double" FORCE)
-    else()
-      set(BULLET_BT_USE_DOUBLE_PRECISION OFF CACHE BOOL "Bullet btScalar is double" FORCE)
+      set(_bullet_check_src "
+#include <btBulletDynamicsCommon.h>
+int main() {
+    btRigidBody::btRigidBodyConstructionInfo info(1.0, 0, 0);
+    btRigidBody body(info);
+    btVector3 inertia(0,0,0);
+    body.setMassProps(1.0, inertia);
+    return 0;
+}
+      ")
+
+      _check_bullet_double(BULLET_IS_DOUBLE "${BULLET_INCLUDE_DIRS}" "${BULLET_LIBRARIES}")
+
+      if(NOT BULLET_IS_DOUBLE)
+        message(STATUS "Found system Bullet, but it is not double-precision. BRL-CAD requires double-precision Bullet.")
+
+        # Try harder: pkg_search_module for bullet-float64 or bullet-dp
+        find_package(PkgConfig)
+        if(PKG_CONFIG_FOUND)
+          pkg_search_module(PC_BULLET bullet-float64 bullet-dp)
+          if(PC_BULLET_FOUND)
+            _check_bullet_double(BULLET_ALT_IS_DOUBLE "${PC_BULLET_INCLUDE_DIRS}" "${PC_BULLET_LINK_LIBRARIES}")
+            if(BULLET_ALT_IS_DOUBLE)
+              set(BULLET_INCLUDE_DIRS ${PC_BULLET_INCLUDE_DIRS})
+              set(BULLET_LIBRARIES ${PC_BULLET_LINK_LIBRARIES})
+              set(BULLET_IS_DOUBLE ON)
+            endif()
+          endif()
+        endif()
+
+        # Try harder: Homebrew double-precision directory on macOS
+        if(NOT BULLET_IS_DOUBLE AND APPLE)
+          find_library(BULLET_HOMEBREW_DYNAMICS_LIBRARY NAMES BulletDynamics HINTS /opt/homebrew/opt/bullet/lib/bullet/double /usr/local/opt/bullet/lib/bullet/double)
+          find_library(BULLET_HOMEBREW_COLLISION_LIBRARY NAMES BulletCollision HINTS /opt/homebrew/opt/bullet/lib/bullet/double /usr/local/opt/bullet/lib/bullet/double)
+          find_library(BULLET_HOMEBREW_MATH_LIBRARY NAMES LinearMath HINTS /opt/homebrew/opt/bullet/lib/bullet/double /usr/local/opt/bullet/lib/bullet/double)
+          if(BULLET_HOMEBREW_DYNAMICS_LIBRARY AND BULLET_HOMEBREW_COLLISION_LIBRARY AND BULLET_HOMEBREW_MATH_LIBRARY)
+            set(_hb_libs ${BULLET_HOMEBREW_DYNAMICS_LIBRARY} ${BULLET_HOMEBREW_COLLISION_LIBRARY} ${BULLET_HOMEBREW_MATH_LIBRARY})
+            _check_bullet_double(BULLET_HB_IS_DOUBLE "${BULLET_INCLUDE_DIRS}" "${_hb_libs}")
+            if(BULLET_HB_IS_DOUBLE)
+              set(BULLET_LIBRARIES ${_hb_libs})
+              set(BULLET_IS_DOUBLE ON)
+            endif()
+          endif()
+        endif()
+
+        if(NOT BULLET_IS_DOUBLE)
+          message(STATUS "Could not find a double-precision system Bullet. Falling back to bundled Bullet if possible.")
+          find_package_reset(Bullet RESET_TP)
+          find_package_reset(BULLET RESET_TP)
+          unset(BULLET_LIBRARIES CACHE)
+          unset(Bullet_FOUND CACHE)
+          set(BULLET_STATUS "NotFound" CACHE STRING "Bullet bundled status" FORCE)
+        endif()
+      endif()
+
+      unset(_bullet_check_src)
     endif()
-  elseif(Bullet_FOUND)
-    set(BULLET_STATUS "System" CACHE STRING "Bullet bundled status" FORCE)
-    set(BULLET_BT_USE_DOUBLE_PRECISION ON CACHE BOOL "Bullet btScalar is double" FORCE)
   else()
     set(BULLET_STATUS "NotFound" CACHE STRING "Bullet bundled status" FORCE)
   endif()

@@ -94,8 +94,12 @@
 #define RT_CROFTON_DEFAULT_THRESHOLD 1.0
 
 /** Minimum evidence before applying stability-based stopping.         */
-#define RT_CROFTON_STABILITY_MIN_RAYS      10000u
-#define RT_CROFTON_STABILITY_MIN_CROSSINGS 200u
+#define RT_CROFTON_STABILITY_MIN_RAYS      20000u
+#define RT_CROFTON_STABILITY_MIN_CROSSINGS 500u
+#define RT_CROFTON_STABILITY_MIN_WINDOWS   2u
+
+/** Fixed seed for reproducible estimates in tests and cross-platform runs. */
+#define RT_CROFTON_RNG_SEED 0x9e3779b97f4a7c15ULL
 
 
 /* ------------------------------------------------------------------ */
@@ -261,6 +265,7 @@ do_one_iteration(struct application *ap_template,
 
     size_t ncpus = bu_avail_cpus();
     if (ncpus < 1) ncpus = 1;
+    if (ncpus > MAX_PSW) ncpus = MAX_PSW;
 
     struct crofton_worker_data *wdata = (struct crofton_worker_data *)bu_calloc(
 	ncpus, sizeof(struct crofton_worker_data), "crofton wdata");
@@ -315,7 +320,8 @@ do_one_iteration(struct application *ap_template,
  *                     NULL or all-zero → 2 000-ray default behaviour.
  * @param out_surf_area Receives the estimated surface area (mm^2).
  * @param out_volume    Receives the estimated volume (mm^3).
- * @return  0 on success, -1 on bad arguments.
+ * @return  The total number of ray-surface crossings accumulated during
+ *          sampling (>= 0) on success; -1 on bad arguments.
  */
 int
 rt_crofton_shoot(struct rt_i                      *rtip,
@@ -410,10 +416,7 @@ rt_crofton_shoot(struct rt_i                      *rtip,
     struct crofton_shared shared;
     memset(&shared, 0, sizeof(shared));
 
-    uint64_t seed = (uint64_t)bu_gettime();
-    seed ^= (uint64_t)(uintptr_t)rtip;
-    if (seed == 0) seed = 5489ULL;
-    std::mt19937_64 rng(seed);
+    std::mt19937_64 rng(RT_CROFTON_RNG_SEED);
 
     const double FOUR_PI    = 4.0 * M_PI;
     const double PI         = M_PI;
@@ -476,6 +479,7 @@ rt_crofton_shoot(struct rt_i                      *rtip,
 	/* ---- Parametric loop: n_rays / stability_mm / time_ms ---- */
 	double prev_r_sa = -1.0, prev_r_v = -1.0;
 	size_t total_fired = 0;
+	size_t stable_windows = 0;
 	int64_t t0 = (time_ms > 0.0) ? bu_gettime() : 0;
 
 	for (;;) {
@@ -517,7 +521,13 @@ rt_crofton_shoot(struct rt_i                      *rtip,
 			fabs(r_sa - prev_r_sa) < stability_mm;
 		    int v_ok  = (!out_volume) ||
 			fabs(r_v  - prev_r_v)  < stability_mm;
-		    if (sa_ok && v_ok) break;
+		    if (sa_ok && v_ok) {
+			stable_windows++;
+			if (stable_windows >= RT_CROFTON_STABILITY_MIN_WINDOWS)
+			    break;
+		    } else {
+			stable_windows = 0;
+		    }
 		}
 		prev_r_sa = r_sa;
 		prev_r_v  = r_v;

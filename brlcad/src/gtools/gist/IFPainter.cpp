@@ -213,8 +213,10 @@ IFPainter::drawImageTransparentFitted(int x, int y, int width, int height, std::
 }
 
 int
-IFPainter::drawDiagramFitted(int x, int y, int width, int height, std::string imgPath, std::string text)
+IFPainter::drawDiagramFitted(int x, int y, int width, int height, std::string imgPath, std::string text, bool centerImage)
 {
+    const int titleWidth = width;
+    const int titleCenterX = x + titleWidth / 2;
     y += 65;
     height -= 65;
     cv::Mat imageRaw = imread(imgPath, cv::IMREAD_UNCHANGED); // Load color image
@@ -243,10 +245,11 @@ IFPainter::drawDiagramFitted(int x, int y, int width, int height, std::string im
 	// image height is too large; bound on height
 	int newWidth = (int)(height * (double)imgWidth / imgHeight);
 	widthOffset = (width - newWidth) / 2;
-	widthOffset /= 2.5;
+	if (!centerImage) {
+	    widthOffset /= 2.5;
+	}
 	width = newWidth;
     }
-
     cv::Mat resized_image;
     resize(lilImage, resized_image, cv::Size(width, height), cv::INTER_LINEAR);
 
@@ -262,8 +265,8 @@ IFPainter::drawDiagramFitted(int x, int y, int width, int height, std::string im
 
     // truncate title until it fits on line
     int countCharDisplayedText = text.length();
-    getTextWidth(50, width, text, TO_BOLD); // needed for while loop to run correctly
-    while (getTextWidth(50, width, text, TO_BOLD) > width) {
+    getTextWidth(50, titleWidth, text, TO_BOLD); // needed for while loop to run correctly
+    while (getTextWidth(50, titleWidth, text, TO_BOLD) > titleWidth) {
 	if ((size_t)countCharDisplayedText == text.length()) {
 	    text = text + " ...";
 	}
@@ -278,8 +281,8 @@ IFPainter::drawDiagramFitted(int x, int y, int width, int height, std::string im
 	}
     }
     // now, draw text and line
-    this->drawLine(x + widthOffset, y + heightOffset - 5, x + widthOffset + width, y + heightOffset - 5, 5, cv::Scalar(0, 0, 0));
-    this->drawTextCentered(x + widthOffset + width / 2, y + heightOffset - 65, 50, width, text, TO_BOLD);
+    this->drawLine(x, y + heightOffset - 5, x + titleWidth, y + heightOffset - 5, 5, cv::Scalar(0, 0, 0));
+    this->drawTextCentered(titleCenterX, y + heightOffset - 65, 50, titleWidth, text, TO_BOLD);
 
     return countCharDisplayedText;
 }
@@ -644,4 +647,3 @@ IFPainter::exportToFile(std::string filePath)
 // c-file-style: "stroustrup"
 // End:
 // ex: shiftwidth=4 tabstop=8
-

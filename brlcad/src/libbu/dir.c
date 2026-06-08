@@ -701,7 +701,7 @@ bu_mkdir(const char *path)
     for (int i = (int)BU_PTBL_LEN(&ndirs) - 1; i >= 0; i--) {
 	char *npath = (char *)BU_PTBL_GET(&ndirs, i);
 #ifdef HAVE_WINDOWS_H
-	CreateDirectory(npath, NULL);
+	CreateDirectory(npath, (const char *)NULL);
 #else
 	/* mode: 775 */
 	mkdir(npath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -725,7 +725,7 @@ bu_dirclear(const char *d)
 	    if (BU_STR_EQUAL(filenames[i], ".."))
 		continue;
 	    char cdir[MAXPATHLEN] = {0};
-	    bu_dir(cdir, MAXPATHLEN, d, filenames[i], NULL);
+	    bu_dir(cdir, MAXPATHLEN, d, filenames[i], (const char *)NULL);
 	    bu_dirclear((const char *)cdir);
 	}
 	bu_argv_free(nfiles, filenames);

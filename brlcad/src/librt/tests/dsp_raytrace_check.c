@@ -59,11 +59,10 @@
 /* Tuneable parameters                                                  */
 /* ------------------------------------------------------------------ */
 
-/* Accuracy pass: convergence-based stopping — stop when the equivalent-radius
- * estimate is stable to within CROFTON_STABILITY_MM between successive
- * iterations, with a wall-clock safety budget of CROFTON_TIME_MS.          */
-#define CROFTON_STABILITY_MM    0.05
-#define CROFTON_TIME_MS         2000.0
+/* Rays for deterministic metric validation.  The DSP cases include small,
+ * tall height fields where low hit probability makes convergence-by-timeout
+ * too noisy for a pass/fail regression. */
+#define CROFTON_ACCURACY_RAYS   500000u
 
 /* Rays for the single-iteration timing measurement (fixed count so the
  * rays/sec figure is directly comparable across runs).                      */
@@ -123,12 +122,9 @@ extern void  dsp_query_terrain(struct soltab *stp,
  * @param buf    Row-major height array, buf[y*xcnt + x].
  * @param xcnt   Number of grid columns (>= 2).
  * @param ycnt   Number of grid rows    (>= 2).
- * @param dx     Model-space width  of one cell (stom[0], mm if identity).
- * @param dy     Model-space height of one cell (stom[5]).
- * @param dz     Model-space scale  per height unit (stom[10]).
+ * @param x     Model-space width  of one cell (stom[0], mm if identity).
+ * @param y     Model-space height of one cell (stom[5]).
  * @param cuttype DSP_CUT_DIR_* triangulation selector.
- * @param sa_out Receives total surface area in model-space units^2.
- * @param vol_out Receives total volume in model-space units^3.
  */
 static int
 cell_cuttype(const unsigned short *buf, unsigned int xcnt, unsigned int ycnt,
@@ -321,16 +317,10 @@ compare_paths(const char  *label,
     if (prep_sec > 0.0)
 	printf("    Prep (DDA/HBB): %.3f s\n", prep_sec);
 
-    /* Accuracy pass: convergence-based stopping.  Sampling continues until the
-     * equivalent-radius estimate stabilises or the time budget is reached.   */
+    /* fixed ray count for deterministic regression behavior. */
     static const struct rt_crofton_params acc_p =
-        { 0u, CROFTON_STABILITY_MM, CROFTON_TIME_MS };
-    /* Timing pass: fixed ray count so the rays/sec figure is directly
-     * comparable across platforms and runs.                                  */
-    static const struct rt_crofton_params tim_p =
-        { CROFTON_TIMING_RAYS, 0.0, 0.0 };
+        { CROFTON_ACCURACY_RAYS, 0.0, 0.0 };
     struct crofton_result dda_acc = run_crofton(rtip, &acc_p);
-    struct crofton_result dda_tim = run_crofton(rtip, &tim_p);
 
     printf("\n    %-12s  %14s  %14s  %10s  %10s\n",
 	    "PATH", "SA", "VOL", "SA_err%", "VOL_err%");
@@ -367,13 +357,8 @@ compare_paths(const char  *label,
 	printf("    %-12s  %14.6g  %14.6g\n",
 		"DDA", dda_acc.sa, dda_acc.vol);
 
-    double dda_rps = (dda_tim.wall_sec > 1e-9)
-	? CROFTON_TIMING_RAYS / dda_tim.wall_sec : 0.0;
-
     printf("\n    %-12s  %8s  %12s  %12s\n",
 	    "PATH", "rays", "wall_sec", "rays/sec");
-    printf("    %-12s  %8u  %12.4f  %12.0f\n",
-	    "DDA", CROFTON_TIMING_RAYS, dda_tim.wall_sec, dda_rps);
 
     const char *dsa  = (dda_sa_err  < 0.0 || dda_sa_err  <= DSP_DDA_MESHREF_PCT) ? "OK" : "FAIL";
     const char *dvol = (dda_vol_err < 0.0 || dda_vol_err <= DSP_DDA_MESHREF_PCT) ? "OK" : "FAIL";
